@@ -1,24 +1,27 @@
-# Ingest 工作流 — 从论文到领域知识库
+# Ingest 工作流 — 从专家材料到专家顾问 skill
 
-> 本文件是 domain-knowledge-builder meta-skill 的**核心生成流程**。
-> 输入：N 篇学术论文（PDF/EPUB/...）+ 领域名 → 输出：结构等价于 CP 实例的领域知识库 skill。
+> 本文件是 expert-advisor-builder meta-skill 的**核心生成流程**（由 domain-knowledge-builder 扩展而来）。
+> 输入：专家名 + 种子材料（网采链接 + 用户 PDF/书）→ 输出：同时拥有「专家心智（主体）+ 知识依据（底盘）+ 紧耦合关联」的专家顾问 skill。
 > 对应 schema §6 的 7 步流水线，按 D3 阶段性质拆分编排（确定性阶段 workflow / 交互阶段 subagent）。
+>
+> **相对 DKB 的扩展点**：S1 加双通道采集、S2 双轨提取、S5 拆三步（S5a 领域镜片 + S5b 专家心智 + S5c 紧耦合融合）。字段/方法论定义在 `schema/` 与 `engines/`，本文件只编排 pipeline 时序与契约，不重抄。
 
 ---
 
 ## 0. 前置检查（每次 ingest 必做）
 
-### 0.1 领域 + 来源确认（交互，subagent）
-- 与用户确认：领域名、来源论文清单、目标用途（研究/教学/工程参考）
-- 检查是否已有同领域知识库（`~/.pi/agent/skills/<domain>/` 存在？）→ 决定新建 or 增量
+### 0.1 专家 + 来源确认（交互，subagent）
+- 与用户确认：专家名、领域、种子材料清单（网采链接 + 用户 PDF/书）、目标用途（研究/教学/工程参考）
+- 检查是否已有同专家顾问 skill（`~/.pi/agent/skills/<expert>-advisor/` 存在？）→ 决定新建 or 增量
 
-### 0.2 docling preflight（generator-skill 合规 §12.4）
+### 0.2 提取器 preflight（generator-skill 合规 §12.4）
 ```bash
 cd <meta-skill-root>
 python3 -m engines.book_to_skill --check
 ```
 - 输出 per-format 提取器可用性报告
-- docling 不可用（technical 模式必需）→ **报错 + 安装指引**，不静默退化
+- docling 不可用（technical 模式必需，保 LaTeX）→ **报错 + 安装指引**，不静默退化
+- unlimited-ocr 不可用（扫描书/图片专用）→ 警告但允许继续（仅 born-digital 论文时不影响）
 - pdftotext 不可用（text 模式 fallback）→ 警告但允许继续（仅 text 论文）
 
 ### 0.3 初始化 git + run-manifest（D7 可回滚/可审计）
@@ -39,36 +42,58 @@ git checkout -b ingest/<run_id>
 ┌─────────────────────────────────────────────────────────────┐
 │  确定性阶段（workflow JS fan-out）                            │
 │                                                              │
-│  S1 提取 ──┬──▶ S2_P1 知识提取 ──┐                          │
-│            ├──▶ S2_P2 知识提取 ──┼──▶ S3 合并（交互）         │
-│            └──▶ S2_P3 知识提取 ──┘         │                 │
-└──────────────────────────────────────────┼──────────────────┘
-                                           │
-┌──────────────────────────────────────────▼──────────────────┐
+│  S1 双通道 ──┬──▶ S2-knowledge_Pn ──┐  （value 打标分流）   │
+│  网采+用户   ├──▶ S2-mind_Pn ────────┤                      │
+│              └──▶ ... ──────────────┼──▶ S3 合并（交互）    │
+└──────────────────────────────────────┼──────────────────────┘
+                                       │
+┌──────────────────────────────────────▼──────────────────────┐
 │  交互/判断阶段（subagent chain）                              │
 │                                                              │
-│  S3 合并 ──▶ S4 导航 ──▶ S5 心智模型 ──▶ S6 验证 ──▶ S7 组装 │
-│  (人工确认                                  (fresh-context   │
-│   contradicts)                               独立评分)        │
-└─────────────────────────────────────────────────────────────┘
+│  S3 合并 ──▶ S4 导航 ─┬─▶ S5a 领域镜片 ──┐                   │
+│  (人工确认            └─▶ S5b 专家心智 ──┼─▶ S5c 融合        │
+│   contradicts)              （可并行）     │  (依赖S5a/b+S3) │
+│                                            ▼                 │
+│                                  S6 验证 ──▶ S7 组装         │
+│                                (fresh-context                │
+│                                 独立评分 + lint)             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 **阶段性质拆分理由（D3）**：
 - S1/S2×N/S4 是确定性/可并行的 → `workflow`（JS fan-out，高效）
 - S3 合并遇 contradicts/does_not_guarantee 边必须人工确认 → `subagent`（可暂停 checkpoint）
-- S5 心智模型/S6 验证/S7 组装需要判断力 → `subagent`
+- S5a/S5b 是两个独立 subagent（上下文不同，可并行）；S5c 依赖两者 + S3 完成 → 必须**串行**在 S3 之后
+- S6 验证/S7 组装需要判断力 → `subagent`
 
 ---
 
-## S1. 文本提取（workflow，确定性）
+## S1. 双通道采集（workflow，确定性）
 
-**目标**：把 N 个 PDF/EPUB 提取成合并的 `full-text.txt` + `metadata.json`。
+**目标**：从两条通道采集专家材料，每源存 `sources/src-*.md`（带 `value` 打标，决定 S2 分流），并提取文本供 S2 双轨使用。
 
-**执行**（workflow 脚本的一个 stage，或直接 bash）：
+**两通道并行**：
+
+### 通道 A：网采（`engines/web_collector.md`）
+- MVP 3 路：① 论文著作 ② 长访谈 ③ 博客文章（V1 补全 nuwa 6 路）
+- 工具：WebSearch + webReader（`mcp__web_reader`）
+- 每源存 `sources/src-*.md`（`channel: web` + `url`，**硬门② 可 HTTP 验证**）
+
+### 通道 B：用户材料（`engines/book_to_skill/` 按格式路由）
 ```bash
-python3 -m engines.book_to_skill raw/sources/ --mode technical --install-missing ask
-# 输出: <tempdir>/book_skill_work/{full_text.txt, metadata.json}
+python3 -m engines.book_to_skill raw/user/ --mode technical --install-missing ask
+# 按格式路由（docling 保 LaTeX 优先）：
+#   born-digital PDF ─▶ docling（保 LaTeX，technical 模式）
+#   arxiv 论文      ─▶ ar5iv HTML（公式最准）
+#   扫描书/图片     ─▶ unlimited-ocr（无文本层专用，不替代 docling）
+#   纯文本          ─▶ pdftotext（fallback）
 ```
+- 每源存 `sources/src-*.md`（`channel: user` + `file` + `locator: {page, section}`，**硬门② 核对依据**）
+
+### 来源打标（S1→S2 的核心契约）
+- 字段定义见 `schema/source.md` §1-2，本文件不重抄
+- **关键字段**：`value = knowledge | mind | both`（决定 S2 分流，见 `source.md` §2）
+- `both` 源（如研究论文：方法+作者动机）在 S2 由 worker 按段落语义切片（`source.md` §3）
 
 **REPL 探测（>50K tokens 必用，book-to-skill 实践）**：
 - 大论文（如 Min 2026 的 157 页 ~67K tokens）禁止 `read(full_text.txt)` 全读
@@ -76,28 +101,40 @@ python3 -m engines.book_to_skill raw/sources/ --mode technical --install-missing
 - 用 `sed -n '<start>,<end>p' full_text.txt` 按段读
 
 **产出**：
+- `sources/src-*.md`（每源一个，打标 `value`）
 - `full-text.txt`（合并全文，带来源分隔符）
 - `metadata.json`（每源 token 数/页数/格式）
 
 **run-manifest 记录**：
 ```json
-{"stage": "S1_extract", "status": "done", "commit": "<sha>", "artifacts": ["full-text.txt","metadata.json"]}
+{"stage": "S1_collect", "status": "done", "commit": "<sha>", "artifacts": ["sources/","full-text.txt","metadata.json"]}
 ```
 
 ---
 
-## S2. 结构化知识提取（workflow，并行 fan-out × N）
+## S2. 双轨提取（workflow，并行 fan-out × N）
 
-**目标**：每篇论文并行提取知识节点 + 关系，输出 `extraction-<source>.json`。
+**目标**：按来源 `value` 打标分流为两条独立提取轨道，分别产出知识 DAG 节点与心智候选。
+
+**双轨对照**：
+
+| 通道 | 输入 | 提取什么 | 输出 |
+|------|------|----------|------|
+| **S2-knowledge**（继承 DKB S2）| `knowledge` 源 + `both` 源的知识切片 | 定理/方法/公式（docling 保 LaTeX）| 知识 DAG 节点（`extraction-<source>.json`）|
+| **S2-mind**（新）| `mind` 源 + `both` 源的判断切片 | 专家判断/直觉/反模式/决策启发式 | 心智候选（带 provenance）|
+
+**`both` 源切片**（契约见 `schema/source.md` §3）：
+- worker 按**段落语义**切片：知识性段落（定理/方法/实验）→ S2-knowledge；判断性段落（作者主张/怀疑/动机）→ S2-mind
+- 切片边界由 S2 worker 标注 `slice_type: knowledge | mind`，S3 合并时去重
 
 **编排**（`pipeline/run-dag-pipeline.js` 的核心）：
-- 为每个 source 启动一个 worker agent（`parallel()` fan-out）
-- 每个 worker 独立读 schema §2 节点模板 + 自己负责的论文片段
+- 为每个 source × 每个适用通道启动一个 worker（`parallel()` fan-out）
+- 知识 worker 读 `schema/schema.md`（§2 节点模板 + §3 关系类型）；心智 worker 读 `schema/expert-mind.md` §1 字段定义
 
-**每个 worker 的任务契约**：
+**知识 worker 任务契约**（继承 DKB S2）：
 ```
-输入：schema/schema.md（§2 节点模板 + §3 关系类型）+ full-text.txt 中该论文的片段
-输出：extraction-<source>.json（nodes + edges）+ wiki/sources/<source>.md
+输入：schema/schema.md（§2 节点模板 + §3 关系类型）+ full-text.txt 中该源的知识切片
+输出：extraction-<source>.json（nodes + edges）
 
 约束：
 - 定理表述必须原文精确（LaTeX 保留）
@@ -107,13 +144,25 @@ python3 -m engines.book_to_skill raw/sources/ --mode technical --install-missing
 - 关系必须有 confidence（high/medium/low）
 ```
 
-**跨源 ID 一致性**：
-- 不同论文里的同一概念 → 同一 node ID（如 P1/P3/P4 都谈 split CP → 都用 `thm-angelopoulos2022-split-cp-coverage` 或合并到主源 slug）
+**心智 worker 任务契约**（新，S2-mind）：
+```
+输入：schema/expert-mind.md（字段定义，不含三重验证——验证在 S5b）+ 该源的判断切片
+输出：mind-candidate-<source>.json（候选心智元素，无 verification）
+
+约束：
+- 候选类型：mental_model | heuristic | anti_pattern（expert-mind.md §2）
+- 每候选附 provenance.sources 引用 src-*.md 的 id（忠实度依据，硬门②）
+- 不在此步验证三重——S5b 跑验证
+- 三重验证的「锚点」是专家个人镜片（这位专家特有，换人就不成立），见 engines/expert-mind-rubric.md
+```
+
+**跨源 ID 一致性**（继承 DKB schema §10）：
+- 不同来源的同一概念 → 同一 node ID（如 P1/P3/P4 都谈 split CP → 都用 `thm-angelopoulos2022-split-cp-coverage` 或合并到主源 slug）
 - worker 间不通信，依赖 schema §10 的命名规范保证幂等
 
-**产出**（per source）：
-- `extraction-<source>.json`
-- `wiki/sources/<source>.md`（来源摘要，schema §5 模板）
+**产出**（per source × track）：
+- 知识：`extraction-<source>.json`（nodes + edges）
+- 心智：`mind-candidate-<source>.json`（候选心智元素 + provenance）
 
 ---
 
