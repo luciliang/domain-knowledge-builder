@@ -180,23 +180,11 @@ venue: "arXiv:2211.12345"
 
 **解决**：`provenance` 追溯，每条 judgment 必须能定位到具体来源。
 
-### 验证方式
+本 schema 与硬门② 相关的字段：
+- 网采源的 `url`（HTTP 可达验证）
+- 用户材料源的 `locator.{page, section}`（供 fresh subagent 抽查核对 judgment 出处是否真来自该页码/章节）
 
-| channel | 验证手段 | 对应字段 |
-|---------|----------|----------|
-| `web` | **HTTP 可达性检查**（`curl -f` 返回 200） | `url` |
-| `user` | **文件存在 + 页码定位**（`grep -n` 在指定页码找到原文） | `file` + `locator.{page, section}` |
-
-### S6 校验流程
-
-1. **程序化验证**（快速、确定）：
-   - 网采源：`curl -f <url>` → HTTP 200
-   - 用户材料源：`test -f <file>` → 文件存在
-
-2. **Fresh subagent 抽查**（慢、需判断力）：
-   - 抽 N 条 judgment（MVP 建议 N=5-10）
-   - 核对 `judgment.judgment` 是否能在 `source.locator` 定位到原文
-   - 发现编造 → **硬门② 失败，darwin 评分 <B+，回滚**
+完整校验流程（fresh subagent 抽查、darwin 门判定）见 **spec §7 与 pipeline §5.4**，本 schema 不重复定义，避免分叉。
 
 ---
 
