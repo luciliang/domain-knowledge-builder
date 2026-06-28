@@ -228,6 +228,10 @@ provenance: { sources: [lex-interview-2023, ieee-spectrum-2022] }
 
 **关键约束**：没有 `grounded_in` 依据的判断，**不能冒充心智模型**——这是"有依据"的硬闸，由 S6 + darwin 门强制。
 
+**两条边界澄清**（reviewer round-2 建议）：
+- **降级只作用于心智元素（§4.2），不作用于 judgment**：judgment 的 status 枚举为 `verified | inferred | contradicted`（**无 `demoted`**）。降级/丢弃由 S5c 在心智元素层面执行；judgment 通过 `derived_from` 继承其所属心智元素的最终 status，自身不参与 §4.4 降级。
+- **§4.4 降级/丢弃规则优先于 §6.2 推断落盘**：若一条判断同时落在「3 重过但 grounded_in 完全找不到」情形又被推断机制触及，以 §4.4 为准——即无依据的推断判断**不落盘 `inferred`**，而是按 §4.4 丢弃或降级为 heuristic。
+
 ### 4.5 judgment 独立成层、不污染知识 DAG
 
 DKB 的 DAG 边是「知识↔知识」。如果把「专家判断」塞进 DAG 当节点，会污染纯知识图谱、query 时难剪枝。所以 judgment 作为**独立关联层**（`expert-mind/judgments.md`），通过 `grounded_in` 引用知识节点 ID——知识图谱保持干净，紧耦合关系单独可查、可验证。
@@ -242,7 +246,7 @@ id: src-lecun-lex-2023
 type: interview              # paper | book | interview | blog | social | review | timeline
 value: mind                  # knowledge | mind | both（决定喂哪个 S2 通道）
 channel: web                 # web（网采）| user（用户材料）
-url: https://lex Fridman...  # 网采源：URL（硬门②可 HTTP 验证）
+url: https://lexfridman.com/lecun-2023  # 网采源：URL（硬门②可 HTTP 验证）
 file: lecun-jepa.pdf         # 用户材料源：本地文件 + 页码锚点
 locator: { page: 12, section: "§3" }   # 用户材料必填（硬门②核对依据）
 collected_at: 2026-06-28
@@ -288,7 +292,7 @@ format: html                 # html | pdf | txt | image
 
 ### 5.3 S5 三步（核心扩展）
 
-原 DKB S5 只做领域镜片，现拆三步。**S5a 与 S5b 是两个独立 subagent**（上下文不同：S5a 用现有 nuwa-validation，S5b 加载 expert-mind-rubric），可并行（契合 dispatching-parallel-agents）；**S5c 依赖两者**完成。
+原 DKB S5 只做领域镜片，现拆三步。**S5a 与 S5b 是两个独立 subagent**（上下文不同：S5a 用现有 nuwa-validation，S5b 加载 expert-mind-rubric），可并行（契合 dispatching-parallel-agents）；**S5c 依赖两者**完成，且必须等待 **S3 合并完成（含 contradicts 人工确认）后启动**——因为 S5c 要为心智判断挂 `grounded_in` 依据节点，节点必须先在 S3 合并后的 DAG 中存在（避免与 §3.4 数据流"S5 在 S4 之后"的时序误读）。
 
 ```
 S5a 领域镜片(独立 subagent)  ─┐ 从知识节点提炼「领域怎么思考」(三重验证)  ← 保留
@@ -347,7 +351,7 @@ S5c 紧耦合融合(依赖 S5a/S5b) ─┘ 对每个心智模型/判断，找支
 | **心智模式** | 加载专家心智镜片 + 匹配 judgment | 专家判断 + 推理链 + grounded_in 依据节点；无现成 judgment 则用镜片推断 |
 | **融合模式** ⭐ | 镜片理解→找 judgment→加载依据节点→综合 | 立场 + 理论依据 + 替代方案 + 局限，每论点挂 judgment ID + 节点 ID |
 
-**心智模式/融合模式的推断落盘**（解决测试可复现）：当无现成 judgment、用镜片推断时，推断结果**落盘为新 judgment**（`status: inferred`，`derived_from` 指向所用心智模型），供 S6 复审与端到端测试复现。不持久化会导致融合查询测试无法复现。
+**心智模式/融合模式的推断落盘**（解决测试可复现）：当无现成 judgment、用镜片推断时，推断结果**在构建期/测试期落盘为新 judgment**（`status: inferred`，`derived_from` 指向所用心智模型），供 S6 复审与端到端测试复现。**运行期 skill 被查询时只读不写**——不持久化运行期推断（避免违背 skill 只读惯例 + 并发写冲突），运行期推断仅返回结果并标注「推断·非原话」。构建期落盘使测试可复现，运行期无副作用。
 
 ### 6.3 融合模式回答示例
 
