@@ -205,6 +205,21 @@ def check_grounding_existence(dag_index, judgments):
     return issues
 
 
+# ========== 7. 硬门①：mental_model 3重全过必 grounded_in ==========
+
+def check_mind_element_grounding(elements):
+    """硬门①：3重过的 mental_model 必须 grounded_in ≥1（heuristic 可选）。
+    注：anti_pattern 的 role:refutes 约束、judgment 的 derived_from 继承正确性
+    由 fresh subagent 抽查兜底（硬门①②），lint 不程序化校验。"""
+    issues = []
+    for e in elements:
+        v = e.get("verification", {})
+        all_pass = all(v.get(k, {}).get("pass") for k in ("cross_scene","generative","exclusive"))
+        if e.get("type") == "mental_model" and all_pass and not e.get("grounded_in"):
+            issues.append(f"{e['id']}: mental_model(3重全过) 缺 grounded_in 依据（硬门①）")
+    return issues
+
+
 # ========== 主流程 ==========
 
 def main():
