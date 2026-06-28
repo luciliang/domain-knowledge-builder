@@ -270,11 +270,11 @@ darwin 2.0 保留了 1.0 的棘轮机制、独立子 agent 评分、results.tsv 
 
 ### 8.1 三硬门总览
 
-| 硬门 | 检查项 | 判定方式 | 实现 |
-|------|--------|----------|------|
-| **① 紧耦合完整性** | 每个 3 重过的心智模型 `grounded_in ≥1` 节点，且**语义匹配**（节点真支撑该判断） | **fresh subagent 抽查语义**（非 lint 程序化，需理解力） | S6 验证阶段 |
-| **② judgment 忠实度** | 每条 judgment 有真实 provenance（网采 URL HTTP 可达 / 用户材料 `locator{page,section}` 可定位），非模型编造；**包含 anti_pattern 的 `role: refutes` 约束 + judgment 的 `derived_from` 继承正确性** | **fresh subagent 抽查**（验证来源真实性，含 refutes/derived_from 正确性） | S6 验证阶段 |
-| **③ 无孤儿判断** | judgment 的 `grounded_in` 节点都在 dag-index 里（无断裂引用） | **lint 程序化**（`pipeline/state/lint_d7.py` 扫 dag-index） | `lint_d7.py` 扩展 |
+| 硬门 | 检查项 | 判定方式 |
+|------|--------|----------|
+| **① 紧耦合完整性** | 每个 3 重过的心智模型 `grounded_in ≥1` 节点，且**语义匹配**（节点真支撑该判断）；**含 anti_pattern 的 `role: refutes` 约束**（反模式必须用 refutes 指向反对的方法节点） | **fresh subagent 抽查语义**（非 lint 程序化，需理解力） |
+| **② judgment 忠实度** | 每条 judgment 有真实 provenance（网采 URL HTTP 可达 / 用户材料 `locator{page,section}` 可定位），非模型编造；**含 judgment 的 `derived_from` 继承正确性**（judgment 继承的心智元素 verification 是否真实） | **fresh subagent 抽查 provenance**（验证来源真实性） |
+| **③ 无孤儿判断** | judgment 的 `grounded_in` 节点都在 dag-index 里（无断裂引用） | **lint 程序化**（`pipeline/state/lint_d7.py` 扫 dag-index） |
 
 **判定方式核心差异**：
 - 存在性（硬门③）= **程序化 lint**（快、确定）
@@ -287,10 +287,10 @@ darwin 2.0 保留了 1.0 的棘轮机制、独立子 agent 评分、results.tsv 
 **检查项**：
 - 心智模型（`type: mental_model`）必须有 `grounded_in ≥1` 节点
 - `grounded_in` 每个节点的 `role` 与判断语义一致（`role: supports` 时节点真支撑判断，`role: refutes` 时节点真反对方观点）
+- **anti_pattern 的 `role: refutes` 约束**：反模式判断的 `grounded_in` 节点必须用 `role: refutes` 明确标注反对关系（非遗漏或误标）
 - 启发式（`type: heuristic`）允许 `grounded_in` 为空，但若有则必须语义匹配
 
 **判定方式**：**fresh subagent 抽查语义**
-- 抽查样本：建议 5-10 条心智模型/判断
 - 每条验证：读取心智模型/判断全文 + 加载其 `grounded_in` 节点定义 → 判断节点内容是否真支撑该判断
 - 失败示例：一条关于"LLM 不能推理"的判断，挂靠节点是"Transformer 架构"（语义不相关）或挂靠节点是"CoT 可提升规划能力"（语义矛盾）
 
@@ -306,14 +306,11 @@ darwin 2.0 保留了 1.0 的棘轮机制、独立子 agent 评分、results.tsv 
 **检查项**：
 - 网采源 judgment：`provenance.sources` 必须包含 HTTP 可达的 URL（fresh subagent 可访问验证）
 - 用户材料源 judgment：`provenance.sources` 对应的 `sources/src-*.md` 必须有 `locator: {page, section}` 且可定位到具体页码/章节
-- **anti_pattern 的 `role: refutes` 约束**：反模式判断的 `grounded_in` 节点必须用 `role: refutes` 明确标注反对关系（非遗漏或误标）
 - **judgment 的 `derived_from` 继承正确性**：judgment 必须正确继承其所属心智元素的 `verification` 结果（derived_from 指向的节点必须存在且确实通过三重验证）
 
 **判定方式**：**fresh subagent 抽查**
-- 抽查样本：建议 5-10 条 judgment（含不同来源：网采/用户材料/anti_pattern）
 - 网采 URL：尝试 HTTP 访问，验证 404/403/权限问题 → 失败即违反硬门②
 - 用户材料：核对 PDF 第 N 页第 M 节是否真包含该判断 → 失败即违反硬门②
-- **refutes 约束**：检查 anti_pattern 的 `grounded_in` 是否用 `role: refutes`，且语义上真反对（非误标）
 - **derived_from 继承**：检查 judgment 的 `derived_from` 字段指向的心智元素是否存在，且其 `verification` 确实通过（避免继承失败/误导）
 
 **与第 9 维可审计支柱的衔接**（见 §2.3）：
@@ -339,41 +336,13 @@ darwin 2.0 保留了 1.0 的棘轮机制、独立子 agent 评分、results.tsv 
 - D7（可控性）要求"每个节点可追溯到来源"
 - 硬门③ 确保"每个判断可追溯到存在的节点"——是 D7 在紧耦合层的强制执行
 
-### 8.5 三硬门执行时机
+### 8.5 执行时机
 
-```
-S5c 紧耦合融合完成（expert-mind/judgments.md 生成）
-   ↓
-S6 验证·fresh（fresh subagent）
-   ├─ 硬门①②：fresh subagent 抽查（语义匹配 + 忠实度）
-   │   抽 5-10 条 judgment → 核对 grounded_in 语义 + provenance 真实性
-   │   含 refutes 约束检查 + derived_from 继承正确性
-   │
-   └─ 硬门③：lint 程序化（lint_d7.py）
-       扫所有 grounded_in 节点 ID → 核对 dag-index.json
-   ↓
-三硬门全过 → S7 组装 → darwin 评分（9 维 + 三硬门）
-```
+三硬门在 S6 验证阶段执行（详见 `pipeline/ingest.md` §5.4），不过即触发棘轮机制（§3）。
 
-**硬门不过的处理**（继承 DKB 棘轮机制）：
-- 任何一硬门不过 → 总分 <B+ → git revert → 修单一硬门 → 重评
-- 连续 3 轮不过 → 探索性重写（见 §3）
+### 8.6 与 darwin 9 维关系
 
-### 8.6 三硬门与 darwin 9 维的关系
-
-三硬门是**致命门槛**（不过即 <B+），darwin 9 维是**综合质量评分**（≥ B+ 才成功）。
-
-| 维度 | 角色 | 不过的后果 |
-|------|------|----------|
-| **三硬门** | 门槛（binary：过/不过） | 任何一硬门不过 → <B+ → 回滚 |
-| **darwin 9 维** | 质量评分（1-10 分加权） | 分数不够高（<80）→ 也不过门，但可通过迭代改进 |
-| **交集** | 硬门② 与第 9 维"可审计" | 硬门② 是第 9 维可审计的执行层验证 |
-
-**验收检查**（grep 关键词）：
-```bash
-grep -nE "硬门①|紧耦合完整性|硬门②|忠实度|硬门③|孤儿|refutes|derived_from" engines/darwin-rubric.md
-```
-Expected：三硬门 + refutes/derived_from fresh 抽查说明均在。
+三硬门是门槛（不过即 <B+），darwin 9 维是质量评分（≥80 才成功）。硬门② 与第 9维『可审计』支柱衔接：darwin 要求标注 provenance，硬门② 验证其真实性。
 
 ---
 
