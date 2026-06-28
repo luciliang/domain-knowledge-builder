@@ -6,6 +6,21 @@
 
 ---
 
+## 相关 schema
+
+本知识节点规范（schema.md）与以下三个 schema 文件协作完成知识库构建：
+
+| schema 文件 | 核心内容 | 职责 |
+|------------|---------|------|
+| **schema.md**（本文件） | 5 类型知识节点（definition/theorem/method/experiment/insight）+ 10 种 DAG 关系 + D7 可控性层 | 知识底盘：定义知识节点结构、关系类型、命名规范、生成可控性 |
+| **expert-mind.md** | 专家心智元素（mental_model/heuristic/anti_pattern）+ 三重验证 + grounded_in | 专家心智：定义领域专家的心智模型、启发式和反模式 |
+| **coupling.md** | judgment 紧耦合枢纽 | 知识枢纽：用 judgment 关系将专家心智（expert-mind）紧耦合到知识节点 |
+| **source.md** | 来源打标规范（sources/src-*.md）+ S1→S2 分流 | 来源追踪：定义来源文档的打标规范和提取流程 |
+
+**四者协作关系**：source.md 负责来源打标和分流 → schema.md 定义知识节点和关系 → expert-mind.md 提炼专家心智元素 → coupling.md 用 judgment 关系将心智紧耦合到知识节点，形成「知识+心智」的完整体系。
+
+---
+
 ## 0. 与 CP 实例 schema 的关系
 
 | 项 | CP schema（query-skill） | 本 schema（meta-skill，generator） |
