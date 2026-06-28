@@ -3,10 +3,12 @@
 | 项目 | 值 |
 |------|-----|
 | 日期 | 2026-06-28 |
-| 状态 | Draft（待 spec review） |
+| 状态 | Draft v2（spec review 第 2 轮修订） |
 | 目标 meta-skill | `expert-advisor-builder`（由 `domain-knowledge-builder` 扩展而来） |
 | 命名 | 工作名，待定 |
 | 设计方式 | 与用户协作 brainstorm，五段设计逐段确认 |
+
+> **v2 修订**：根据 spec-document-reviewer 第 1 轮反馈，补齐 schema 字段、统一 `grounded_in` 结构、定义 sources 打标 schema、写清 S5c 降级规则与 S6 语义匹配判定、澄清 dag/wiki 职责。
 
 ---
 
@@ -69,45 +71,52 @@
 
 把 `domain-knowledge-builder` 从「领域知识库生成器」升级为「专家顾问生成器」。输入 = 专家名 + 种子材料 → 输出 = 一个同时拥有「专家心智（主体）+ 知识依据（底盘）+ 紧耦合关联」的 skill。
 
-### 3.2 meta-skill 自身的扩展（在 DKB 5 层上加 3 件事）
+### 3.2 meta-skill 自身的扩展
 
 ```
 expert-advisor-builder/  (原 domain-knowledge-builder 扩展)
 ├── SKILL.md                     # 改：触发词/路由加"专家顾问"
 ├── schema/
 │   ├── schema.md                # 原：5节点+10关系+D7（知识底盘，不动）
-│   ├── expert-mind.md           # 🆕 专家心智 schema（5层OS结构）
-│   └── coupling.md              # 🆕 紧耦合关联 schema（判断↔依据节点）
+│   ├── expert-mind.md           # 🆕 专家心智 schema（§4.2）
+│   ├── coupling.md              # 🆕 紧耦合关联 schema（judgment §4.3）
+│   └── source.md                # 🆕 来源打标 schema（§4.6）
 ├── pipeline/
 │   ├── ingest.md                # 改：S1 加双通道、S5 拆三步
 │   ├── query.md                 # 改：查询协议加"专家判断+依据"模式
 │   └── state/                   # 原：D7 不动
-├── engines/
-│   ├── book_to_skill/           # 原：docling/OCR/pdftotext 路由
-│   ├── web_collector/           # 🆕 nuwa 6路采集的领域化版（WebSearch+webReader）
-│   ├── expert-mind-rubric.md    # 🆕 专家心智提炼（恢复 nuwa 人物DNA，三重验证）
-│   ├── nuwa-validation.md       # 原：三重验证（S5 复用）
-│   └── darwin-rubric.md         # 改：第9维加"专家忠实度"要求
+├── engines/                     # 命名统一为单文件 + 子目录混合（见下）
+│   ├── book_to_skill/           # 原：多格式提取（目录，因含脚本）
+│   ├── web_collector.md         # 🆕 nuwa 6路采集契约（单文件）
+│   ├── expert-mind-rubric.md    # 🆕 专家心智提炼（恢复 nuwa 人物DNA）
+│   ├── nuwa-validation.md       # 原：三重验证
+│   └── darwin-rubric.md         # 改：第9维加专家忠实度硬门
 └── examples/
     └── <某专家>/                 # 🆕 黄金参照（建议 karpathy-advisor）
 ```
+
+> **engines 命名约定**：含可执行脚本的用目录（`book_to_skill/`、未来的 `web_collector/scripts/`），纯方法论契约用单 `.md`（`web_collector.md`、`expert-mind-rubric.md`、`nuwa-validation.md`、`darwin-rubric.md`）。
 
 ### 3.3 生成的产物 skill 结构（专家顾问 skill）
 
 ```
 <expert>-advisor/
 ├── SKILL.md                 # 入口(<4K)：专家心智摘要 + 查询协议 + 诚实边界
-├── dag/                     # 知识 DAG（定理/方法/公式）—— 依据底盘（docling 保 LaTeX）
+├── dag/                     # 知识节点定义 + dag-index.json（单一数据源）
+│   ├── dag-index.json       #   节点/边索引（DAG 主数据）
+│   └── knowledge/           #   节点定义文件（def-/thm-/meth-/exp-/ins-）
 ├── expert-mind/             # 🆕 专家心智（主体）
-│   ├── mental-models.md     #   思维镜片（判断/直觉，三重验证过）
-│   ├── decision-heuristics.md  # 决策启发式
-│   ├── anti-patterns.md     #   反模式（专家反对什么、为什么）
-│   └── index.md             #   心智导航
-├── judgments/               # 🆕 紧耦合关联（核心枢纽）
-│   └── judg-*.md            #   每条专家判断 → 挂支撑它的定理/方法节点ID
-├── wiki/                    # 知识节点 + 导航
-└── sources/                 # 来源 provenance（网采URL + 用户PDF）
+│   ├── mental-models.md     #   心智模型/启发式/反模式（§4.2）
+│   ├── judgments.md         #   judgment 索引（§4.3，紧耦合枢纽）
+│   └── index.md             #   心智导航（只引用 ID）
+├── wiki/                    # 导航层（不存数据，只引用 dag 节点 ID）
+│   ├── index.md             #   按类型分组的节点导航
+│   └── overview.md          #   领域全局概览
+└── sources/                 # 🆕 来源打标（§4.6，网采URL + 用户PDF provenance）
+    └── src-*.md
 ```
+
+> **dag/ vs wiki/ 职责澄清**（解决数据双写）：`dag/` 是知识节点的**单一数据源**（节点定义 + index）；`wiki/` 是**纯导航层**（index/overview 只引用 dag 节点 ID，不复制节点内容）。心智在 `expert-mind/`，judgment 在 `expert-mind/judgments.md`。三层数据不重叠。
 
 ### 3.4 数据流总览
 
@@ -117,20 +126,20 @@ expert-advisor-builder/  (原 domain-knowledge-builder 扩展)
 [S1 采集·双通道]
    ├─ 网采通道: WebSearch+webReader, nuwa 6路(论文/访谈/博客/推文/他评/时间线)
    └─ 用户材料: docling(born-digital,保LaTeX) / OCR(扫描书) / pdftotext(fallback)
-      ↓ raw corpus（每源打标 knowledge/mind/both）
+      ↓ raw corpus → sources/src-*.md（每源打标 value, §4.6）
 [S2·双轨提取]
-   ├─ 论文/教材(knowledge/both) ──▶ 知识 DAG 节点(定理/方法/公式, 带provenance)
-   └─ 访谈/博客(mind/both)     ──▶ 专家心智候选(判断/直觉/反模式)
-      ↓
+   ├─ knowledge/both 源 ──▶ 知识 DAG 节点(定理/方法/公式, 带provenance)
+   └─ mind/both 源     ──▶ 专家心智候选(判断/直觉/反模式)
+      ↓（both 源按段落语义切片，分别喂两通道，§5.2）
 [S3 合并]  DAG合并(contradicts人工确认) + 心智候选去重
-[S4 导航]  知识导航 + 心智导航
+[S4 导航]  知识导航(wiki/) + 心智导航(expert-mind/index)
       ↓
 [S5·三步]  ← 核心
-   S5a 领域镜片(现有三重验证)
-   S5b 专家心智(nuwa人物DNA, 三重验证)
-   S5c 🆕紧耦合融合: 每个专家判断 → 关联支撑它的定理/方法节点
+   S5a 领域镜片(现有三重验证)         ─┐ 两个独立 subagent，可并行
+   S5b 专家心智(nuwa人物DNA, 三重验证) ─┘
+   S5c 🆕紧耦合融合(依赖 S5a/S5b): 建立 judgment + 降级规则(§4.4)
       ↓
-[S6 验证·fresh] [S7 组装] → darwin门(加专家忠实度硬门)
+[S6 验证·fresh] [S7 组装] → darwin门(三硬门, §7)
       ↓
 专家顾问 skill
 ```
@@ -142,15 +151,15 @@ expert-advisor-builder/  (原 domain-knowledge-builder 扩展)
 ### 4.1 三层实体 + 连接关系
 
 ```
-专家心智(expert-mind/)  ──grounded_in──▶  知识节点(dag/wiki/)   ← DKB 原生，不动
+专家心智(expert-mind/)  ──grounded_in──▶  知识节点(dag/knowledge/)   ← DKB 原生，不动
    ↑                                          ↑
-   └──────── judgment(judgments/) ────────────┘
+   └──────── judgment(expert-mind/) ──────────┘
               ↑ 紧耦合的"枢纽"：一条专家判断 = 立场 + 推理 + 依据节点
 ```
 
 知识节点 schema 完全继承 DKB（5 类型 def/thm/meth/exp/ins + 10 关系 + D7 provenance），**不动**。
 
-### 4.2 专家心智元素 schema（`expert-mind/*.md`）
+### 4.2 专家心智元素 schema（`expert-mind/mental-models.md`）
 
 ```yaml
 ---
@@ -158,116 +167,160 @@ id: mm-lecun-energy-based-worldview
 type: mental_model            # mental_model | heuristic | anti_pattern
 label: 能量模型世界观
 statement: "智能 = 在能量函数上做优化/约束满足，而非自回归预测下一token"
-verification:                 # nuwa 三重验证（S5b 跑）
+status: verified              # verified | demoted | inferred | contradicted（§4.4 降级规则）
+verification:                 # nuwa 三重验证（S5b 跑）；judgment 继承此结果，不独立验证
   cross_scene: { pass: true, evidence: [JEPA架构, 反对LLM推理, LatentEBM] }
   generative: { pass: true, predicts: "对任何新架构先问能量/目标函数" }
   exclusive:  { pass: true, vs: "贝叶斯派靠先验、生成式派靠似然" }
-grounded_in:                  # 紧耦合：这条心智挂到哪些定理/方法节点
-  - thm-ebm-as-energy-minimization
-  - meth-jepa-latent-predictive
+grounded_in:                  # 紧耦合：结构同 judgment.grounded_in（统一对象数组）
+  - { node: thm-ebm-as-energy-minimization, role: supports, quote: "..." }
+  - { node: meth-jepa-latent-predictive,     role: supports, quote: "..." }
 confidence: high              # high | medium | low
 provenance: { sources: [lecun-2022-jepa, lex-interview-2023] }
 ---
 <展开：核心思想 / 跨场景证据 / 局限 / 支撑节点>
 ```
 
-### 4.3 judgment schema——紧耦合的枢纽（`judgments/*.md`）
+### 4.3 judgment schema——紧耦合的枢纽（`expert-mind/judgments.md`）
 
 回答「专家怎么看 X」的载体：**一条判断 = 立场 + 推理链 + 依据节点**。
+
+**judgment 不独立跑三重验证**，而是通过 `derived_from` 继承其所属心智元素（§4.2）的 `verification` 结果。judgment 自身的质量由 `provenance`（忠实度，硬门②）+ `grounded_in`（紧耦合，硬门①）保证。
 
 ```yaml
 ---
 id: judg-lecun-llm-cant-reason
+type: judgment                # 固定值 judgment（与心智元素 type 区分）
+label: LLM不能真正推理
+status: verified              # verified | inferred | contradicted（推断结果落盘为 inferred，§6.2）
 trigger: "LLM 能做真正的推理吗 / 为什么 LLM 不会规划"
+derived_from: mm-lecun-energy-based-worldview   # 所属心智元素（继承其 verification）
 judgment: "不能。纯自回归续写缺乏世界模型，无法预测后果做规划"
 reasoning: "推理 = 在抽象空间预测后果+规划路径；自回归只做token级概率续写，
-           没有世界模型的 forward 模拟，故 shot-hole 在外推时暴露"
-grounded_in:                  # 依据：挂到具体定理/方法节点
+           没有世界模型的 forward 模拟，故外推时暴露"
+grounded_in:                  # 依据：统一对象数组（与心智元素同结构）
   - { node: thm-planning-needs-world-model, role: supports, quote: "..." }
   - { node: meth-jepa-latent-predictive,     role: supports, quote: "..." }
-counter_evidence:             # 诚实：列反方
-  - { node: exp-gpt4-planning-benchmarks, note: "CoT下部分规划任务可通过" }
+counter_evidence:             # 诚实：列反方（role 用 context）
+  - { node: exp-gpt4-planning-benchmarks, role: context, note: "CoT下部分规划任务可通过" }
 confidence: high
 provenance: { sources: [lex-interview-2023, ieee-spectrum-2022] }
 ---
 ```
 
-### 4.4 紧耦合的「强度按验证分级」（防滥竽）
+### 4.4 紧耦合分级与降级规则（解决 S5c 边界 case）
+
+**强度按验证分级**：
 
 | 心智元素 | 三重验证 | 与知识的耦合要求 |
 |----------|----------|------------------|
-| 心智模型 (mental_model) | 3 重全过 | **必须** `grounded_in ≥1` 定理/方法节点（强耦合，有硬依据）|
+| 心智模型 (mental_model) | 3 重全过 | **必须** `grounded_in ≥1` 节点（强耦合，有硬依据）|
 | 启发式 (heuristic) | 1-2 重 | `grounded_in` 可选（可能只有经验依据，标注）|
-| 反模式 (anti_pattern) | 排他性必过 | `grounded_in` 指向它反对的方法节点 |
+| 反模式 (anti_pattern) | 排他性必过 | `grounded_in` 用 `role: refutes` 指向反对的方法节点 |
 
-**关键约束**：没有 `grounded_in` 依据的判断，**不能冒充心智模型**——这是"有依据"的硬闸，由 S6 验证 + darwin 门强制。纯口嗨/无定理支撑的观点只能降级为启发式或丢弃。
+**降级规则**（S5c 执行，处理"3 重过但依据不足"的边界）：
 
-### 4.5 为什么用 judgment 作枢纽、而不在 DAG 里加跨层边
+| 情况 | 处理 | status |
+|------|------|--------|
+| 3 重全过，但 `grounded_in` **完全找不到**任何相关节点 | **丢弃**（纯口嗨，无任何知识锚点）| dropped（不入库）|
+| 3 重全过，找到候选节点但 S6 判定**语义不匹配** | **降级为 heuristic**，保留原 verification + 标注降级原因 | demoted（`demote_reason: semantic_mismatch`）|
+| 降级后的 heuristic | `grounded_in` 变可选，但 `provenance` 必须保留；不重跑验证 | demoted |
 
-DKB 的 DAG 边是「知识↔知识」（定理 A 推出定理 B）。如果把「专家判断」也塞进 DAG 当节点，会污染纯知识图谱、query 时难剪枝。所以 judgment 作为**独立关联层**，通过 `grounded_in` 引用知识节点 ID——知识图谱保持干净，紧耦合关系单独可查、可验证。
+**关键约束**：没有 `grounded_in` 依据的判断，**不能冒充心智模型**——这是"有依据"的硬闸，由 S6 + darwin 门强制。
+
+### 4.5 judgment 独立成层、不污染知识 DAG
+
+DKB 的 DAG 边是「知识↔知识」。如果把「专家判断」塞进 DAG 当节点，会污染纯知识图谱、query 时难剪枝。所以 judgment 作为**独立关联层**（`expert-mind/judgments.md`），通过 `grounded_in` 引用知识节点 ID——知识图谱保持干净，紧耦合关系单独可查、可验证。
+
+### 4.6 来源打标 schema（`sources/src-*.md`）——S1→S2 的契约
+
+每个采集/提供的来源存一个 `src-*.md`，frontmatter 打标决定 S2 分流：
+
+```yaml
+---
+id: src-lecun-lex-2023
+type: interview              # paper | book | interview | blog | social | review | timeline
+value: mind                  # knowledge | mind | both（决定喂哪个 S2 通道）
+channel: web                 # web（网采）| user（用户材料）
+url: https://lex Fridman...  # 网采源：URL（硬门②可 HTTP 验证）
+file: lecun-jepa.pdf         # 用户材料源：本地文件 + 页码锚点
+locator: { page: 12, section: "§3" }   # 用户材料必填（硬门②核对依据）
+collected_at: 2026-06-28
+format: html                 # html | pdf | txt | image
+---
+<来源摘要：核心贡献 / 覆盖范围 / 可信度>
+```
+
+**`both` 源的分流契约**（解决开放问题 5）：`value: both` 的源（如研究论文：既含方法也含作者动机）在 S2 由 worker **按段落语义切片**——知识性段落（定理/方法/实验）喂 S2-knowledge，判断性段落（作者主张/怀疑/动机）喂 S2-mind。切片边界由 S2 worker 标注，S3 合并时去重。
 
 ---
 
 ## 5. Pipeline 契约
 
-相对 DKB 的改动集中在 **S1（采集）** 和 **S5（心智）**，其余 stage 多是继承 + 小扩展。
+相对 DKB 的改动集中在 **S1（采集）** 和 **S5（心智）**。
 
 ### 5.1 S1 采集·双通道（新）+ 来源打标
 
 ```
 专家名 + 种子材料
-   ├─【通道A：网采】web_collector (nuwa 6路领域化, WebSearch+webReader)
+   ├─【通道A：网采】engines/web_collector.md (nuwa 6路, WebSearch+webReader)
    │     ①论文著作 ②长访谈 ③博客文章 ④社媒碎片 ⑤他者评论 ⑥观点时间线
-   │     → 每条存 sources/，带 URL + 采集时间 provenance
+   │     → 每源存 sources/src-*.md（channel: web, url, §4.6）
    │
-   └─【通道B：用户材料】book_to_skill 按格式路由
+   └─【通道B：用户材料】engines/book_to_skill/ 按格式路由
          born-digital PDF ─▶ docling (保LaTeX)
          扫描书/图片     ─▶ unlimited-ocr
          arxiv 论文      ─▶ ar5iv HTML (公式最准)
          纯文本          ─▶ pdftotext (fallback)
-         ↓
-   来源打标（关键）：每源标 value = knowledge | mind | both
-      论文/教材→knowledge   访谈/博客/推文→mind   研究论文→both
+         → 每源存 sources/src-*.md（channel: user, file, locator, §4.6）
 ```
 
-`both`（如研究论文：既含方法也含作者动机/判断）两通道都喂——这是心智的隐藏富矿（作者为什么这么设计、对什么持怀疑）。
+打标 `value = knowledge | mind | both`（§4.6）决定 S2 分流。
 
 ### 5.2 S2 双轨提取（改，并行 fan-out）
 
 | 通道 | 输入 | 提取什么 | 输出 |
 |------|------|----------|------|
-| **S2-knowledge**（继承 DKB S2） | knowledge/both 源 | 定理/方法/公式（docling 保 LaTeX）| 知识 DAG 节点 |
-| **S2-mind**（新） | mind/both 源 | 专家判断/直觉/反模式/决策启发式 | 心智候选（带 provenance）|
+| **S2-knowledge**（继承 DKB S2） | knowledge 源 + both 源的知识切片 | 定理/方法/公式（docling 保 LaTeX）| 知识 DAG 节点 |
+| **S2-mind**（新） | mind 源 + both 源的判断切片 | 专家判断/直觉/反模式/决策启发式 | 心智候选（带 provenance）|
+
+`both` 源由 worker 按段落语义切片后分别喂两通道（§4.6）。
 
 ### 5.3 S5 三步（核心扩展）
 
-原 DKB S5 只做领域镜片，现拆三步：
+原 DKB S5 只做领域镜片，现拆三步。**S5a 与 S5b 是两个独立 subagent**（上下文不同：S5a 用现有 nuwa-validation，S5b 加载 expert-mind-rubric），可并行（契合 dispatching-parallel-agents）；**S5c 依赖两者**完成。
 
 ```
-S5a 领域镜片(现有)  ─┐  从知识节点提炼「领域怎么思考」(三重验证)   ← 保留
-                    │
-S5b 专家心智(新)    ─┤  从心智候选提炼「这位专家怎么思考」(三重验证)
-                    │   恢复 nuwa 人物DNA: 判断/直觉/反模式/启发式
-                    │   加载 engines/expert-mind-rubric.md
-                    │   → expert-mind/*.md
-                    │
-S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的知识节点
-                        建立 judgment(立场+推理+grounded_in 依据节点)
-                        硬闸: 3重过的心智模型必须 grounded_in≥1，否则降级
-                        → judgments/*.md
+S5a 领域镜片(独立 subagent)  ─┐ 从知识节点提炼「领域怎么思考」(三重验证)  ← 保留
+                             │
+S5b 专家心智(独立 subagent)  ─┤ 从心智候选提炼「这位专家怎么思考」(三重验证)
+                             │  恢复 nuwa 人物DNA, 加载 engines/expert-mind-rubric.md
+                             │  → expert-mind/mental-models.md
+                             │
+S5c 紧耦合融合(依赖 S5a/S5b) ─┘ 对每个心智模型/判断，找支撑它的知识节点
+                                建立 judgment(立场+推理+grounded_in)
+                                执行降级规则(§4.4): 无依据→丢弃, 语义不匹配→降级heuristic
+                                → expert-mind/judgments.md
 ```
-
-- **S5a 与 S5b 可并行**（独立输入）；**S5c 依赖两者**（要心智候选 + 知识节点都在）
 
 ### 5.4 其余 stage 的增量
 
 | Stage | 继承 DKB | 新增 |
 |-------|----------|------|
 | S3 合并 | 知识 DAG 合并（contradicts 人工确认）| 心智候选去重（同判断多次出现→加强证据）|
-| S4 导航 | 知识 index/overview/log | `expert-mind/index` |
-| S6 验证 | 知识 DAG 校验（fresh subagent）| **紧耦合校验**：grounded_in 节点存在且语义匹配、无孤儿判断、judgment 忠实专家（非编造）|
+| S4 导航 | 知识 wiki/index | `expert-mind/index` |
+| S6 验证 | 知识 DAG 校验（fresh subagent）| **紧耦合校验**（判定方式见下）|
 | S7 组装 | SKILL.md 框架 | 顶部放专家心智摘要 + 查询协议加"判断+依据"模式 |
-| darwin 门 | 9 维 | 第9维加 **专家忠实度** 硬门（见 §7）|
+
+**S6 紧耦合校验的判定方式**（解决"语义匹配无操作定义"）：
+
+| 检查 | 判定方式 | 对应硬门 |
+|------|----------|----------|
+| grounded_in 节点**存在性** | **lint 程序化**（`lint_d7.py` 扫 dag-index，节点 ID 不存在即报）| 硬门③ 无孤儿判断 |
+| grounded_in **语义匹配**（节点是否真支撑该判断）| **fresh subagent 抽查**（与忠实度合并，§7 硬门②）| 硬门① 紧耦合完整性 |
+| judgment **忠实度**（是否真来自专家，非编造）| **fresh subagent 抽查** provenance（网采 URL HTTP 可达 / 用户材料 locator 可定位）| 硬门② |
+
+> 即：存在性 = 程序化（快、确定）；语义匹配 + 忠实度 = fresh subagent 抽查（慢、需判断力，合并为一次 fresh 校验）。
 
 ---
 
@@ -291,8 +344,10 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 | 模式 | 流程 | 返回 |
 |------|------|------|
 | **知识模式**（继承 DKB）| DAG 遍历找节点 | 定理/方法原文（LaTeX）+ 来源 provenance |
-| **心智模式** | 加载专家心智镜片 + 匹配 judgment | 专家判断 + 推理链 + grounded_in 依据节点；无现成 judgment 则用镜片推断（**标注「推断·非原话」**）|
+| **心智模式** | 加载专家心智镜片 + 匹配 judgment | 专家判断 + 推理链 + grounded_in 依据节点；无现成 judgment 则用镜片推断 |
 | **融合模式** ⭐ | 镜片理解→找 judgment→加载依据节点→综合 | 立场 + 理论依据 + 替代方案 + 局限，每论点挂 judgment ID + 节点 ID |
+
+**心智模式/融合模式的推断落盘**（解决测试可复现）：当无现成 judgment、用镜片推断时，推断结果**落盘为新 judgment**（`status: inferred`，`derived_from` 指向所用心智模型），供 S6 复审与端到端测试复现。不持久化会导致融合查询测试无法复现。
 
 ### 6.3 融合模式回答示例
 
@@ -308,7 +363,7 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 
 | 情况 | 处理 |
 |------|------|
-| 专家没明确说过的 | 标注「**推断·基于其心智镜片外推，非原话**」，不冒充原话 |
+| 专家没明确说过的 | 标注「**推断·基于其心智镜片外推，非原话**」（落盘 status: inferred），不冒充原话 |
 | 知识不足的子领域 | 明说「本库未覆盖此方向」，不补脑 |
 | 专家观点演化的 | 标注「早期/近期」，不把旧观点改写成新观点 |
 | judgment 互相矛盾 | 并列双方 + 各自适用边界，不编调和 |
@@ -320,12 +375,14 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 
 紧耦合和专家忠实度是**致命问题**（不是扣分项），设为**硬门**——不过即判 <B+ 回滚。
 
-| 类型 | 检查项 | 实现 |
-|------|--------|------|
-| **硬门①** 紧耦合完整性 | 每个 3 重过的心智模型必须有 `grounded_in ≥1` **真实存在**的节点 | S6 + `lint_d7.py` 扩展 |
-| **硬门②** judgment 忠实度 | 每条 judgment 有真实 provenance（网采 URL / 用户材料），非模型编造 | S6 fresh subagent 抽查 |
-| **硬门③** 无孤儿判断 | judgment 的 `grounded_in` 节点都在 DAG 里 | `lint_d7.py` 扩展 |
-| darwin 第9维可审计支柱扩展 | judgment provenance 可追溯到具体来源 | darwin-rubric 改 |
+| 硬门 | 检查项 | 判定方式 | 实现 |
+|------|--------|----------|------|
+| **① 紧耦合完整性** | 每个 3 重过的心智模型 `grounded_in ≥1` 节点，且**语义匹配** | fresh subagent 抽查语义 | S6 |
+| **② judgment 忠实度** | 每条 judgment 有真实 provenance（网采 URL HTTP 可达 / 用户材料 `locator` 可定位到页码章节），非编造 | fresh subagent 抽查 | S6 |
+| **③ 无孤儿判断** | judgment 的 `grounded_in` 节点都在 dag-index 里 | **lint 程序化** | `lint_d7.py` 扩展 |
+| darwin 第9维可审计支柱 | judgment provenance 可追溯到具体来源（URL 或 file+locator） | darwin-rubric 改 | darwin |
+
+> 用户材料通道的忠实度靠 `locator: {page, section}`（§4.6）保证——fresh subagent 可核对"这条判断真来自该 PDF 第几页"，否则硬门②对用户材料形同虚设。
 
 棘轮机制继承 DKB（<B+ → git revert → 修单一维度 → 重评；连续 3 轮无改进 → 探索性重写）。
 
@@ -333,10 +390,12 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 
 ## 8. 测试策略（四层）
 
-1. **程序化 lint**（`lint_d7.py` 扩展）：紧耦合完整性 / 孤儿判断 / grounded_in 节点存在性
-2. **忠实度抽查**（fresh subagent）：抽 N 条 judgment，核对 provenance 是否真来自专家言论（防幻觉扮演）
-3. **融合查询端到端**：K 个「专家怎么看 X」问题 → 融合模式 → 检查「有立场 + 有依据节点 + 有诚实边界」三要素
-4. **黄金参照**：选 1 位专家人工策展 A 级参照（建议 **Karpathy**——材料丰富、心智鲜明、有 from-scratch/build-intuition 等强镜片），后续自动生成对标它（类比 DKB 的 conformal-prediction 88/A-）
+1. **程序化 lint**（`lint_d7.py` 扩展）：grounded_in 节点存在性（硬门③）/ 孤儿判断 / frontmatter 字段完整性
+2. **忠实度 + 语义抽查**（fresh subagent）：抽 N 条 judgment，核对 provenance 真实性（硬门②）+ grounded_in 语义匹配（硬门①）。MVP 建议 N=5-10
+3. **融合查询端到端**：K 个「专家怎么看 X」问题 → 融合模式 → 检查「有立场 + 有依据节点 + 有诚实边界」三要素。推断结果因落盘（§6.2）可复现
+4. **黄金参照**：选 1 位专家人工策展 A 级参照
+
+**黄金参照专家风险**（reviewer 指出）：Karpathy 强在工程直觉，严格定理级节点（thm 类型）可能偏少，导致紧耦合硬门①在黄金参照上难满足。**对策**：黄金参照允许 heuristic 占比高（心智为主、知识为辅的真实专家本就如此），硬门①只要求"3 重过的心智模型有依据"，heuristic 无依据不违规；若 Karpathy 定理依据仍不足，备选 **Hinton**（反向传播/BP 有定理级论述）。
 
 ---
 
@@ -344,8 +403,8 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 
 | 阶段 | 范围 | 目标 |
 |------|------|------|
-| **MVP** | 单专家 + 用户材料(PDF/书) + **最小网采**(论文/博客/访谈 3 路) + S2 双轨 + S5 三步 + 紧耦合硬门 + Karpathy 黄金参照 | 跑通「专家心智+知识融合」最小闭环，证明核心价值 |
-| **V1** | nuwa 完整 6 路网采 + 来源打标自动化 + 多专家增量 ingest | 真正的"元 skill 生成多个专家 skill" |
+| **MVP** | 单专家 + 用户材料(PDF/书) + **最小网采 3 路（①论文 ②访谈 ③博客）** + S2 双轨 + S5 三步 + 三硬门 + Karpathy 黄金参照 | 跑通「专家心智+知识融合」最小闭环，证明核心价值 |
+| **V1** | nuwa 完整 6 路网采（+④社媒 ⑤他评 ⑥时间线）+ 来源打标自动化 + 多专家增量 ingest | 真正的"元 skill 生成多个专家 skill" |
 | **V2** | 忠实度测试自动化 + 观点演化追踪 + 跨专家交叉验证 | 质量与可信度提升 |
 
 ---
@@ -365,21 +424,21 @@ S5c 紧耦合融合(新)  ─┘  对每个心智模型/判断，找支撑它的
 ## 11. 开放问题（待实现阶段定）
 
 1. **命名**：`expert-advisor-builder` vs `advisor-forge` vs 其他
-2. **黄金参照专家**：Karpathy（待确认材料可得性 + 是否有足够定理级知识依据；备选 LeCun/Hinton）
-3. **judgment 忠实度抽查样本数 N**：MVP 取值（建议 5-10）
+2. **黄金参照专家**：Karpathy 首选（备选 Hinton）——见 §8 风险对策
+3. **judgment 忠实度抽查样本数 N**：MVP 建议取 5-10
 4. **网采的反爬/合规**：Twitter/YouTube 等平台采集的可行性与合规边界
-5. **`both` 来源的分流粒度**：研究论文里"方法"与"作者动机"如何精确切分喂两通道
+5. ~~`both` 来源的分流粒度~~ → **已解决**（§4.6 按段落语义切片）
 
 ---
 
 ## 12. 实现顺序建议（供 writing-plans 参考）
 
-1. schema 层：`expert-mind.md` + `coupling.md`（judgment schema）
-2. engines 层：`expert-mind-rubric.md`（从 nuwa 恢复人物 DNA）+ `web_collector/`（最小 3 路）
-3. pipeline 层：ingest.md 改 S1 双通道 + S5 三步；query.md 加三模式路由
-4. 质量层：`lint_d7.py` 扩展三硬门 + darwin-rubric 改
-5. 黄金参照：人工策展 karpathy-advisor
-6. MVP 端到端验证
+1. schema 层：`expert-mind.md`（§4.2）+ `coupling.md`（§4.3 judgment）+ `source.md`（§4.6）
+2. engines 层：`expert-mind-rubric.md`（从 nuwa 恢复人物 DNA）+ `web_collector.md`（最小 3 路契约）
+3. pipeline 层：ingest.md 改 S1 双通道 + S5 三步（S5a/S5b 独立 subagent）；query.md 加三模式路由 + 推断落盘
+4. 质量层：`lint_d7.py` 扩展硬门③ + darwin-rubric 加硬门①②
+5. 黄金参照：人工策展 karpathy-advisor（允许 heuristic 占比高）
+6. MVP 端到端验证（四层测试）
 
 ---
 
