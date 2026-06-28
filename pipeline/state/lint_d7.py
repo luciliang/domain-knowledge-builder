@@ -191,6 +191,20 @@ def check_path_determinism(target_root: Path) -> dict:
     return {"ok": len(issues) == 0, "scanned": scanned, "violations": len(violations), "issues": issues}
 
 
+# ========== 6. 硬门③：grounded_in 节点存在性 ==========
+
+def check_grounding_existence(dag_index, judgments):
+    """硬门③：judgment/心智元素的 grounded_in 节点必须存在于 DAG。"""
+    valid_ids = {n["id"] for n in dag_index.get("nodes", [])}
+    issues = []
+    for j in judgments:
+        for ref in j.get("grounded_in", []):
+            node = ref.get("node") if isinstance(ref, dict) else ref
+            if node not in valid_ids:
+                issues.append(f"{j['id']}: grounded_in 指向不存在的节点 {node}")
+    return issues
+
+
 # ========== 主流程 ==========
 
 def main():
