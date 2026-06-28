@@ -166,43 +166,70 @@ python3 -m engines.book_to_skill raw/user/ --mode technical --install-missing as
 
 ---
 
-## S3. DAG 合并（subagent，交互式 checkpoint）
+## S3. 合并（subagent，交互式 checkpoint）
 
-**目标**：把 N 个 extraction-<source>.json 合并成统一的 `dag/dag-index.json`。
+**目标**：把 N 个 extraction-<source>.json 合并成统一的 `dag/dag-index.json`；把 N 个 mind-candidate-<source>.json 去重为心智候选池供 S5b 提炼。
 
 **为什么必须 subagent 非 workflow**：
 - schema §6 Step 3 强制：`contradicts` / `does_not_guarantee` 边**必须人工确认**
 - workflow fire-and-forget 无法暂停做 checkpoint
 - subagent 可在遇冲突时 `contact_supervisor(reason: "need_decision")` 暂停
 
-**合并规则**（schema §6 Step 3）：
+**知识 DAG 合并规则**（schema §6 Step 3，继承）：
 1. 新节点 → 追加到 `dag-index.json.nodes`
 2. 同 ID 节点 → token-level 比对：一致跳过（幂等成功），不一致标注冲突
 3. 新关系 → 追加到 `edges`
 4. `contradicts` / `does_not_guarantee` 关系 → **暂停，contact_supervisor 请用户确认**
 
+**心智候选去重**（spec §5.4 新增）：
+- 同一专家判断在多个来源出现（如访谈+博客都说「LLM 不能推理」）→ **合并为一条候选，多源 provenance 加强证据**
+- 不同切片产生的同义候选去重（保留合并后的 provenance.sources 列表）
+- 心智候选去重**不触发人工确认**（无 contradicts 边）——确认发生在 S5b 三重验证后
+
 **产出**：
 - `dag/dag-index.json`（含 meta.run_id）
 - `dag/merge-report.md`（新增节点数/冲突数/关系数/人工确认记录）
+- `mind-candidates.json`（去重后的心智候选池，供 S5b）
 
 ---
 
 ## S4. 导航文件更新（workflow，确定性）
 
-**目标**：基于 dag-index.json 生成索引和概览。
+**目标**：基于 dag-index.json + mind-candidates.json 生成知识导航与心智导航（spec §5.4 新增 `expert-mind/index`）。
 
-**任务**（可 workflow 并行 3 个子任务）：
-1. 生成 `wiki/index.md`：按节点类型分组（def/thm/meth/exp/ins），每节点一行带链接 + 一句话摘要
+**任务**（可 workflow 并行 4 个子任务）：
+1. 生成 `wiki/index.md`：按节点类型分组（def/thm/meth/exp/ins），每节点一行带链接 + 一句话摘要（纯导航层，不复制节点内容，spec §3.3）
 2. 追加 `wiki/log.md`：本次 ingest 摘要（日期/来源/新增节点数/总节点数）
 3. 生成/更新 `wiki/overview.md`：领域全局概览（3-5 段，基于 dag-index 的 meta + sources）
+4. 生成 `expert-mind/index.md`：心智导航（只引用心智元素 ID + judgment ID，**S5 完成后回填**；此处先建空骨架）
 
-**产出**：3 个导航文件。
+**产出**：3 个知识导航文件 + 1 个心智导航骨架。
 
 ---
 
-## S5. 心智模型提炼（subagent，判断式）
+## S5. 三步：领域镜片 + 专家心智 + 紧耦合融合（subagent，判断式）
 
-**目标**：从所有 knowledge 节点提炼 3-7 个心智模型 + 5-10 条决策启发式。
+**目标**：原 DKB 单步 S5 只做领域镜片，现拆三步。S5a/S5b 是两个**独立 subagent**（上下文不同），**可并行**；S5c 依赖两者，且必须**等待 S3 合并完成（含 contradicts 人工确认）后启动**——因为 S5c 要为心智判断挂 `grounded_in` 依据节点，节点必须先在 S3 合并后的 DAG 中存在（spec §5.3 时序澄清）。
+
+```
+S5a 领域镜片（独立 subagent）  ─┐ 从知识节点提炼「这个领域怎么思考」(三重验证)  ← 保留 DKB
+                               │  加载 engines/nuwa-validation.md
+                               │  → wiki/mental-models.md（领域镜片）
+                               │
+S5b 专家心智（独立 subagent）  ─┤ 从心智候选提炼「这位专家怎么思考」(三重验证)
+                               │  恢复 nuwa 人物 DNA, 加载 engines/expert-mind-rubric.md
+                               │  三重验证锚点 = 专家个人镜片（换人就不成立）
+                               │  → expert-mind/mental-models.md
+                               │
+S5c 紧耦合融合（依赖 S5a/S5b + S3）┘ 对每个心智模型/判断，找支撑它的知识节点
+                                   建立 judgment（立场+推理+grounded_in）
+                                   执行降级规则（schema §4.4）
+                                   → expert-mind/judgments.md
+```
+
+### S5a. 领域镜片（独立 subagent，保留 DKB）
+
+**目标**：从所有 knowledge 节点提炼 3-7 个领域心智模型 + 5-10 条决策启发式。
 
 **加载规范**：`engines/nuwa-validation.md`（领域化三重验证）
 
@@ -213,20 +240,69 @@ python3 -m engines.book_to_skill raw/user/ --mode technical --install-missing as
    - 生成力（能推断对新问题的立场）
    - 领域排他性（本领域特有，换领域不成立）
 3. 3 重全过 → 心智模型；过 1-2 重 → 降级为决策启发式；0 重 → 丢弃
-4. 写 `wiki/mental-models.md`
+4. 写 `wiki/mental-models.md`（领域镜片，与 DKB 兼容）
 
 **约束**：
 - 心智模型数量 3-7（太少浅，太多没提炼）
 - 每模型附跨源证据（哪些节点支撑）
 - 诚实边界（未覆盖子领域 + 单一来源结论 + 开放问题）
 
+### S5b. 专家心智（独立 subagent，新）
+
+**目标**：从 S3 去重后的心智候选池提炼专家个人心智模型/启发式/反模式，锚点从「领域镜片」迁移到「专家个人镜片」。
+
+**加载规范**：`engines/expert-mind-rubric.md`（恢复 nuwa 人物 DNA：判断、直觉、反模式、决策启发式）
+
+**三重验证锚点迁移**（spec §5.3）：
+- 领域镜片（S5a）：领域共识，任何研究者都这么想
+- 专家心智（S5b）：**这位专家特有**，换人就不成立（如 LeCun 的能量世界观非 ML 共识）
+- 验证标准见 `expert-mind-rubric.md`，本文件不重抄
+
+**流程**：
+1. 读 `mind-candidates.json`（S3 去重后）
+2. 三重验证每个候选（cross_scene/generative/exclusive，expert-mind-rubric.md）
+3. 落盘 `verification` 对象（schema `expert-mind.md` §1）
+4. 3 重全过 → mental_model；1-2 重 → heuristic；排他性必过 → anti_pattern
+5. 写 `expert-mind/mental-models.md`
+
+**约束**：
+- `grounded_in` 此时**可能为空**（依赖知识节点的关联在 S5c 完成，因为节点需经 S3 合并）
+- 每心智元素附 provenance.sources（引用 `src-*.md` 的 id）
+- 不在此步建 judgment——S5c 做
+
+### S5c. 紧耦合融合（依赖 S5a/S5b + S3 完成，subagent）
+
+**启动前置**（spec §5.3 时序）：
+- **必须等 S3 合并完成**（含 contradicts 人工确认）——节点已在 dag-index 中存在，才能挂 grounded_in
+- S5a 与 S5b 都已完成
+
+**目标**：对每个专家心智模型/判断，找支撑它的知识节点，建立 judgment（紧耦合枢纽），并执行降级规则。
+
+**建 judgment**（schema `coupling.md` §1）：
+- judgment = 立场 + 推理链 + `grounded_in` 依据节点
+- 通过 `derived_from` 继承所属心智元素的 verification（不独立跑三重）
+- 写 `expert-mind/judgments.md`
+
+**降级规则**（schema `expert-mind.md` §4 引用 spec §4.4，S5c 执行）：
+
+| 情况 | 处理 | 心智元素 status |
+|------|------|----------------|
+| 3 重全过，但 `grounded_in` **完全找不到**任何相关节点 | **丢弃**（纯口嗨，无任何知识锚点）| dropped（不入库）|
+| 3 重全过，找到候选节点但 S6 判定**语义不匹配** | **降级为 heuristic**，保留原 verification + 标注降级原因 | demoted（`demote_reason: semantic_mismatch`）|
+| 降级后的 heuristic | `grounded_in` 变可选，但 `provenance` 必须保留；不重跑验证 | demoted |
+
+**边界澄清**（schema `coupling.md` §4，避免分叉）：
+- 降级只作用于**心智元素**（S5c 在 mental-models.md 层），不作用于 judgment
+- judgment 的 status 枚举 `verified | inferred | contradicted`（无 demoted），通过 `derived_from` 继承所属心智元素最终 status
+- §4.4 降级/丢弃规则优先于 §6.2 推断落盘：无依据的推断判断**不落盘 inferred**
+
 ---
 
-## S6. 验证（fresh-context subagent，独立评分）
+## S6. 验证（fresh-context subagent + lint，独立评分）
 
-**目标**：独立验证生成结果，不看了构建过程只看产物。
+**目标**：独立验证生成结果，不看构建过程只看产物。继承 DKB 知识 DAG 校验 + 新增紧耦合校验（spec §5.4）。
 
-**fresh-context 子 agent 任务**：
+**fresh-context 子 agent 任务**（继承 DKB 知识校验）：
 1. 读 `dag/dag-index.json`，程序化校验：0 悬空引用 / 0 重复 ID / 0 孤立节点 / meta 计数一致
 2. 随机抽 3 节点验证：定理表述 vs 原文（用 source_span 定位）、schema 合规、LaTeX 正确
 3. 检查关系方向（from→to 语义正确）
@@ -234,7 +310,17 @@ python3 -m engines.book_to_skill raw/user/ --mode technical --install-missing as
 5. 走一个测试查询，验证 Query 工作流能否找到答案
 6. 输出 `validation-report.md`
 
-**D7 Provenance 校验**（schema §11）：
+**紧耦合校验判定表**（spec §5.4，三行不可压缩）：
+
+| 检查 | 判定方式 | 对应硬门 |
+|------|----------|----------|
+| `grounded_in` 节点**存在性** | **lint 程序化**（`pipeline/state/lint_d7.py` 扫 dag-index，节点 ID 不存在即报）| 硬门③ 无孤儿判断 |
+| `grounded_in` **语义匹配**（节点是否真支撑该判断）| **fresh subagent 抽查**（与忠实度合并为一次 fresh 校验，需判断力）| 硬门① 紧耦合完整性 |
+| judgment **忠实度**（是否真来自专家，非编造）| **fresh subagent 抽查** provenance（网采 URL HTTP 可达 / 用户材料 `locator` 可定位到页码章节）| 硬门② |
+
+> 即：存在性 = 程序化（快、确定，lint 扩展见 `pipeline/lint.md`）；语义匹配 + 忠实度 = fresh subagent 抽查（慢、需判断力，合并为一次 fresh 校验，MVP 抽 N=5-10 条）。
+
+**D7 Provenance 校验**（schema §11，继承）：
 - 所有新节点含 generated_by_step / run_id / source_span？
 - run_id 与 run-manifest.json 一致？
 
@@ -242,29 +328,37 @@ python3 -m engines.book_to_skill raw/user/ --mode technical --install-missing as
 
 ## S7. SKILL.md 组装（subagent）
 
-**目标**：组装最终的知识库 skill 入口文件。
+**目标**：组装最终的专家顾问 skill 入口文件（spec §5.4 顶部放专家心智摘要 + 查询协议加「判断+依据」模式）。
 
 **结构**（<4K tokens，compaction 从末尾截断所以重要内容前置）：
-1. YAML frontmatter（name=<domain>, description foreground 领域名 + 查询语义）
-2. 核心心智模型（<2K tokens，来自 S5 的 mental-models.md）
-3. 查询协议（5 步，schema §7）
-4. 知识节点索引表（从 dag-index 生成，按类型分组）
-5. 术语映射（中英对照）
-6. 诚实边界（已覆盖/未覆盖/争议）
+1. YAML frontmatter（name=`<expert>-advisor`, description foreground 专家名 + 三模式查询语义）
+2. **专家心智摘要**（<2K tokens，来自 S5b 的 `expert-mind/mental-models.md`，前置——专家心智是主体）
+3. **查询协议**（三模式路由：知识/心智/融合，`pipeline/query.md` §6；融合模式 = 判断 + grounded_in 依据节点）
+4. 核心领域镜片（来自 S5a 的 `wiki/mental-models.md`，作为知识底盘）
+5. 知识节点索引表（从 dag-index 生成，按类型分组）
+6. 术语映射（中英对照）
+7. 诚实边界（已覆盖/未覆盖/争议 + 专家观点演化）
 
 ---
 
 ## 2. darwin 质量门（S7 之后）
 
-触发 `engines/darwin-rubric.md` 的 9 维评分（第 9 维按 generator-skill 子类，schema §12 四支柱）：
+触发 `engines/darwin-rubric.md` 的 9 维评分（第 9 维按 generator-skill 子类，schema §12 四支柱）。
 
-- **≥ B+ (80)** → 接受，`git merge ingest/<run_id>` 到 main，更新 CHANGELOG
-- **< B+** → 棘轮机制：`git revert` 最后 stage，诊断低分维度，修复后重评
+**三硬门**（紧耦合 + 专家忠实度是致命问题，不过即判 <B+ 回滚；判定方式见 S6 三行表，spec §7）：
+- **硬门① 紧耦合完整性**：3 重过的心智模型 `grounded_in ≥1` 节点，且语义匹配（S6 fresh subagent 抽查）
+- **硬门② judgment 忠实度**：每条 judgment 有真实 provenance（S6 fresh subagent 抽查 URL/locator）
+- **硬门③ 无孤儿判断**：judgment 的 `grounded_in` 节点都在 dag-index（S6 lint 程序化）
+- darwin 第 9 维可审计支柱：judgment provenance 可追溯到具体来源（URL 或 file+locator）
+
+**评分处置**：
+- **≥ B+ (80)** 且三硬门全过 → 接受，`git merge ingest/<run_id>` 到 main，更新 CHANGELOG
+- **< B+** 或任一硬门不过 → 棘轮机制：`git revert` 最后 stage，诊断低分维度/失败硬门，修复后重评
 - **连续 3 轮无改进** → 提议探索性重写（征得用户同意）
 
 **results.tsv 追加**：
 ```
-<timestamp>  <commit>  <domain>  -  <score>  baseline  -  initial  full_test
+<timestamp>  <commit>  <expert>  -  <score>  baseline  -  initial  full_test
 ```
 
 ---
@@ -283,14 +377,17 @@ cat pipeline/state/run-manifest.json | jq '.stages[] | {stage, status}'
 
 ---
 
-## 4. 增量 ingest（已存在知识库 + 新论文）
+## 4. 增量 ingest（已存在专家顾问 skill + 新材料）
 
-与首次 ingest 的差异：
-- S1/S2 只处理**新**论文
-- S3 合并进**现有** dag-index.json（不是新建）
-- schema §10 Determinism 保证：旧论文已提取的概念用同 node ID，新论文若谈同概念会幂等跳过
-- S4-S7 重新跑（导航/心智模型/验证/组装可能变化）
+与首次 ingest 的差异（服务"在世专家持续更新"）：
+- S1 双通道只处理**新**材料（网采新链接 + 用户新 PDF）
+- S2 双轨只提取**新**源的 knowledge/mind 切片
+- S3 合并进**现有** dag-index.json + mind-candidates.json（不是新建）
+  - 知识：schema §10 Determinism 保证旧概念用同 node ID，新材料若谈同概念幂等跳过
+  - 心智：同判断再次出现 → provenance 加强证据；观点演化（前后矛盾）→ 标注 `status: contradicted`，保留时间线不编调和
+- S5c 紧耦合融合需对新心智元素重跑降级规则；已有 judgment 若依据节点变化需重挂 grounded_in
+- S4-S7 重新跑（导航/心智/验证/组装可能变化）
 
 ---
 
-_本工作流对应 schema §6 | 编排脚本：pipeline/run-dag-pipeline.js | 质量门：engines/darwin-rubric.md_
+_本工作流对应 schema §6 | 编排脚本：pipeline/run-dag-pipeline.js | 质量门：engines/darwin-rubric.md | 三硬门判定见 S6 + spec §7_
