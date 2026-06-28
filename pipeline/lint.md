@@ -74,6 +74,142 @@ for node in dag['nodes']:
 
 ---
 
+## 2.6 紧耦合硬门检查（expert-advisor 扩展）
+
+> 本节适用于 `expert-advisor-builder`（DKB 扩展分支）。在 D7 四支柱基础上，新增**三硬门中的程序化部分**。
+
+### 2.6.1 硬门③：无孤儿判断（程序化校验）
+
+**目标**：确保 judgment/心智元素的 `grounded_in.node` 都存在于 dag-index（无断裂引用）。
+
+**检查项**：
+- 扫描所有 judgment（`type: judgment`）和心智元素（`type: mental_model/heuristic/anti_pattern`）
+- 校验其 `grounded_in` 引用的 `node` 字段是否都在 `dag/dag-index.json` 的 `nodes` 列表中
+- 任一不存在 → **error**（硬门③违例）
+
+**实现**：
+```python
+# pipeline/state/lint_d7.py
+def check_grounding_existence(dag_index, judgments):
+    """硬门③：judgment/心智元素的 grounded_in 节点必须存在于 DAG。"""
+    valid_ids = {n["id"] for n in dag_index.get("nodes", [])}
+    issues = []
+    for j in judgments:
+        for ref in j.get("grounded_in", []):
+            node = ref.get("node") if isinstance(ref, dict) else ref
+            if node not in valid_ids:
+                issues.append(f"{j['id']}: grounded_in 指向不存在的节点 {node}")
+    return issues
+```
+
+### 2.6.2 硬门①：mental_model 依据（程序化校验）
+
+**目标**：确保 3 重全过的 mental_model 必须 `grounded_in ≥1`（存在性校验，语义匹配由 fresh subagent 抽查）。
+
+**检查项**：
+- 遍历所有心智元素，筛选 `type: mental_model` 且 `verification.{cross_scene,generative,exclusive}.pass` 都为 `true` 的元素
+- 校验其 `grounded_in` 字段非空（至少存在 1 个依据节点）
+- 任一违反 → **error**（硬门①存在性违例）
+
+**语义匹配判定**：
+- **不在 lint 范围**：需要理解节点内容与判断的语义关系
+- 由 fresh subagent 抽查兜底（见 `engines/darwin-rubric.md` §8.2）
+- 失败示例：判断"LLM 不能推理"挂靠节点"Transformer 架构"（语义不相关）
+
+**实现**：
+```python
+# pipeline/state/lint_d7.py
+def check_mind_element_grounding(elements):
+    """硬门①：3重过的 mental_model 必须 grounded_in ≥1（语义匹配由 fresh subagent 抽查）。"""
+    issues = []
+    for e in elements:
+        v = e.get("verification", {})
+        all_pass = all(v.get(k, {}).get("pass") for k in ("cross_scene","generative","exclusive"))
+        if e.get("type") == "mental_model" and all_pass and not e.get("grounded_in"):
+            issues.append(f"{e['id']}: mental_model(3重全过) 缺 grounded_in 依据（硬门①）")
+    return issues
+```
+
+### 2.6.3 数据加载：frontmatter 解析
+
+**契约**：每个心智元素（judgment/mental_model/heuristic/anti_pattern）是一个独立的 `expert-mind/*.md` 文件，顶部裸 YAML frontmatter。
+
+**实现**：
+```python
+# pipeline/state/lint_d7.py
+def load_mind_artifacts(skill_root):
+    """从 expert-mind/*.md 解析 judgments + mind elements 的 frontmatter。
+
+    Returns:
+        {"judgments": [...], "elements": [...]}
+        judgments: type == "judgment" 的 frontmatter 列表
+        elements:  type in ("mental_model", "heuristic", "anti_pattern") 的列表
+    """
+    em = Path(skill_root) / "expert-mind"
+    if not em.exists():
+        return {"judgments": [], "elements": []}
+    judgments, elements = [], []
+    for f in em.glob("*.md"):
+        fm = _parse_frontmatter(f.read_text())
+        t = fm.get("type")
+        if t == "judgment":
+            judgments.append(fm)
+        elif t in ("mental_model", "heuristic", "anti_pattern"):
+            elements.append(fm)
+    return {"judgments": judgments, "elements": elements}
+```
+
+**frontmatter 解析**：
+```python
+def _parse_frontmatter(text):
+    """解析 .md 文件的 YAML frontmatter，无 frontmatter 或无 PyYAML 时返回 {}。"""
+    m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+    if not m:
+        return {}
+    if yaml:
+        return yaml.safe_load(m.group(1)) or {}
+    print("warning: PyYAML 未安装，frontmatter 解析返回空（请 pip install pyyaml）", file=sys.stderr)
+    return {}
+```
+
+### 2.6.4 接入 main() 与 CLI
+
+**CLI 扩展**：
+```bash
+# 挂进 checks dict
+checks = {
+    # ... D7 四支柱 ...
+    "硬门③ grounded_in 节点存在 (Grounding Existence)": {
+        "ok": len(grounding_issues) == 0,
+        "issues": grounding_issues,
+        "judgments_count": len(artifacts["judgments"]),
+    },
+    "硬门① mental_model 3重全过必 grounded_in": {
+        "ok": len(mind_grounding_issues) == 0,
+        "issues": mind_grounding_issues,
+        "elements_count": len(artifacts["elements"]),
+    },
+}
+```
+
+**CLI 参数**：
+```bash
+python3 pipeline/state/lint_d7.py --target-skill-root <path-to-expert-advisor-skill>
+```
+
+### 2.6.5 完整三硬门引用
+
+- **硬门①②（语义匹配 + judgment 忠实度）**：需要 fresh subagent 抽查，见 `engines/darwin-rubric.md` §8
+- **硬门③（无孤儿判断）**：本节程序化校验，实现见 `pipeline/state/lint_d7.py:199-210`
+- **判定方式差异**：存在性 = lint 程序化（快、确定）；语义匹配 + 忠实度 = fresh subagent 抽查（慢、需判断力）
+
+### 2.6.6 已知盲区
+
+- **provenance.sources 孤儿检查**：lint 不校验 `provenance.sources` 的 URL/引用是否存在（留给硬门② fresh subagent 抽查）
+  - 未来增强：`check_provenance_sources_exist`（HTTP 可达性校验 + `sources/src-*.md` 的 `locator` 有效性）
+
+---
+
 ## 3. darwin 评分（`lint --score` 时）
 
 加载 `engines/darwin-rubric.md`，按 9 维评分：
