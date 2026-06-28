@@ -1,0 +1,1034 @@
+{
+  "edges": [
+    {
+      "confidence": "high",
+      "desc": "Understanding the forward posterior q(x_{t-1}|x_t,x0) requires the forward diffusion chain",
+      "from": "def-ho2020-forward-diffusion-process",
+      "id": "e-fwd-posterior",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "def-ho2020-forward-posterior"
+    },
+    {
+      "confidence": "high",
+      "desc": "The ELBO decomposition L_T, L_t, L_0 all derive from the Gaussian forward process",
+      "from": "def-ho2020-forward-diffusion-process",
+      "id": "e-fwd-elbo",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-elbo-variational-bound"
+    },
+    {
+      "confidence": "high",
+      "desc": "The variational bound compares the learned reverse process against the forward posterior",
+      "from": "def-ho2020-reverse-process",
+      "id": "e-rev-elbo",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-elbo-variational-bound"
+    },
+    {
+      "confidence": "high",
+      "desc": "The KL terms L_{t-1} are computed against the tractable forward posterior",
+      "from": "def-ho2020-forward-posterior",
+      "id": "e-post-elbo",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-elbo-variational-bound"
+    },
+    {
+      "confidence": "high",
+      "desc": "Lsimple is a special (down-weighted) variant of the general ELBO L",
+      "from": "thm-ho2020-elbo-variational-bound",
+      "id": "e-elbo-training",
+      "relation": "specializes",
+      "source": "ho2020",
+      "to": "meth-ho2020-ddpm-training"
+    },
+    {
+      "confidence": "high",
+      "desc": "The training algorithm relies on the epsilon-prediction parameterization of the reverse mean",
+      "from": "meth-ho2020-epsilon-prediction",
+      "id": "e-eps-training",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "meth-ho2020-ddpm-training"
+    },
+    {
+      "confidence": "high",
+      "desc": "The score-matching/Langevin equivalence is derived from the epsilon-prediction parameterization (Eqs 10-12)",
+      "from": "meth-ho2020-epsilon-prediction",
+      "id": "e-eps-equiv",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-score-matching-langevin-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "The equivalence analyzes the learned reverse process transitions",
+      "from": "def-ho2020-reverse-process",
+      "id": "e-rev-equiv",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-score-matching-langevin-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "The sampling procedure is interpreted as Langevin dynamics via the equivalence",
+      "from": "thm-ho2020-score-matching-langevin-equivalence",
+      "id": "e-equiv-sampling",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "meth-ho2020-ddpm-sampling"
+    },
+    {
+      "confidence": "high",
+      "desc": "The forward process is parameterized by the beta variance schedule",
+      "from": "meth-ho2020-variance-schedule",
+      "id": "e-var-fwd",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "def-ho2020-forward-diffusion-process"
+    },
+    {
+      "confidence": "high",
+      "desc": "The reverse process covariance Sigma_theta is set from the fixed variance schedule",
+      "from": "meth-ho2020-variance-schedule",
+      "id": "e-var-rev",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "def-ho2020-reverse-process"
+    },
+    {
+      "confidence": "high",
+      "desc": "Ancestral sampling uses sigma_t drawn from the variance schedule",
+      "from": "meth-ho2020-variance-schedule",
+      "id": "e-var-sampling",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "meth-ho2020-ddpm-sampling"
+    },
+    {
+      "confidence": "high",
+      "desc": "Understanding why Lsimple works requires understanding the simplified objective",
+      "from": "meth-ho2020-ddpm-training",
+      "id": "e-training-insight",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "ins-ho2020-simplified-objective-downweights"
+    },
+    {
+      "confidence": "high",
+      "desc": "Table 2 ablates epsilon vs mu-tilde prediction",
+      "from": "meth-ho2020-epsilon-prediction",
+      "id": "e-abl-eps",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-ablation"
+    },
+    {
+      "confidence": "high",
+      "desc": "Table 2 ablates Lsimple vs true variational bound L",
+      "from": "meth-ho2020-ddpm-training",
+      "id": "e-abl-training",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-ablation"
+    },
+    {
+      "confidence": "high",
+      "desc": "Table 2 ablates learned vs fixed covariance Sigma",
+      "from": "meth-ho2020-variance-schedule",
+      "id": "e-abl-var",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-ablation"
+    },
+    {
+      "confidence": "high",
+      "desc": "CIFAR-10 FID 3.17 achieved with Lsimple training objective",
+      "from": "meth-ho2020-ddpm-training",
+      "id": "e-cifar-training",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-cifar10-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "Best CIFAR-10 results use epsilon prediction",
+      "from": "meth-ho2020-epsilon-prediction",
+      "id": "e-cifar-eps",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-cifar10-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "LSUN/CelebA-HQ 256 results use the same Lsimple + epsilon-prediction recipe",
+      "from": "meth-ho2020-ddpm-training",
+      "id": "e-lsun-training",
+      "relation": "evaluates",
+      "source": "ho2020",
+      "to": "exp-ho2020-lsun-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "The autoregressive generalization argument rewrites the ELBO as Eq.16",
+      "from": "ins-ho2020-autoregressive-generalization",
+      "id": "e-ar-elbo",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-elbo-variational-bound"
+    },
+    {
+      "confidence": "high",
+      "desc": "The rate-distortion view splits the ELBO into rate (sum L_t) and distortion (L_0)",
+      "from": "ins-ho2020-progressive-lossy-compression",
+      "id": "e-rd-elbo",
+      "relation": "depends_on",
+      "source": "ho2020",
+      "to": "thm-ho2020-elbo-variational-bound"
+    },
+    {
+      "confidence": "medium",
+      "desc": "Both are reinterpretations of the same ELBO: one as generalized autoregressive decoding, the other as progressive lossy compression",
+      "from": "ins-ho2020-autoregressive-generalization",
+      "id": "e-ar-rd",
+      "relation": "compares_with",
+      "source": "ho2020",
+      "to": "ins-ho2020-progressive-lossy-compression"
+    },
+    {
+      "confidence": "high",
+      "desc": "The reverse-time SDE (Eq 6) is derived from the forward SDE (Eq 5)",
+      "from": "def-song2021-forward-sde",
+      "id": "e-fwd-reverse",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-reverse-time-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "VE-SDE is a specialization of the general forward SDE (zero drift)",
+      "from": "def-song2021-forward-sde",
+      "id": "e-fwd-ve",
+      "relation": "specializes",
+      "source": "song2021",
+      "to": "def-song2021-ve-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "VP-SDE is a specialization of the general forward SDE (linear drift)",
+      "from": "def-song2021-forward-sde",
+      "id": "e-fwd-vp",
+      "relation": "specializes",
+      "source": "song2021",
+      "to": "def-song2021-vp-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "The reverse-time SDE depends only on the score \u2207_x log p_t(x)",
+      "from": "def-song2021-score-function",
+      "id": "e-score-reverse",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-reverse-time-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "The probability flow ODE is determined once the score is known",
+      "from": "def-song2021-score-function",
+      "id": "e-score-pfode",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-probability-flow-ode"
+    },
+    {
+      "confidence": "high",
+      "desc": "Training estimates the score via continuous denoising score matching (Eq 7)",
+      "from": "def-song2021-score-function",
+      "id": "e-score-training",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "meth-song2021-score-based-training"
+    },
+    {
+      "confidence": "high",
+      "desc": "The VE-SDE is the continuous limit of the SMLD Markov chain",
+      "from": "def-song2021-ve-sde",
+      "id": "e-ve-equiv",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-sde-discretization-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "The VP-SDE is the continuous limit of the DDPM Markov chain",
+      "from": "def-song2021-vp-sde",
+      "id": "e-vp-equiv",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-sde-discretization-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "A trained score model is required to instantiate the reverse-time SDE",
+      "from": "meth-song2021-score-based-training",
+      "id": "e-training-reverse",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "thm-song2021-reverse-time-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "PC samplers numerically solve the reverse-time SDE",
+      "from": "thm-song2021-reverse-time-sde",
+      "id": "e-reverse-pc",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "meth-song2021-pc-sampler"
+    },
+    {
+      "confidence": "high",
+      "desc": "The conditional reverse-time SDE extends the unconditional one with a likelihood-gradient term",
+      "from": "thm-song2021-reverse-time-sde",
+      "id": "e-reverse-conditional",
+      "relation": "extends",
+      "source": "song2021",
+      "to": "meth-song2021-conditional-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "PF-ODE sampling integrates the probability flow ODE for generation",
+      "from": "thm-song2021-probability-flow-ode",
+      "id": "e-pfode-sampling",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "meth-song2021-pf-ode-sampling"
+    },
+    {
+      "confidence": "high",
+      "desc": "Unique identifiability follows from the trainable-parameter-free forward SDE and deterministic ODE",
+      "from": "thm-song2021-probability-flow-ode",
+      "id": "e-pfode-encoding",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "ins-song2021-uniquely-identifiable-encoding"
+    },
+    {
+      "confidence": "high",
+      "desc": "The discretization equivalence is the theoretical basis of the unified framework insight",
+      "from": "thm-song2021-sde-discretization-equivalence",
+      "id": "e-equiv-framework",
+      "relation": "depends_on",
+      "source": "song2021",
+      "to": "ins-song2021-unified-continuous-framework"
+    },
+    {
+      "confidence": "high",
+      "desc": "Stochastic reverse-time SDE vs deterministic probability flow ODE share the same marginals",
+      "from": "thm-song2021-reverse-time-sde",
+      "id": "e-reverse-pfode-cmp",
+      "relation": "compares_with",
+      "source": "song2021",
+      "to": "thm-song2021-probability-flow-ode"
+    },
+    {
+      "confidence": "high",
+      "desc": "SDE-based PC sampling vs ODE-based deterministic sampling are two complementary routes",
+      "from": "meth-song2021-pc-sampler",
+      "id": "e-pc-vs-pfode",
+      "relation": "compares_with",
+      "source": "song2021",
+      "to": "meth-song2021-pf-ode-sampling"
+    },
+    {
+      "confidence": "high",
+      "desc": "Table 1 evaluates PC vs predictor-only vs corrector-only vs probability flow samplers",
+      "from": "meth-song2021-pc-sampler",
+      "id": "e-pc-table1",
+      "relation": "evaluates",
+      "source": "song2021",
+      "to": "exp-song2021-sampler-comparison"
+    },
+    {
+      "confidence": "high",
+      "desc": "CIFAR-10 SOTA results driven by the continuous training objective Eq 7",
+      "from": "meth-song2021-score-based-training",
+      "id": "e-training-cifar",
+      "relation": "evaluates",
+      "source": "song2021",
+      "to": "exp-song2021-cifar10-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "Best FID/IS sample quality reported with PC samplers",
+      "from": "meth-song2021-pc-sampler",
+      "id": "e-pc-cifar",
+      "relation": "evaluates",
+      "source": "song2021",
+      "to": "exp-song2021-cifar10-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "NLL (2.99 bits/dim) computed via black-box ODE solver on the PF-ODE",
+      "from": "meth-song2021-pf-ode-sampling",
+      "id": "e-pfode-cifar",
+      "relation": "evaluates",
+      "source": "song2021",
+      "to": "exp-song2021-cifar10-results"
+    },
+    {
+      "confidence": "high",
+      "desc": "The VP-SDE is the continuous-time generalization of the DDPM discrete forward chain; DDPM's chain is a discretization of VP-SDE in the N\u2192\u221e limit (Eq 10\u219211)",
+      "from": "def-ho2020-forward-diffusion-process",
+      "id": "xsrc-vpsde-fwd",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "def-song2021-vp-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "The general forward SDE framework subsumes the DDPM discrete Gaussian forward process as a special case",
+      "from": "def-ho2020-forward-diffusion-process",
+      "id": "xsrc-fsde-fwd",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "def-song2021-forward-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "The reverse-time SDE (Anderson 1982) is the continuous-time generalization of DDPM's learned reverse Markov chain; ancestral sampling is a discretization of the reverse-time VP SDE (Sec 4.1, App E)",
+      "from": "def-ho2020-reverse-process",
+      "id": "xsrc-reverse-revproc",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "thm-song2021-reverse-time-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "ho2020 found sampling\u2248Langevin in the discrete setting; the reverse-time SDE gives the continuous-time SDE whose -g(t)\u00b2\u2207log p_t term is the Langevin-like denoising force",
+      "from": "thm-ho2020-score-matching-langevin-equivalence",
+      "id": "xsrc-reverse-eps-equiv",
+      "relation": "extends",
+      "source": "song2021",
+      "to": "thm-song2021-reverse-time-sde"
+    },
+    {
+      "confidence": "high",
+      "desc": "The discretization equivalence proves the DDPM forward chain is a discretization of VP-SDE, placing DDPM inside the unified SDE framework",
+      "from": "def-ho2020-forward-diffusion-process",
+      "id": "xsrc-equiv-fwd",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "thm-song2021-sde-discretization-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "ho2020's heuristic (DDPM training\u2248score matching, sampling\u2248Langevin) is elevated to a framework-level theorem: DDPM's objective IS weighted denoising score matching and is a discretization of the continuous score matching objective",
+      "from": "thm-ho2020-score-matching-langevin-equivalence",
+      "id": "xsrc-equiv-scorelang",
+      "relation": "extends",
+      "source": "song2021",
+      "to": "thm-song2021-sde-discretization-equivalence"
+    },
+    {
+      "confidence": "high",
+      "desc": "DDPM's \u03b5-prediction (Eq 3) is weighted denoising score matching (s_\u03b8* \u221d -\u03b5_\u03b8/\u221a(1-\u03b1)); the continuous objective Eq 7 generalizes the discrete integer index i to continuous time t",
+      "from": "meth-ho2020-epsilon-prediction",
+      "id": "xsrc-training-eps",
+      "relation": "extends",
+      "source": "song2021",
+      "to": "meth-song2021-score-based-training"
+    },
+    {
+      "confidence": "high",
+      "desc": "DDPM only provides an ELBO upper bound on NLL (\u2264 bits/dim); the PF-ODE enables EXACT likelihood via the instantaneous change-of-variables formula, a strictly stronger capability",
+      "from": "thm-ho2020-elbo-variational-bound",
+      "id": "xsrc-pfode-elbo",
+      "relation": "extends",
+      "source": "song2021",
+      "to": "thm-song2021-probability-flow-ode"
+    },
+    {
+      "confidence": "high",
+      "desc": "ho2020's core contribution (DDPM\u2248score matching+Langevin, discrete) is reframed: DDPM is merely one SDE discretization inside a broader continuous-time unified framework",
+      "from": "thm-ho2020-score-matching-langevin-equivalence",
+      "id": "xsrc-framework-scorelang",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "ins-song2021-unified-continuous-framework"
+    },
+    {
+      "confidence": "high",
+      "desc": "Direct CIFAR-10 comparison: song2021 FID 2.20/IS 9.89 vs ho2020 FID 3.17/IS 9.46; exact NLL 2.99 vs ELBO \u22643.75 bits/dim",
+      "from": "exp-song2021-cifar10-results",
+      "id": "xsrc-cifar-cifar",
+      "relation": "compares_with",
+      "source": "song2021",
+      "to": "exp-ho2020-cifar10-results"
+    },
+    {
+      "confidence": "medium",
+      "desc": "DDPM ancestral sampling is the predictor-only degenerate case of PC samplers (ancestral predictor + identity corrector); PC unifies and improves it",
+      "from": "meth-ho2020-ddpm-sampling",
+      "id": "xsrc-pc-ancestral",
+      "relation": "generalizes",
+      "source": "song2021",
+      "to": "meth-song2021-pc-sampler"
+    }
+  ],
+  "meta": {
+    "created": "2026-06-28",
+    "domain": "diffusion-models",
+    "last_updated": "2026-06-28",
+    "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+    "run_ids": [
+      "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9"
+    ],
+    "sources": [
+      {
+        "edges": 22,
+        "id": "ho2020",
+        "nodes": 15,
+        "paper": "Denoising Diffusion Probabilistic Models (Ho et al. NeurIPS 2020)"
+      },
+      {
+        "edges": 31,
+        "id": "song2021",
+        "nodes": 15,
+        "paper": "Score-Based Generative Modeling through Stochastic Differential Equations (Song et al. ICLR 2021)"
+      }
+    ],
+    "total_edges": 53,
+    "total_nodes": 30
+  },
+  "nodes": [
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-ho2020-forward-diffusion-process.md",
+      "generated_by_step": "S2",
+      "id": "def-ho2020-forward-diffusion-process",
+      "label": "Forward Diffusion Process",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 120,
+        "file": "ho2020-ddpm.pdf",
+        "page": "2",
+        "start_line": 88
+      },
+      "tokens": 750,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-ho2020-reverse-process.md",
+      "generated_by_step": "S2",
+      "id": "def-ho2020-reverse-process",
+      "label": "Reverse Generative Process",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 97,
+        "file": "ho2020-ddpm.pdf",
+        "page": "2",
+        "start_line": 88
+      },
+      "tokens": 700,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-ho2020-forward-posterior.md",
+      "generated_by_step": "S2",
+      "id": "def-ho2020-forward-posterior",
+      "label": "Tractable Forward Process Posterior",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 140,
+        "file": "ho2020-ddpm.pdf",
+        "page": "2",
+        "start_line": 131
+      },
+      "tokens": 650,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/thm-ho2020-elbo-variational-bound.md",
+      "generated_by_step": "S2",
+      "id": "thm-ho2020-elbo-variational-bound",
+      "label": "ELBO / Variational Bound on Negative Log-Likelihood",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 140,
+        "file": "ho2020-ddpm.pdf",
+        "page": "2",
+        "start_line": 106
+      },
+      "tokens": 1200,
+      "type": "theorem"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/thm-ho2020-score-matching-langevin-equivalence.md",
+      "generated_by_step": "S2",
+      "id": "thm-ho2020-score-matching-langevin-equivalence",
+      "label": "Diffusion-ScoreMatching-Langevin Equivalence",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 237,
+        "file": "ho2020-ddpm.pdf",
+        "page": "3",
+        "start_line": 157
+      },
+      "tokens": 1500,
+      "type": "theorem"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-ho2020-epsilon-prediction.md",
+      "generated_by_step": "S2",
+      "id": "meth-ho2020-epsilon-prediction",
+      "label": "Epsilon-Prediction Parameterization",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 237,
+        "file": "ho2020-ddpm.pdf",
+        "page": "3",
+        "start_line": 166
+      },
+      "tokens": 850,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-ho2020-ddpm-training.md",
+      "generated_by_step": "S2",
+      "id": "meth-ho2020-ddpm-training",
+      "label": "DDPM Training (Simplified Objective Lsimple)",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 308,
+        "file": "ho2020-ddpm.pdf",
+        "page": "4",
+        "start_line": 261
+      },
+      "tokens": 1000,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-ho2020-ddpm-sampling.md",
+      "generated_by_step": "S2",
+      "id": "meth-ho2020-ddpm-sampling",
+      "label": "DDPM Ancestral Sampling",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 220,
+        "file": "ho2020-ddpm.pdf",
+        "page": "3",
+        "start_line": 193
+      },
+      "tokens": 800,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-ho2020-variance-schedule.md",
+      "generated_by_step": "S2",
+      "id": "meth-ho2020-variance-schedule",
+      "label": "Fixed Variance Schedule (Forward beta and Reverse sigma)",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 165,
+        "file": "ho2020-ddpm.pdf",
+        "page": "3",
+        "start_line": 151
+      },
+      "tokens": 800,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/exp-ho2020-cifar10-results.md",
+      "generated_by_step": "S2",
+      "id": "exp-ho2020-cifar10-results",
+      "label": "CIFAR-10 Sample Quality Results",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 335,
+        "file": "ho2020-ddpm.pdf",
+        "page": "5",
+        "start_line": 268
+      },
+      "tokens": 850,
+      "type": "experiment"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/exp-ho2020-lsun-results.md",
+      "generated_by_step": "S2",
+      "id": "exp-ho2020-lsun-results",
+      "label": "LSUN and CelebA-HQ 256 Results",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 352,
+        "file": "ho2020-ddpm.pdf",
+        "page": "6",
+        "start_line": 339
+      },
+      "tokens": 700,
+      "type": "experiment"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/exp-ho2020-ablation.md",
+      "generated_by_step": "S2",
+      "id": "exp-ho2020-ablation",
+      "label": "Reverse Process Parameterization & Objective Ablation",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 294,
+        "file": "ho2020-ddpm.pdf",
+        "page": "5",
+        "start_line": 268
+      },
+      "tokens": 850,
+      "type": "experiment"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/ins-ho2020-simplified-objective-downweights.md",
+      "generated_by_step": "S2",
+      "id": "ins-ho2020-simplified-objective-downweights",
+      "label": "Lsimple Down-Weights Small-t Terms, Improving Sample Quality",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 316,
+        "file": "ho2020-ddpm.pdf",
+        "page": "4",
+        "start_line": 309
+      },
+      "tokens": 800,
+      "type": "insight"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/ins-ho2020-progressive-lossy-compression.md",
+      "generated_by_step": "S2",
+      "id": "ins-ho2020-progressive-lossy-compression",
+      "label": "Diffusion as Progressive Lossy Compression (Rate-Distortion)",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 430,
+        "file": "ho2020-ddpm.pdf",
+        "page": "6",
+        "start_line": 366
+      },
+      "tokens": 900,
+      "type": "insight"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/ins-ho2020-autoregressive-generalization.md",
+      "generated_by_step": "S2",
+      "id": "ins-ho2020-autoregressive-generalization",
+      "label": "Gaussian Diffusion Generalizes Autoregressive Decoding",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source": "ho2020",
+      "source_span": {
+        "end_line": 471,
+        "file": "ho2020-ddpm.pdf",
+        "page": "7",
+        "start_line": 444
+      },
+      "tokens": 850,
+      "type": "insight"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-song2021-forward-sde.md",
+      "generated_by_step": "S2",
+      "id": "def-song2021-forward-sde",
+      "label": "Forward SDE (Continuous-Time Diffusion Process)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.1",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1455,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1389
+      },
+      "tokens": 900,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-song2021-score-function.md",
+      "generated_by_step": "S2",
+      "id": "def-song2021-score-function",
+      "label": "Score Function (Time-Dependent Gradient Field)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 1, Section 3.3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1544,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1490
+      },
+      "tokens": 800,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-song2021-ve-sde.md",
+      "generated_by_step": "S2",
+      "id": "def-song2021-ve-sde",
+      "label": "Variance Exploding (VE) SDE",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.4",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1652,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1580
+      },
+      "tokens": 850,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/def-song2021-vp-sde.md",
+      "generated_by_step": "S2",
+      "id": "def-song2021-vp-sde",
+      "label": "Variance Preserving (VP) SDE",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.4",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1670,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1617
+      },
+      "tokens": 950,
+      "type": "definition"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/thm-song2021-reverse-time-sde.md",
+      "generated_by_step": "S2",
+      "id": "thm-song2021-reverse-time-sde",
+      "label": "Reverse-Time SDE (Anderson 1982)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.2",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1488,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1457
+      },
+      "tokens": 1100,
+      "type": "theorem"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/thm-song2021-probability-flow-ode.md",
+      "generated_by_step": "S2",
+      "id": "thm-song2021-probability-flow-ode",
+      "label": "Probability Flow ODE (Deterministic Counterpart)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1884,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1867
+      },
+      "tokens": 1200,
+      "type": "theorem"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/thm-song2021-sde-discretization-equivalence.md",
+      "generated_by_step": "S2",
+      "id": "thm-song2021-sde-discretization-equivalence",
+      "label": "SMLD/DDPM Are Discretizations of VE/VP SDEs",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.4",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1670,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1574
+      },
+      "tokens": 1100,
+      "type": "theorem"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-song2021-score-based-training.md",
+      "generated_by_step": "S2",
+      "id": "meth-song2021-score-based-training",
+      "label": "Continuous Denoising Score Matching Training",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 3.3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1544,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1490
+      },
+      "tokens": 1100,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-song2021-pc-sampler.md",
+      "generated_by_step": "S2",
+      "id": "meth-song2021-pc-sampler",
+      "label": "Predictor-Corrector (PC) Samplers",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.2",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1865,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1719
+      },
+      "tokens": 1200,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-song2021-pf-ode-sampling.md",
+      "generated_by_step": "S2",
+      "id": "meth-song2021-pf-ode-sampling",
+      "label": "Probability Flow ODE Sampling (Fast Adaptive Sampling)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 2166,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 2098
+      },
+      "tokens": 1000,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/meth-song2021-conditional-sde.md",
+      "generated_by_step": "S2",
+      "id": "meth-song2021-conditional-sde",
+      "label": "Conditional Reverse-Time SDE for Controllable Generation",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 5",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 2276,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 2210
+      },
+      "tokens": 1100,
+      "type": "method"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/exp-song2021-cifar10-results.md",
+      "generated_by_step": "S2",
+      "id": "exp-song2021-cifar10-results",
+      "label": "CIFAR-10 Record Results (IS 9.89, FID 2.20, NLL 2.99 bits/dim)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.3-4.4, Tables 2-3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 2207,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1933
+      },
+      "tokens": 1200,
+      "type": "experiment"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/exp-song2021-sampler-comparison.md",
+      "generated_by_step": "S2",
+      "id": "exp-song2021-sampler-comparison",
+      "label": "Sampler Comparison (Predictor vs Corrector vs PC vs Probability Flow)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.1-4.2, Table 1",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1865,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1747
+      },
+      "tokens": 1000,
+      "type": "experiment"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/ins-song2021-unified-continuous-framework.md",
+      "generated_by_step": "S2",
+      "id": "ins-song2021-unified-continuous-framework",
+      "label": "Unified Continuous-Time Framework (SMLD & DDPM Are SDE Special Cases)",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 1, Section 3.4",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 1200,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 1145
+      },
+      "tokens": 1000,
+      "type": "insight"
+    },
+    {
+      "created": "2026-06-28",
+      "file": "wiki/knowledge/ins-song2021-uniquely-identifiable-encoding.md",
+      "generated_by_step": "S2",
+      "id": "ins-song2021-uniquely-identifiable-encoding",
+      "label": "Uniquely Identifiable Encoding via Probability Flow ODE",
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "section": "Section 4.3",
+      "source": "song2021",
+      "source_span": {
+        "end_line": 2136,
+        "file": "song2021-score-sde.md",
+        "page": "Unknown",
+        "start_line": 2098
+      },
+      "tokens": 900,
+      "type": "insight"
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+# Domain Knowledge Skill — MVP Plan
+
+> 目标：用 3 篇 CP 论文跑通完整流程（Ingest → DAG 构建 → Query → 验证）
+
+## 基本信息
+
+- **领域**：统计校准与共形预测（Conformal Prediction）
+- **锚定人**：Vovk（CP 理论奠基人之一）
+- **来源文献**：3 篇核心论文（见下方）
+- **产出**：可运行的领域知识 Skill + 验证报告
+
+## 来源文献（待确认）
+
+| 编号 | 论文 | 来源文件 | 说明 |
+|------|------|---------|------|
+| P1 | Angelopoulos & Bates (2022) "A Gentle Introduction to Conformal Prediction" | `raw/sources/p1-angelopoulos-bates-2022.pdf` (51页) | CP 理论基础教程 |
+| P3 | Teneggi et al. (2025) "Conformal Risk Control for Semantic UQ in CT" | `raw/sources/p3-teneggi-2025.pdf` (12页) | CP 在生成模型上的应用 |
+| P4 | Min et al. (2026) "A Unified Theory of Conditional Coverage in CP" | `raw/sources/p4-min-2026.pdf` (157页) | 统一条件覆盖理论 |
+| P2 | Lei et al. — Distribution-Free Predictive Inference | 待补充 | 回归 CP（后续 Fold-in） |
+
+## DAG 流水线
+
+```yaml
+name: "CP领域知识库MVP"
+workdir: "domain-knowledge-skill"
+timeout_minutes: 30
+cron_interval_ms: 300000
+
+steps:
+  - id: S1
+    name: PDF批量提取
+    deps: []
+    prompt: |
+      用 book-to-skill extract.py 提取 raw/sources/ 下所有 PDF 文件。
+      命令：python3 ~/.agents/skills/book-to-skill/scripts/extract.py raw/sources/ --mode technical --install-missing ask
+      确认输出 full_text.txt 和 metadata.json，记录 token 数。
+    output: "extraction-done.flag"
+    run_directly: true
+
+  - id: S2_P1
+    name: P1知识结构化提取
+    deps: [S1]
+    prompt: |
+      你是领域知识提取专家。
+      1. 读取 schema/schema.md 获取提取规范
+      2. 用 REPL-style 探测（grep/sed）定位 P1 在 full_text.txt 中的内容段落
+      3. 按 schema 规范提取知识节点，写入 wiki/knowledge/*.md
+      4. 同时输出 wiki/sources/src-p1.md（来源摘要）
+      5. 输出 extraction-p1.json（节点+关系）
+      约束：
+      - 定理表述必须是原文精确表述
+      - 每节点 500-2000 tokens
+      - 关系必须有 confidence 标注
+    output: "extraction-p1.json"
+
+  - id: S2_P3
+    name: P3知识结构化提取
+    deps: [S1]
+    prompt: |
+      同 S2_P1，但处理 P3（Teneggi et al. 2025）。
+      注意：P3 中与 P1 重复的概念使用相同节点ID。
+      特别关注：Conformal Risk Control 定义、语义不确定性、CT 应用实验。
+    output: "extraction-p3.json"
+
+  - id: S2_P4
+    name: P4知识结构化提取
+    deps: [S1]
+    prompt: |
+      同 S2_P1，但处理 P4（Min et al. 2026，157页，最长的一篇）。
+      注意：P4 中与 P1 重复的概念使用相同节点ID。
+      特别关注：统一条件覆盖理论、Theorem 1&2、条件覆盖误差分解、加权分位回归。
+      这是最核心的一篇——统一框架理论，提取要最仔细。
+    output: "extraction-p4.json"
+
+  - id: S3
+    name: DAG合并
+    deps: [S2_P1, S2_P3, S2_P4]
+    prompt: |
+      DAG 合并专家。
+      1. 读取 schema/schema.md 中的 DAG 结构规范
+      2. 读取 extraction-p1.json, extraction-p3.json, extraction-p4.json
+      3. 初始化 dag/dag-index.json（如果不存在）或读取现有版本
+      4. 按合并规则执行：
+         - 新节点 → 追加
+         - 同ID节点 → 比对内容，一致则跳过，不一致则标注
+         - 新关系 → 追加
+         - contradicts → 标注待确认
+      5. 输出 dag/dag-index.json（完整版本）
+      6. 输出合并报告 merge-report.md（新增节点数、冲突数、关系数）
+    output: "dag/dag-index.json"
+
+  - id: S4
+    name: 导航文件更新
+    deps: [S3]
+    prompt: |
+      1. 读取 dag/dag-index.json
+      2. 生成 wiki/index.md：按类型分类列出所有知识节点，带链接和一句话摘要
+      3. 更新 wiki/log.md：追加本次 MVP 构建的完整记录
+      4. 初始化 wiki/overview.md：领域全局概览（3-5段）
+    output: "wiki/index.md"
+
+  - id: S5
+    name: 心智模型提炼
+    deps: [S3]
+    prompt: |
+      用女娲三重验证法提炼心智模型：
+      1. 读取所有 wiki/knowledge/*.md 和 wiki/sources/*.md
+      2. 从锚定学者（Vovk）的角度，提炼 3-5 个心智模型
+      3. 每个模型用三重验证：跨域复现、生成力、排他性
+      4. 提炼 5-10 条决策启发式（"如果X，则Y"）
+      5. 输出 wiki/mental-models.md
+      注意：心智模型是从这三篇论文中提炼的，不是泛泛的统计思维。
+    output: "wiki/mental-models.md"
+
+  - id: S6
+    name: 验证
+    deps: [S4, S5]
+    prompt: |
+      独立验证子 agent（不要看构建过程，只看最终产物）：
+      1. 读取 dag/dag-index.json
+      2. 随机选 3 个知识节点，验证其 wiki/knowledge/*.md 中的表述是否合理
+      3. 检查关系方向：from → to 是否正确
+      4. 检查 index.md 是否与 dag-index.json 一致
+      5. 检查是否有孤立节点（无任何 edge）
+      6. 用一个测试问题走一遍 Query 工作流：
+         "Split Conformal Prediction 的覆盖率保证来自哪个定理？ECE 评估的是什么？"
+         验证能否通过 DAG 遍历找到正确答案
+      7. 输出 validation-report.md
+    output: "validation-report.md"
+
+  - id: S7
+    name: SKILL.md生成
+    deps: [S4, S5, S6]
+    prompt: |
+      组装最终的 SKILL.md：
+      1. 读取 schema/schema.md（Query 工作流规范）
+      2. 读取 wiki/mental-models.md（心智模型）
+      3. 读取 dag/dag-index.json（知识索引）
+      4. 组装 SKILL.md：
+         - YAML frontmatter（name, description）
+         - 核心心智模型（<2K tokens）
+         - 查询协议（读 dag-index → 遍历 → 按需加载 → 分析）
+         - 知识节点索引表（从 dag-index.json 生成）
+         - 术语映射（glossary）
+         - 诚实边界（知识截止点、局限性）
+      5. SKILL.md 保持在 4K tokens 以内
+    output: "SKILL.md"
+
+notify:
+  channel: feishu
+  message: "CP领域知识库MVP构建完成"

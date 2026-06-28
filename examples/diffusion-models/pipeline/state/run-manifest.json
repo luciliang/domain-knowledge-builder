@@ -1,0 +1,40 @@
+{
+  "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+  "started_at": "2026-06-28T03:05:46.007532+00:00",
+  "domain": "diffusion-models",
+  "sources": [
+    "ho2020-ddpm.pdf",
+    "song2021-score-sde.md"
+  ],
+  "meta_skill_root": "<META_SKILL_ROOT>",
+  "preflight": {
+    "ok": false,
+    "book_to_skill_runs": true,
+    "docling_available": false,
+    "mode": "text_fallback",
+    "note": "docling curl 18 via proxy; user decision: text fallback to unblock acceptance test",
+    "checked_at": "2026-06-28T03:05:46.007773+00:00"
+  },
+  "stages": [
+    {
+      "stage": "S1_extract",
+      "status": "done",
+      "mode": "text_fallback (pdftotext)",
+      "artifacts": [
+        "full-text.txt"
+      ]
+    }
+  ],
+  "darwin_score": null,
+  "accepted": false,
+  "incremental_runs": [
+    {
+      "run_id": "9bab0aa5-cf9d-4d60-af8b-1d19de0dd9f9",
+      "started_at": "2026-06-28T05:11:53.001094+00:00",
+      "action": "incremental_ingest_song2021",
+      "source_added": "song2021-score-sde.md (from ar5iv HTML, 663 LaTeX formulas preserved)",
+      "note": "PDF download failed (curl 18 via proxy); ar5iv HTML fallback successful, better formula quality than pdftotext"
+    }
+  ],
+  "last_updated": "2026-06-28T05:11:53.001365+00:00"
+}

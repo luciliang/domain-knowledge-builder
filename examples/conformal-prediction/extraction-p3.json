@@ -1,0 +1,286 @@
+{
+  "meta": {
+    "source": "teneggi2025",
+    "paper": "Conformal Risk Control for Semantic Uncertainty Quantification in Computed Tomography",
+    "authors": ["Jacopo Teneggi", "J Webster Stayman", "Jeremias Sulam"],
+    "year": 2025,
+    "venue": "arXiv:2503.00136",
+    "extracted": "2026-06-23",
+    "total_nodes": 9,
+    "total_edges": 21
+  },
+  "nodes": [
+    {
+      "id": "def-crc",
+      "type": "definition",
+      "label": "Conformal Risk Control (CRC)",
+      "file": "wiki/knowledge/def-crc.md",
+      "tokens": 900,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "def-conformal-coverage",
+      "type": "definition",
+      "label": "Conformal Risk Control Guarantee",
+      "file": "wiki/knowledge/def-conformal-coverage.md",
+      "tokens": 600,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "meth-k-crc",
+      "type": "method",
+      "label": "K-CRC (High-Dimensional Risk Control via K Groups)",
+      "file": "wiki/knowledge/meth-k-crc.md",
+      "tokens": 1200,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "meth-sem-crc",
+      "type": "method",
+      "label": "sem-CRC (Semantic Conformal Risk Control)",
+      "file": "wiki/knowledge/meth-sem-crc.md",
+      "tokens": 1500,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "thm-sem-crc-validity",
+      "type": "theorem",
+      "label": "Proposition 1: Validity of sem-CRC",
+      "file": "wiki/knowledge/thm-sem-crc-validity.md",
+      "tokens": 1100,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "meth-sem-crc-per-organ",
+      "type": "method",
+      "label": "sem-CRC̄ (Per-Organ Risk Control)",
+      "file": "wiki/knowledge/meth-sem-crc-per-organ.md",
+      "tokens": 1000,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "def-semantic-uq",
+      "type": "definition",
+      "label": "Semantic Uncertainty Quantification",
+      "file": "wiki/knowledge/def-semantic-uq.md",
+      "tokens": 800,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "exp-ct-denoising-reconstruction",
+      "type": "experiment",
+      "label": "CT Denoising and FBP-UNet Reconstruction Experiments",
+      "file": "wiki/knowledge/exp-ct-denoising-reconstruction.md",
+      "tokens": 1400,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    },
+    {
+      "id": "ins-semantic-uq-clinical",
+      "type": "insight",
+      "label": "Clinical Value of Semantic Uncertainty in Medical Imaging",
+      "file": "wiki/knowledge/ins-semantic-uq-clinical.md",
+      "tokens": 900,
+      "source": "teneggi2025",
+      "created": "2026-06-23"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-crc-coverage",
+      "from": "def-crc",
+      "to": "def-conformal-coverage",
+      "relation": "guarantees",
+      "desc": "CRC procedure guarantees risk control",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-kcrc-crc",
+      "from": "def-crc",
+      "to": "meth-k-crc",
+      "relation": "extends",
+      "desc": "K-CRC extends CRC to high-dimensional settings with K groups",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semcrc-kcrc",
+      "from": "meth-k-crc",
+      "to": "meth-sem-crc",
+      "relation": "extends",
+      "desc": "sem-CRC extends K-CRC from fixed groups to instance-dependent semantic groups",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semcrc-kcrc-cmp",
+      "from": "meth-k-crc",
+      "to": "meth-sem-crc",
+      "relation": "compares_with",
+      "desc": "K-CRC uses fixed partition vs sem-CRC uses semantic instance-dependent partition",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm-semcrc",
+      "from": "thm-sem-crc-validity",
+      "to": "meth-sem-crc",
+      "relation": "guarantees",
+      "desc": "Proposition 1 guarantees sem-CRC controls risk at level epsilon",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm-defcoverage",
+      "from": "def-conformal-coverage",
+      "to": "thm-sem-crc-validity",
+      "relation": "extends",
+      "desc": "Proposition 1 extends the basic CRC guarantee to the semantic setting",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-perorgan-thm",
+      "from": "thm-sem-crc-validity",
+      "to": "meth-sem-crc-per-organ",
+      "relation": "specializes",
+      "desc": "Per-organ risk control follows by applying Proposition 1 to each dimension",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-perorgan-semcrc",
+      "from": "meth-sem-crc",
+      "to": "meth-sem-crc-per-organ",
+      "relation": "specializes",
+      "desc": "sem-CRC̄ is a specialization of sem-CRC for per-organ risk control",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-perorgan-cmp",
+      "from": "meth-sem-crc",
+      "to": "meth-sem-crc-per-organ",
+      "relation": "compares_with",
+      "desc": "sem-CRC̄ provides tighter per-organ guarantees but longer mean intervals",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semuq-defcrc",
+      "from": "def-crc",
+      "to": "def-semantic-uq",
+      "relation": "depends_on",
+      "desc": "Understanding semantic UQ requires understanding the CRC framework first",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semuq-semcrc",
+      "from": "def-semantic-uq",
+      "to": "meth-sem-crc",
+      "relation": "applies_to",
+      "desc": "Semantic UQ is operationalized through the sem-CRC method",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semuq-kcrc-contra",
+      "from": "def-semantic-uq",
+      "to": "meth-k-crc",
+      "relation": "compares_with",
+      "desc": "Semantic grouping contrasts with fixed pixel grouping of K-CRC",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semcrc-exp",
+      "from": "meth-sem-crc",
+      "to": "exp-ct-denoising-reconstruction",
+      "relation": "applies_to",
+      "desc": "sem-CRC is evaluated on CT denoising and FBP-UNet reconstruction",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-exp-evaluates-semcrc",
+      "from": "exp-ct-denoising-reconstruction",
+      "to": "meth-sem-crc",
+      "relation": "evaluates",
+      "desc": "Experiments demonstrate sem-CRC provides shortest intervals with valid coverage",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-exp-kcrc",
+      "from": "exp-ct-denoising-reconstruction",
+      "to": "meth-k-crc",
+      "relation": "evaluates",
+      "desc": "K-CRC evaluated as comparison baseline",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-exp-crc",
+      "from": "exp-ct-denoising-reconstruction",
+      "to": "def-crc",
+      "relation": "evaluates",
+      "desc": "CRC evaluated as comparison baseline",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-exp-perorgan",
+      "from": "exp-ct-denoising-reconstruction",
+      "to": "meth-sem-crc-per-organ",
+      "relation": "evaluates",
+      "desc": "sem-CRC̄ evaluated showing per-organ control but longer intervals",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-ins-semuq",
+      "from": "def-semantic-uq",
+      "to": "ins-semantic-uq-clinical",
+      "relation": "extends",
+      "desc": "Clinical insights extend the concept of semantic UQ to deployment considerations",
+      "source": "teneggi2025",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-ins-exp",
+      "from": "exp-ct-denoising-reconstruction",
+      "to": "ins-semantic-uq-clinical",
+      "relation": "extends",
+      "desc": "Clinical insights are supported by experimental findings",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-ins-perorgan",
+      "from": "meth-sem-crc-per-organ",
+      "to": "ins-semantic-uq-clinical",
+      "relation": "extends",
+      "desc": "Per-organ risk control design is motivated by clinical insights about organ-specific failures",
+      "source": "teneggi2025",
+      "confidence": "high"
+    },
+    {
+      "id": "e-semcrc-dep-semuq",
+      "from": "def-semantic-uq",
+      "to": "meth-sem-crc",
+      "relation": "depends_on",
+      "desc": "Understanding sem-CRC requires the concept of semantic UQ",
+      "source": "teneggi2025",
+      "confidence": "high"
+    }
+  ]
+}

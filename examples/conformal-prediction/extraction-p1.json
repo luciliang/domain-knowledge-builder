@@ -1,0 +1,853 @@
+{
+  "meta": {
+    "source": "angelopoulos2022",
+    "paper": "A Gentle Introduction to Conformal Prediction: Distribution-Free, Finite-Sample Validity Guarantees",
+    "authors": ["Anastasios N. Angelopoulos", "Stephen Bates"],
+    "year": 2022,
+    "venue": "arXiv:2107.07511",
+    "extracted": "2026-06-24",
+    "total_nodes": 22,
+    "total_edges": 58
+  },
+  "nodes": [
+    {
+      "id": "def-split-conformal-prediction",
+      "type": "definition",
+      "label": "Split Conformal Prediction (Inductive)",
+      "file": "wiki/knowledge/def-split-conformal-prediction.md",
+      "tokens": 800,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-split-cp-coverage",
+      "type": "theorem",
+      "label": "Theorem 1: Conformal Coverage Guarantee (Split CP)",
+      "file": "wiki/knowledge/thm-split-cp-coverage.md",
+      "tokens": 1000,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-marginal-coverage",
+      "type": "definition",
+      "label": "Marginal Coverage",
+      "file": "wiki/knowledge/def-marginal-coverage.md",
+      "tokens": 700,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-conditional-coverage",
+      "type": "definition",
+      "label": "Conditional Coverage",
+      "file": "wiki/knowledge/def-conditional-coverage.md",
+      "tokens": 900,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-conditional-coverage-impossible",
+      "type": "theorem",
+      "label": "Conditional Coverage Impossibility",
+      "file": "wiki/knowledge/thm-conditional-coverage-impossible.md",
+      "tokens": 800,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-aps",
+      "type": "method",
+      "label": "Adaptive Prediction Sets (APS)",
+      "file": "wiki/knowledge/meth-aps.md",
+      "tokens": 1200,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-cqr",
+      "type": "method",
+      "label": "Conformalized Quantile Regression (CQR)",
+      "file": "wiki/knowledge/meth-cqr.md",
+      "tokens": 1200,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-conformalize-uncertainty",
+      "type": "method",
+      "label": "Conformalizing Scalar Uncertainty Estimates",
+      "file": "wiki/knowledge/meth-conformalize-uncertainty.md",
+      "tokens": 1100,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-conformalize-bayes",
+      "type": "method",
+      "label": "Conformalizing Bayes",
+      "file": "wiki/knowledge/meth-conformalize-bayes.md",
+      "tokens": 900,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-fsc-metric",
+      "type": "definition",
+      "label": "Feature-Stratified Coverage (FSC) Metric",
+      "file": "wiki/knowledge/def-fsc-metric.md",
+      "tokens": 800,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-ssc-metric",
+      "type": "definition",
+      "label": "Size-Stratified Coverage (SSC) Metric",
+      "file": "wiki/knowledge/def-ssc-metric.md",
+      "tokens": 800,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-beta-coverage-distribution",
+      "type": "theorem",
+      "label": "Beta Distribution of Coverage (Vovk 2012)",
+      "file": "wiki/knowledge/thm-beta-coverage-distribution.md",
+      "tokens": 1000,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-group-balanced-cp",
+      "type": "method",
+      "label": "Group-Balanced Conformal Prediction",
+      "file": "wiki/knowledge/meth-group-balanced-cp.md",
+      "tokens": 1000,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-group-balanced-coverage",
+      "type": "theorem",
+      "label": "Proposition 1: Group-Balanced CP Validity",
+      "file": "wiki/knowledge/thm-group-balanced-coverage.md",
+      "tokens": 800,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-class-conditional-cp",
+      "type": "method",
+      "label": "Class-Conditional Conformal Prediction",
+      "file": "wiki/knowledge/meth-class-conditional-cp.md",
+      "tokens": 1000,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-class-conditional-coverage",
+      "type": "theorem",
+      "label": "Proposition 2: Class-Conditional CP Validity",
+      "file": "wiki/knowledge/thm-class-conditional-coverage.md",
+      "tokens": 700,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-conformal-risk-control",
+      "type": "theorem",
+      "label": "Theorem 2: Conformal Risk Control",
+      "file": "wiki/knowledge/thm-conformal-risk-control.md",
+      "tokens": 1000,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-covariate-shift-coverage",
+      "type": "theorem",
+      "label": "Theorem 3: Conformal Prediction Under Covariate Shift",
+      "file": "wiki/knowledge/thm-covariate-shift-coverage.md",
+      "tokens": 1100,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-distribution-drift-coverage",
+      "type": "theorem",
+      "label": "Theorem 4: Conformal Prediction Under Distribution Drift",
+      "file": "wiki/knowledge/thm-distribution-drift-coverage.md",
+      "tokens": 1100,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-outlier-detection-cp",
+      "type": "method",
+      "label": "Conformal Outlier Detection",
+      "file": "wiki/knowledge/meth-outlier-detection-cp.md",
+      "tokens": 900,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-outlier-detection-guarantee",
+      "type": "theorem",
+      "label": "Proposition 3: Outlier Detection Error Control",
+      "file": "wiki/knowledge/thm-outlier-detection-guarantee.md",
+      "tokens": 700,
+      "source": "angelopoulos2022",
+      "created": "2026-06-24"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-split-cp-thm1",
+      "from": "def-split-conformal-prediction",
+      "to": "thm-split-cp-coverage",
+      "relation": "guarantees",
+      "desc": "Split CP's validity is guaranteed by Theorem 1",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-marginal",
+      "from": "def-split-conformal-prediction",
+      "to": "def-marginal-coverage",
+      "relation": "achieves",
+      "desc": "Split CP achieves marginal coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-aps",
+      "from": "def-split-conformal-prediction",
+      "to": "meth-aps",
+      "relation": "extends_to",
+      "desc": "APS is a specialization of split CP for classification",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-cqr",
+      "from": "def-split-conformal-prediction",
+      "to": "meth-cqr",
+      "relation": "extends_to",
+      "desc": "CQR is a specialization of split CP for regression",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-unc",
+      "from": "def-split-conformal-prediction",
+      "to": "meth-conformalize-uncertainty",
+      "relation": "extends_to",
+      "desc": "Conformalizing uncertainty is a specialization of split CP",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-bayes",
+      "from": "def-split-conformal-prediction",
+      "to": "meth-conformalize-bayes",
+      "relation": "extends_to",
+      "desc": "Conformalizing Bayes is a specialization of split CP",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-split-cp-conditional-cmp",
+      "from": "def-split-conformal-prediction",
+      "to": "def-conditional-coverage",
+      "relation": "compares_with",
+      "desc": "Split CP only guarantees marginal, not conditional coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-marginal",
+      "from": "thm-split-cp-coverage",
+      "to": "def-marginal-coverage",
+      "relation": "guarantees",
+      "desc": "Theorem 1 guarantees marginal coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-conformal-cov",
+      "from": "thm-split-cp-coverage",
+      "to": "def-conformal-coverage",
+      "relation": "is_a",
+      "desc": "Theorem 1 is the foundational conformal coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-split-cp",
+      "from": "thm-split-cp-coverage",
+      "to": "def-split-conformal-prediction",
+      "relation": "validates",
+      "desc": "Theorem 1 is the validity property of split CP",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-covshift",
+      "from": "thm-split-cp-coverage",
+      "to": "thm-covariate-shift-coverage",
+      "relation": "extended_by",
+      "desc": "Theorem 3 extends Theorem 1 to covariate shift",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-drift",
+      "from": "thm-split-cp-coverage",
+      "to": "thm-distribution-drift-coverage",
+      "relation": "extended_by",
+      "desc": "Theorem 4 extends Theorem 1 to distribution drift",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-group-bal",
+      "from": "thm-split-cp-coverage",
+      "to": "thm-group-balanced-coverage",
+      "relation": "specializes_to",
+      "desc": "Group-balanced coverage is a specialization of Theorem 1",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-class-cond",
+      "from": "thm-split-cp-coverage",
+      "to": "thm-class-conditional-coverage",
+      "relation": "specializes_to",
+      "desc": "Class-conditional coverage is a specialization of Theorem 1",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-thm1-outlier",
+      "from": "thm-split-cp-coverage",
+      "to": "thm-outlier-detection-guarantee",
+      "relation": "specializes_to",
+      "desc": "Outlier detection guarantee is a specialization of Theorem 1",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-marginal-conditional",
+      "from": "def-marginal-coverage",
+      "to": "def-conditional-coverage",
+      "relation": "weaker_than",
+      "desc": "Marginal coverage allows all errors in one group; conditional requires uniformity",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-marginal-beta",
+      "from": "def-marginal-coverage",
+      "to": "thm-beta-coverage-distribution",
+      "relation": "characterized_by",
+      "desc": "Coverage fluctuations around the marginal guarantee follow Beta distribution",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-marginal-covshift",
+      "from": "def-marginal-coverage",
+      "to": "thm-covariate-shift-coverage",
+      "relation": "preserved_by",
+      "desc": "Covariate shift CP preserves marginal coverage under shift",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-marginal-drift",
+      "from": "def-marginal-coverage",
+      "to": "thm-distribution-drift-coverage",
+      "relation": "preserved_by",
+      "desc": "Drift CP preserves approximate marginal coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-conditional-impossible",
+      "from": "def-conditional-coverage",
+      "to": "thm-conditional-coverage-impossible",
+      "relation": "limited_by",
+      "desc": "Conditional coverage is generally impossible to achieve",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-conditional-fsc",
+      "from": "def-conditional-coverage",
+      "to": "def-fsc-metric",
+      "relation": "measured_by",
+      "desc": "FSC measures approximation to conditional coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-conditional-ssc",
+      "from": "def-conditional-coverage",
+      "to": "def-ssc-metric",
+      "relation": "measured_by",
+      "desc": "SSC measures approximation to conditional coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-conditional-group-bal",
+      "from": "def-conditional-coverage",
+      "to": "meth-group-balanced-cp",
+      "relation": "approximated_by",
+      "desc": "Group-balanced CP achieves conditional coverage for known groups",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-conditional-class-cond",
+      "from": "def-conditional-coverage",
+      "to": "meth-class-conditional-cp",
+      "relation": "approximated_by",
+      "desc": "Class-conditional CP achieves conditional coverage for known classes",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-impossible-marginal",
+      "from": "thm-conditional-coverage-impossible",
+      "to": "def-marginal-coverage",
+      "relation": "contrasts_with",
+      "desc": "Marginal coverage IS achievable but conditional is not",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-impossible-fsc",
+      "from": "thm-conditional-coverage-impossible",
+      "to": "def-fsc-metric",
+      "relation": "motivates",
+      "desc": "Since conditional coverage is impossible, we need metrics to measure proximity",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-impossible-ssc",
+      "from": "thm-conditional-coverage-impossible",
+      "to": "def-ssc-metric",
+      "relation": "motivates",
+      "desc": "Since conditional coverage is impossible, we need metrics to measure proximity",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-impossible-aps",
+      "from": "thm-conditional-coverage-impossible",
+      "to": "meth-aps",
+      "relation": "motivates",
+      "desc": "APS is a practical method that approximates conditional coverage",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-aps-thm1",
+      "from": "meth-aps",
+      "to": "thm-split-cp-coverage",
+      "relation": "satisfies",
+      "desc": "APS satisfies Theorem 1's marginal coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-aps-conditional",
+      "from": "meth-aps",
+      "to": "def-conditional-coverage",
+      "relation": "approximates",
+      "desc": "APS better approximates conditional coverage than standard CP",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-aps-fsc",
+      "from": "def-fsc-metric",
+      "to": "meth-aps",
+      "relation": "evaluates",
+      "desc": "FSC metric evaluates APS performance across feature groups",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-aps-ssc",
+      "from": "def-ssc-metric",
+      "to": "meth-aps",
+      "relation": "evaluates",
+      "desc": "SSC metric evaluates APS performance across set sizes",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-aps-cqr-cmp",
+      "from": "meth-aps",
+      "to": "meth-cqr",
+      "relation": "compares_with",
+      "desc": "APS for classification vs CQR for regression",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cqr-thm1",
+      "from": "meth-cqr",
+      "to": "thm-split-cp-coverage",
+      "relation": "satisfies",
+      "desc": "CQR satisfies Theorem 1's coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cqr-conditional",
+      "from": "meth-cqr",
+      "to": "def-conditional-coverage",
+      "relation": "approximates",
+      "desc": "Quantile regression has asymptotically valid conditional coverage, propagating to CQR",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cqr-unc-cmp",
+      "from": "meth-cqr",
+      "to": "meth-conformalize-uncertainty",
+      "relation": "compares_with",
+      "desc": "CQR preferred when possible; uncertainty scalars easier but less precise",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cqr-group-bal",
+      "from": "meth-cqr",
+      "to": "meth-group-balanced-cp",
+      "relation": "composable_with",
+      "desc": "CQR can be combined with group-balanced CP",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-unc-thm1",
+      "from": "meth-conformalize-uncertainty",
+      "to": "thm-split-cp-coverage",
+      "relation": "satisfies",
+      "desc": "Conformalizing uncertainty satisfies Theorem 1's coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-unc-conditional",
+      "from": "meth-conformalize-uncertainty",
+      "to": "def-conditional-coverage",
+      "relation": "does_not_guarantee",
+      "desc": "Uncertainty scalars do not necessarily provide conditional coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-bayes-thm1",
+      "from": "meth-conformalize-bayes",
+      "to": "thm-split-cp-coverage",
+      "relation": "satisfies",
+      "desc": "Conformalizing Bayes satisfies Theorem 1's coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-fsc-ssc-cmp",
+      "from": "def-fsc-metric",
+      "to": "def-ssc-metric",
+      "relation": "compares_with",
+      "desc": "FSC is feature-based, SSC is set-size-based; both measure conditional coverage approximation",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-fsc-group-bal",
+      "from": "meth-group-balanced-cp",
+      "to": "def-fsc-metric",
+      "relation": "evaluated_by",
+      "desc": "FSC metric evaluates whether group-balanced CP succeeded",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-fsc-class-cond",
+      "from": "meth-class-conditional-cp",
+      "to": "def-fsc-metric",
+      "relation": "evaluated_by",
+      "desc": "FSC metric can evaluate per-class coverage",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-ssc-group-bal",
+      "from": "meth-group-balanced-cp",
+      "to": "def-ssc-metric",
+      "relation": "evaluated_by",
+      "desc": "SSC metric evaluates group-balanced CP's size-adaptivity",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-beta-marginal",
+      "from": "thm-beta-coverage-distribution",
+      "to": "def-marginal-coverage",
+      "relation": "characterizes",
+      "desc": "Explains fluctuations around the marginal coverage guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-beta-thm1",
+      "from": "thm-beta-coverage-distribution",
+      "to": "thm-split-cp-coverage",
+      "relation": "complements",
+      "desc": "Complements Theorem 1 by characterizing finite-sample variability",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-beta-fsc",
+      "from": "thm-beta-coverage-distribution",
+      "to": "def-fsc-metric",
+      "relation": "informs",
+      "desc": "Beta distribution helps set expectations for FSC evaluation",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-beta-ssc",
+      "from": "thm-beta-coverage-distribution",
+      "to": "def-ssc-metric",
+      "relation": "informs",
+      "desc": "Beta distribution helps set expectations for SSC evaluation",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-group-bal-thm",
+      "from": "meth-group-balanced-cp",
+      "to": "thm-group-balanced-coverage",
+      "relation": "guaranteed_by",
+      "desc": "Group-balanced CP validity guaranteed by Proposition 1",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-group-bal-thm1",
+      "from": "meth-group-balanced-cp",
+      "to": "thm-split-cp-coverage",
+      "relation": "extends",
+      "desc": "Group-balanced CP extends standard CP with group-specific thresholds",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-group-bal-conditional",
+      "from": "meth-group-balanced-cp",
+      "to": "def-conditional-coverage",
+      "relation": "achieves",
+      "desc": "Achieves conditional coverage for the known grouping",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-group-bal-class-cond-cmp",
+      "from": "meth-group-balanced-cp",
+      "to": "meth-class-conditional-cp",
+      "relation": "compares_with",
+      "desc": "Similar idea but group is observed vs class is unknown at test time",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-group-bal-thm-conditional",
+      "from": "thm-group-balanced-coverage",
+      "to": "def-conditional-coverage",
+      "relation": "achieves",
+      "desc": "Proposition 1 achieves conditional coverage for the known grouping",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-group-bal-thm-class-cond",
+      "from": "thm-group-balanced-coverage",
+      "to": "thm-class-conditional-coverage",
+      "relation": "analogous_to",
+      "desc": "Analogous guarantee for different grouping criterion",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-class-cond-thm",
+      "from": "meth-class-conditional-cp",
+      "to": "thm-class-conditional-coverage",
+      "relation": "guaranteed_by",
+      "desc": "Class-conditional CP validity guaranteed by Proposition 2",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-class-cond-thm1",
+      "from": "meth-class-conditional-cp",
+      "to": "thm-split-cp-coverage",
+      "relation": "extends",
+      "desc": "Class-conditional CP extends standard CP with class-specific thresholds",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-class-cond-conditional",
+      "from": "meth-class-conditional-cp",
+      "to": "def-conditional-coverage",
+      "relation": "achieves",
+      "desc": "Achieves conditional coverage conditioned on Y",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-class-cond-thm-conditional",
+      "from": "thm-class-conditional-coverage",
+      "to": "def-conditional-coverage",
+      "relation": "achieves",
+      "desc": "Proposition 2 achieves conditional coverage conditioned on Y",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-crc-thm2",
+      "from": "thm-conformal-risk-control",
+      "to": "def-crc",
+      "relation": "underpins",
+      "desc": "Theorem 2 provides the theoretical foundation for CRC (P3)",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-crc-split-cp",
+      "from": "thm-conformal-risk-control",
+      "to": "def-split-conformal-prediction",
+      "relation": "generalizes",
+      "desc": "CRC generalizes conformal prediction to arbitrary losses",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-crc-thm1",
+      "from": "thm-conformal-risk-control",
+      "to": "thm-split-cp-coverage",
+      "relation": "includes_special_case",
+      "desc": "When ℓ = miscoverage loss, CRC reduces to standard CP guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-covshift-thm1",
+      "from": "thm-covariate-shift-coverage",
+      "to": "thm-split-cp-coverage",
+      "relation": "extends",
+      "desc": "Extends standard CP to covariate shift via likelihood-ratio weighting",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-covshift-marginal",
+      "from": "thm-covariate-shift-coverage",
+      "to": "def-marginal-coverage",
+      "relation": "preserves",
+      "desc": "Preserves marginal coverage under covariate shift",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-covshift-split-cp",
+      "from": "thm-covariate-shift-coverage",
+      "to": "def-split-conformal-prediction",
+      "relation": "special_case_of",
+      "desc": "Standard split CP is the special case when P = P_test",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-drift-thm1",
+      "from": "thm-distribution-drift-coverage",
+      "to": "thm-split-cp-coverage",
+      "relation": "extends",
+      "desc": "Extends standard CP to distribution drift via weighted quantile",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-drift-covshift",
+      "from": "thm-distribution-drift-coverage",
+      "to": "thm-covariate-shift-coverage",
+      "relation": "generalizes",
+      "desc": "Covariate shift is a special case of distribution drift with known likelihood ratio",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-drift-marginal",
+      "from": "thm-distribution-drift-coverage",
+      "to": "def-marginal-coverage",
+      "relation": "approximately_preserves",
+      "desc": "Provides approximate marginal coverage under drift (bounded loss)",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-drift-beta",
+      "from": "thm-distribution-drift-coverage",
+      "to": "thm-beta-coverage-distribution",
+      "relation": "affected_by",
+      "desc": "Effective sample size under drift affects Beta distribution variance",
+      "source": "angelopoulos2022",
+      "confidence": "medium"
+    },
+    {
+      "id": "e-outlier-thm",
+      "from": "meth-outlier-detection-cp",
+      "to": "thm-outlier-detection-guarantee",
+      "relation": "guaranteed_by",
+      "desc": "Outlier detection error control guaranteed by Proposition 3",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-outlier-split-cp",
+      "from": "meth-outlier-detection-cp",
+      "to": "def-split-conformal-prediction",
+      "relation": "specializes",
+      "desc": "Conformal outlier detection adapts split CP to unsupervised settings",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-outlier-cqr-cmp",
+      "from": "meth-outlier-detection-cp",
+      "to": "meth-cqr",
+      "relation": "compares_with",
+      "desc": "Different applications of the conformal framework",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    },
+    {
+      "id": "e-outlier-thm-thm1",
+      "from": "thm-outlier-detection-guarantee",
+      "to": "thm-split-cp-coverage",
+      "relation": "specializes",
+      "desc": "Outlier detection guarantee is a specialization of the standard CP guarantee",
+      "source": "angelopoulos2022",
+      "confidence": "high"
+    }
+  ]
+}

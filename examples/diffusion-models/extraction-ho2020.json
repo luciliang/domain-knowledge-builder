@@ -1,0 +1,400 @@
+{
+  "meta": {
+    "domain": "diffusion-models",
+    "created": "2026-06-28",
+    "last_updated": "2026-06-28",
+    "total_nodes": 15,
+    "total_edges": 22,
+    "sources": [
+      {
+        "id": "ho2020",
+        "paper": "Denoising Diffusion Probabilistic Models (Ho et al. NeurIPS 2020)",
+        "nodes": 15,
+        "edges": 22
+      }
+    ],
+    "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f"
+  },
+  "nodes": [
+    {
+      "id": "def-ho2020-forward-diffusion-process",
+      "type": "definition",
+      "label": "Forward Diffusion Process",
+      "file": "wiki/knowledge/def-ho2020-forward-diffusion-process.md",
+      "tokens": 750,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 88, "end_line": 120, "page": "2"}
+    },
+    {
+      "id": "def-ho2020-reverse-process",
+      "type": "definition",
+      "label": "Reverse Generative Process",
+      "file": "wiki/knowledge/def-ho2020-reverse-process.md",
+      "tokens": 700,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 88, "end_line": 97, "page": "2"}
+    },
+    {
+      "id": "def-ho2020-forward-posterior",
+      "type": "definition",
+      "label": "Tractable Forward Process Posterior",
+      "file": "wiki/knowledge/def-ho2020-forward-posterior.md",
+      "tokens": 650,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 131, "end_line": 140, "page": "2"}
+    },
+    {
+      "id": "thm-ho2020-elbo-variational-bound",
+      "type": "theorem",
+      "label": "ELBO / Variational Bound on Negative Log-Likelihood",
+      "file": "wiki/knowledge/thm-ho2020-elbo-variational-bound.md",
+      "tokens": 1200,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 106, "end_line": 140, "page": "2"}
+    },
+    {
+      "id": "thm-ho2020-score-matching-langevin-equivalence",
+      "type": "theorem",
+      "label": "Diffusion-ScoreMatching-Langevin Equivalence",
+      "file": "wiki/knowledge/thm-ho2020-score-matching-langevin-equivalence.md",
+      "tokens": 1500,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 157, "end_line": 237, "page": "3"}
+    },
+    {
+      "id": "meth-ho2020-epsilon-prediction",
+      "type": "method",
+      "label": "Epsilon-Prediction Parameterization",
+      "file": "wiki/knowledge/meth-ho2020-epsilon-prediction.md",
+      "tokens": 850,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 166, "end_line": 237, "page": "3"}
+    },
+    {
+      "id": "meth-ho2020-ddpm-training",
+      "type": "method",
+      "label": "DDPM Training (Simplified Objective Lsimple)",
+      "file": "wiki/knowledge/meth-ho2020-ddpm-training.md",
+      "tokens": 1000,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 261, "end_line": 308, "page": "4"}
+    },
+    {
+      "id": "meth-ho2020-ddpm-sampling",
+      "type": "method",
+      "label": "DDPM Ancestral Sampling",
+      "file": "wiki/knowledge/meth-ho2020-ddpm-sampling.md",
+      "tokens": 800,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 193, "end_line": 220, "page": "3"}
+    },
+    {
+      "id": "meth-ho2020-variance-schedule",
+      "type": "method",
+      "label": "Fixed Variance Schedule (Forward beta and Reverse sigma)",
+      "file": "wiki/knowledge/meth-ho2020-variance-schedule.md",
+      "tokens": 800,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 151, "end_line": 165, "page": "3"}
+    },
+    {
+      "id": "exp-ho2020-cifar10-results",
+      "type": "experiment",
+      "label": "CIFAR-10 Sample Quality Results",
+      "file": "wiki/knowledge/exp-ho2020-cifar10-results.md",
+      "tokens": 850,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 268, "end_line": 335, "page": "5"}
+    },
+    {
+      "id": "exp-ho2020-lsun-results",
+      "type": "experiment",
+      "label": "LSUN and CelebA-HQ 256 Results",
+      "file": "wiki/knowledge/exp-ho2020-lsun-results.md",
+      "tokens": 700,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 339, "end_line": 352, "page": "6"}
+    },
+    {
+      "id": "exp-ho2020-ablation",
+      "type": "experiment",
+      "label": "Reverse Process Parameterization & Objective Ablation",
+      "file": "wiki/knowledge/exp-ho2020-ablation.md",
+      "tokens": 850,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 268, "end_line": 294, "page": "5"}
+    },
+    {
+      "id": "ins-ho2020-simplified-objective-downweights",
+      "type": "insight",
+      "label": "Lsimple Down-Weights Small-t Terms, Improving Sample Quality",
+      "file": "wiki/knowledge/ins-ho2020-simplified-objective-downweights.md",
+      "tokens": 800,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 309, "end_line": 316, "page": "4"}
+    },
+    {
+      "id": "ins-ho2020-progressive-lossy-compression",
+      "type": "insight",
+      "label": "Diffusion as Progressive Lossy Compression (Rate-Distortion)",
+      "file": "wiki/knowledge/ins-ho2020-progressive-lossy-compression.md",
+      "tokens": 900,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 366, "end_line": 430, "page": "6"}
+    },
+    {
+      "id": "ins-ho2020-autoregressive-generalization",
+      "type": "insight",
+      "label": "Gaussian Diffusion Generalizes Autoregressive Decoding",
+      "file": "wiki/knowledge/ins-ho2020-autoregressive-generalization.md",
+      "tokens": 850,
+      "source": "ho2020",
+      "created": "2026-06-28",
+      "generated_by_step": "S2",
+      "run_id": "09207eda-1bc6-46b7-a8f3-779abb928d4f",
+      "source_span": {"file": "ho2020-ddpm.pdf", "start_line": 444, "end_line": 471, "page": "7"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-fwd-posterior",
+      "from": "def-ho2020-forward-diffusion-process",
+      "to": "def-ho2020-forward-posterior",
+      "relation": "depends_on",
+      "desc": "Understanding the forward posterior q(x_{t-1}|x_t,x0) requires the forward diffusion chain",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-fwd-elbo",
+      "from": "def-ho2020-forward-diffusion-process",
+      "to": "thm-ho2020-elbo-variational-bound",
+      "relation": "depends_on",
+      "desc": "The ELBO decomposition L_T, L_t, L_0 all derive from the Gaussian forward process",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-rev-elbo",
+      "from": "def-ho2020-reverse-process",
+      "to": "thm-ho2020-elbo-variational-bound",
+      "relation": "depends_on",
+      "desc": "The variational bound compares the learned reverse process against the forward posterior",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-post-elbo",
+      "from": "def-ho2020-forward-posterior",
+      "to": "thm-ho2020-elbo-variational-bound",
+      "relation": "depends_on",
+      "desc": "The KL terms L_{t-1} are computed against the tractable forward posterior",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-elbo-training",
+      "from": "thm-ho2020-elbo-variational-bound",
+      "to": "meth-ho2020-ddpm-training",
+      "relation": "specializes",
+      "desc": "Lsimple is a special (down-weighted) variant of the general ELBO L",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-eps-training",
+      "from": "meth-ho2020-epsilon-prediction",
+      "to": "meth-ho2020-ddpm-training",
+      "relation": "depends_on",
+      "desc": "The training algorithm relies on the epsilon-prediction parameterization of the reverse mean",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-eps-equiv",
+      "from": "meth-ho2020-epsilon-prediction",
+      "to": "thm-ho2020-score-matching-langevin-equivalence",
+      "relation": "depends_on",
+      "desc": "The score-matching/Langevin equivalence is derived from the epsilon-prediction parameterization (Eqs 10-12)",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-rev-equiv",
+      "from": "def-ho2020-reverse-process",
+      "to": "thm-ho2020-score-matching-langevin-equivalence",
+      "relation": "depends_on",
+      "desc": "The equivalence analyzes the learned reverse process transitions",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-equiv-sampling",
+      "from": "thm-ho2020-score-matching-langevin-equivalence",
+      "to": "meth-ho2020-ddpm-sampling",
+      "relation": "depends_on",
+      "desc": "The sampling procedure is interpreted as Langevin dynamics via the equivalence",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-var-fwd",
+      "from": "meth-ho2020-variance-schedule",
+      "to": "def-ho2020-forward-diffusion-process",
+      "relation": "depends_on",
+      "desc": "The forward process is parameterized by the beta variance schedule",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-var-rev",
+      "from": "meth-ho2020-variance-schedule",
+      "to": "def-ho2020-reverse-process",
+      "relation": "depends_on",
+      "desc": "The reverse process covariance Sigma_theta is set from the fixed variance schedule",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-var-sampling",
+      "from": "meth-ho2020-variance-schedule",
+      "to": "meth-ho2020-ddpm-sampling",
+      "relation": "depends_on",
+      "desc": "Ancestral sampling uses sigma_t drawn from the variance schedule",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-training-insight",
+      "from": "meth-ho2020-ddpm-training",
+      "to": "ins-ho2020-simplified-objective-downweights",
+      "relation": "depends_on",
+      "desc": "Understanding why Lsimple works requires understanding the simplified objective",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-abl-eps",
+      "from": "exp-ho2020-ablation",
+      "to": "meth-ho2020-epsilon-prediction",
+      "relation": "evaluates",
+      "desc": "Table 2 ablates epsilon vs mu-tilde prediction",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-abl-training",
+      "from": "exp-ho2020-ablation",
+      "to": "meth-ho2020-ddpm-training",
+      "relation": "evaluates",
+      "desc": "Table 2 ablates Lsimple vs true variational bound L",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-abl-var",
+      "from": "exp-ho2020-ablation",
+      "to": "meth-ho2020-variance-schedule",
+      "relation": "evaluates",
+      "desc": "Table 2 ablates learned vs fixed covariance Sigma",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cifar-training",
+      "from": "exp-ho2020-cifar10-results",
+      "to": "meth-ho2020-ddpm-training",
+      "relation": "evaluates",
+      "desc": "CIFAR-10 FID 3.17 achieved with Lsimple training objective",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-cifar-eps",
+      "from": "exp-ho2020-cifar10-results",
+      "to": "meth-ho2020-epsilon-prediction",
+      "relation": "evaluates",
+      "desc": "Best CIFAR-10 results use epsilon prediction",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-lsun-training",
+      "from": "exp-ho2020-lsun-results",
+      "to": "meth-ho2020-ddpm-training",
+      "relation": "evaluates",
+      "desc": "LSUN/CelebA-HQ 256 results use the same Lsimple + epsilon-prediction recipe",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-ar-elbo",
+      "from": "ins-ho2020-autoregressive-generalization",
+      "to": "thm-ho2020-elbo-variational-bound",
+      "relation": "depends_on",
+      "desc": "The autoregressive generalization argument rewrites the ELBO as Eq.16",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-rd-elbo",
+      "from": "ins-ho2020-progressive-lossy-compression",
+      "to": "thm-ho2020-elbo-variational-bound",
+      "relation": "depends_on",
+      "desc": "The rate-distortion view splits the ELBO into rate (sum L_t) and distortion (L_0)",
+      "source": "ho2020",
+      "confidence": "high"
+    },
+    {
+      "id": "e-ar-rd",
+      "from": "ins-ho2020-autoregressive-generalization",
+      "to": "ins-ho2020-progressive-lossy-compression",
+      "relation": "compares_with",
+      "desc": "Both are reinterpretations of the same ELBO: one as generalized autoregressive decoding, the other as progressive lossy compression",
+      "source": "ho2020",
+      "confidence": "medium"
+    }
+  ]
+}

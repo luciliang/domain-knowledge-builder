@@ -1,0 +1,20 @@
+# 原始论文 PDFs / 全文（版权，不提交）
+raw/sources/*.pdf
+raw/sources/*.html
+raw/sources/*.md
+!raw/sources/PLACEHOLDER.md
+full_text.txt
+full-text.txt
+
+# 运行时缓存
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+
+# 大文件（精简版不提交 .git，发布版用 GitHub 自身历史）
+examples/*/.git/
+
+# docling 模型缓存（如本地装了）
+*.bin
+*.safetensors

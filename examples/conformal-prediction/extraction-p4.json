@@ -1,0 +1,238 @@
+{
+  "meta": {
+    "source": "min2026",
+    "paper": "A Unified Theory of Conditional Coverage for Conformal Prediction",
+    "authors": ["Yinjie Min", "Liuhua Peng", "Changliang Zou"],
+    "year": 2026,
+    "venue": "arXiv:2605.11602v3 [stat.ME]",
+    "extracted": "2026-06-24",
+    "total_nodes": 20,
+    "total_edges": 42
+  },
+  "nodes": [
+    {
+      "id": "def-unified-cp-framework",
+      "type": "definition",
+      "label": "Unified CP Framework via Weighted Conformal Quantiles",
+      "file": "wiki/knowledge/def-unified-cp-framework.md",
+      "tokens": 900,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-marginal-coverage-weighted",
+      "type": "theorem",
+      "label": "Theorem 1: Marginal Coverage of Weighted CP",
+      "file": "wiki/knowledge/thm-marginal-coverage-weighted.md",
+      "tokens": 1100,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-three-term-decomposition",
+      "type": "theorem",
+      "label": "Theorem 2: Three-Term Conditional Miscoverage Decomposition",
+      "file": "wiki/knowledge/thm-three-term-decomposition.md",
+      "tokens": 1500,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-three-errors",
+      "type": "definition",
+      "label": "Three Components of Conditional Miscoverage",
+      "file": "wiki/knowledge/def-three-errors.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-averaged-miscoverage",
+      "type": "theorem",
+      "label": "Theorem 3: Averaged Conditional Miscoverage under Weak Conditions",
+      "file": "wiki/knowledge/thm-averaged-miscoverage.md",
+      "tokens": 1200,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-cc-averaged",
+      "type": "theorem",
+      "label": "Corollary 1: Averaged Conditional Miscoverage of CC",
+      "file": "wiki/knowledge/thm-cc-averaged.md",
+      "tokens": 900,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-model-selection-cc",
+      "type": "method",
+      "label": "Conditional-Coverage-Oriented Model Selection",
+      "file": "wiki/knowledge/meth-model-selection-cc.md",
+      "tokens": 1200,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-covariate-shift-marginal",
+      "type": "theorem",
+      "label": "Theorem 4: Marginal Coverage under Covariate Shift",
+      "file": "wiki/knowledge/thm-covariate-shift-marginal.md",
+      "tokens": 800,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-covariate-shift-conditional",
+      "type": "method",
+      "label": "Conditional Methods under Covariate Shift (Density-Ratio + Localization)",
+      "file": "wiki/knowledge/meth-covariate-shift-conditional.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-symmpi-structured",
+      "type": "theorem",
+      "label": "Theorem 5: Marginal Coverage under SymmPI (Structured Data)",
+      "file": "wiki/knowledge/thm-symmpi-structured.md",
+      "tokens": 900,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-symmpi-conditional",
+      "type": "theorem",
+      "label": "Theorem 6: Conditional Miscoverage Decomposition under SymmPI",
+      "file": "wiki/knowledge/thm-symmpi-conditional.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "meth-graphcp",
+      "type": "method",
+      "label": "GraphCP: Community-Conditional Conformal Prediction on Graphs",
+      "file": "wiki/knowledge/meth-graphcp.md",
+      "tokens": 1300,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "thm-community-conditional",
+      "type": "theorem",
+      "label": "Theorem 7: Community-Conditional Miscoverage Convergence",
+      "file": "wiki/knowledge/thm-community-conditional.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "ins-method-comparison-table",
+      "type": "insight",
+      "label": "Unified Error Decomposition Across Methods (Table 1)",
+      "file": "wiki/knowledge/ins-method-comparison-table.md",
+      "tokens": 1100,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "ins-intrinsic-error-necessity",
+      "type": "insight",
+      "label": "Intrinsic Conditional-Mismatch Error is the Key Bottleneck",
+      "file": "wiki/knowledge/ins-intrinsic-error-necessity.md",
+      "tokens": 800,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "exp-covariate-shift",
+      "type": "experiment",
+      "label": "Conditional Methods under Covariate Shift (Synthetic)",
+      "file": "wiki/knowledge/exp-covariate-shift.md",
+      "tokens": 1200,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "exp-model-selection",
+      "type": "experiment",
+      "label": "Conditional-Coverage-Oriented Model Selection Experiments",
+      "file": "wiki/knowledge/exp-model-selection.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "exp-toloker-graph",
+      "type": "experiment",
+      "label": "GraphCP on Toloker Dataset (Real Graph Data)",
+      "file": "wiki/knowledge/exp-toloker-graph.md",
+      "tokens": 1000,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "def-conditional-coverage",
+      "type": "definition",
+      "label": "Conditional Coverage Notions in CP",
+      "file": "wiki/knowledge/def-conditional-coverage.md",
+      "tokens": 800,
+      "source": "min2026",
+      "created": "2026-06-24"
+    },
+    {
+      "id": "ins-wcp-limitation",
+      "type": "insight",
+      "label": "WCP Restores Marginal but Not Conditional Coverage under Covariate Shift",
+      "file": "wiki/knowledge/ins-wcp-limitation.md",
+      "tokens": 700,
+      "source": "min2026",
+      "created": "2026-06-24"
+    }
+  ],
+  "edges": [
+    {"id": "e-p4-01", "from": "def-unified-cp-framework", "to": "thm-marginal-coverage-weighted", "relation": "guarantees", "desc": "Unified framework enables marginal coverage theorem via weighted quantiles", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-02", "from": "def-unified-cp-framework", "to": "thm-three-term-decomposition", "relation": "guarantees", "desc": "Unified framework enables the three-term conditional miscoverage decomposition", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-03", "from": "def-unified-cp-framework", "to": "def-conformal-coverage", "relation": "extends", "desc": "Unified framework generalizes standard conformal coverage definition to weighted quantiles", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-04", "from": "thm-marginal-coverage-weighted", "to": "def-conformal-coverage", "relation": "extends", "desc": "Theorem 1 extends standard marginal coverage to weighted calibration schemes", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-05", "from": "thm-marginal-coverage-weighted", "to": "thm-three-term-decomposition", "relation": "depends_on", "desc": "Marginal coverage is baseline for conditional coverage analysis", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-06", "from": "thm-three-term-decomposition", "to": "def-three-errors", "relation": "specializes", "desc": "Theorem 2 defines the three error components in detail", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-07", "from": "thm-three-term-decomposition", "to": "thm-averaged-miscoverage", "relation": "generalizes", "desc": "Pointwise Theorem 2 has averaged counterpart in Theorem 3", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-08", "from": "thm-three-term-decomposition", "to": "def-conditional-coverage", "relation": "extends", "desc": "Three-term decomposition applies to all conditional coverage notions", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-09", "from": "thm-three-term-decomposition", "to": "meth-model-selection-cc", "relation": "extends", "desc": "Intrinsic error component drives model selection criterion design", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-10", "from": "def-three-errors", "to": "ins-method-comparison-table", "relation": "extends", "desc": "Three-error decomposition enables unified method comparison", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-11", "from": "def-three-errors", "to": "meth-model-selection-cc", "relation": "depends_on", "desc": "Intrinsic error is the target quantity for model selection", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-12", "from": "thm-averaged-miscoverage", "to": "thm-cc-averaged", "relation": "specializes", "desc": "Theorem 3 specializes to CC via Corollary 1", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-13", "from": "thm-averaged-miscoverage", "to": "ins-method-comparison-table", "relation": "applies_to", "desc": "Averaged bound is used for BatchGCP and CC entries in Table 1", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-14", "from": "thm-cc-averaged", "to": "ins-method-comparison-table", "relation": "applies_to", "desc": "CC averaged bound fills Table 1 CC entry", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-15", "from": "thm-covariate-shift-marginal", "to": "thm-marginal-coverage-weighted", "relation": "extends", "desc": "Theorem 4 extends Theorem 1 to covariate shift setting", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-16", "from": "thm-covariate-shift-marginal", "to": "def-conformal-coverage", "relation": "extends", "desc": "Marginal coverage preserved under covariate shift", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-17", "from": "thm-covariate-shift-marginal", "to": "meth-covariate-shift-conditional", "relation": "depends_on", "desc": "Marginal coverage theorem guides covariate shift method design", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-18", "from": "meth-covariate-shift-conditional", "to": "thm-three-term-decomposition", "relation": "depends_on", "desc": "Covariate shift design uses three-term decomposition guidance", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-19", "from": "meth-covariate-shift-conditional", "to": "exp-covariate-shift", "relation": "applies_to", "desc": "Covariate shift methods evaluated in synthetic experiments", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-20", "from": "def-unified-cp-framework", "to": "thm-symmpi-structured", "relation": "extends", "desc": "Unified framework extends from i.i.d. to structural symmetry", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-21", "from": "thm-symmpi-structured", "to": "thm-marginal-coverage-weighted", "relation": "extends", "desc": "SymmPI marginal coverage generalizes i.i.d. marginal coverage", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-22", "from": "thm-symmpi-structured", "to": "thm-symmpi-conditional", "relation": "guarantees", "desc": "SymmPI marginal coverage enables conditional miscoverage analysis", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-23", "from": "thm-symmpi-conditional", "to": "thm-three-term-decomposition", "relation": "extends", "desc": "SymmPI conditional decomposition mirrors i.i.d. three-term structure", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-24", "from": "thm-symmpi-conditional", "to": "meth-graphcp", "relation": "applies_to", "desc": "SymmPI conditional decomposition analyzed for graph CP", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-25", "from": "meth-graphcp", "to": "thm-community-conditional", "relation": "guarantees", "desc": "Theorem 7 provides community-conditional coverage guarantee for GraphCP", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-26", "from": "meth-graphcp", "to": "exp-toloker-graph", "relation": "applies_to", "desc": "GraphCP evaluated on Toloker real graph dataset", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-27", "from": "thm-community-conditional", "to": "exp-toloker-graph", "relation": "applies_to", "desc": "Theorem 7 predictions validated by Toloker experiments", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-28", "from": "ins-method-comparison-table", "to": "exp-covariate-shift", "relation": "applies_to", "desc": "Method comparison insights validated in covariate shift experiments", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-29", "from": "ins-intrinsic-error-necessity", "to": "def-three-errors", "relation": "depends_on", "desc": "Key insight relies on three-error decomposition", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-30", "from": "ins-intrinsic-error-necessity", "to": "meth-model-selection-cc", "relation": "depends_on", "desc": "Intrinsic error as bottleneck motivates model selection approach", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-31", "from": "meth-model-selection-cc", "to": "exp-model-selection", "relation": "applies_to", "desc": "Model selection method evaluated in experiments", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-32", "from": "thm-three-term-decomposition", "to": "exp-model-selection", "relation": "extends", "desc": "Decomposition theory motivates model selection experiments", "source": "min2026", "confidence": "medium"},
+    {"id": "e-p4-33", "from": "exp-covariate-shift", "to": "thm-covariate-shift-marginal", "relation": "evaluates", "desc": "Experiments validate covariate shift marginal coverage recovery", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-34", "from": "exp-model-selection", "to": "meth-model-selection-cc", "relation": "evaluates", "desc": "Experiments demonstrate selection criterion effectiveness", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-35", "from": "exp-toloker-graph", "to": "meth-graphcp", "relation": "evaluates", "desc": "Experiments validate GraphCP community-conditional coverage", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-36", "from": "meth-graphcp", "to": "meth-sem-crc", "relation": "compares_with", "desc": "GraphCP targets graph community coverage vs sem-CRC targets pixel semantic groups", "source": "min2026", "confidence": "medium"},
+    {"id": "e-p4-37", "from": "meth-model-selection-cc", "to": "meth-sem-crc", "relation": "compares_with", "desc": "P4 model selection does not require separate hold-out set, unlike P3's sem-CRC evaluation approach", "source": "min2026", "confidence": "medium"},
+    {"id": "e-p4-38", "from": "ins-wcp-limitation", "to": "thm-covariate-shift-marginal", "relation": "depends_on", "desc": "WCP limitation is derived from the covariate shift marginal coverage analysis", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-39", "from": "ins-wcp-limitation", "to": "def-three-errors", "relation": "depends_on", "desc": "WCP's nonzero intrinsic error is a consequence of the three-error decomposition", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-40", "from": "ins-wcp-limitation", "to": "meth-covariate-shift-conditional", "relation": "extends", "desc": "WCP limitation motivates combined density-ratio + localization methods", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-41", "from": "thm-symmpi-conditional", "to": "thm-community-conditional", "relation": "specializes", "desc": "Community-conditional result is a specialization of SymmPI conditional decomposition", "source": "min2026", "confidence": "high"},
+    {"id": "e-p4-42", "from": "def-conditional-coverage", "to": "thm-three-term-decomposition", "relation": "depends_on", "desc": "Conditional coverage definition is the target analyzed by the three-term decomposition", "source": "min2026", "confidence": "high"}
+  ]
+}
