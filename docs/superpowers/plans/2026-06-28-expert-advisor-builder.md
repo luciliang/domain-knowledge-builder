@@ -379,6 +379,16 @@ def test_end_to_end_lint_flags_orphan_in_temp_skill(tmp_path):
     dag = json.loads((dag_dir / "dag-index.json").read_text())
     issues = lint.check_grounding_existence(dag, art["judgments"])
     assert any("thm-bar" in i for i in issues)
+
+def test_end_to_end_lint_flags_mental_model_no_grounding(tmp_path):
+    """端到端：硬门①接入——mental_model 三重全过但无 grounded_in 应被报"""
+    lint = _load_lint("pipeline/state/lint_d7.py")
+    em = tmp_path / "expert-mind"; em.mkdir()
+    (em / "mental-models.md").write_text(
+        "---\nid: mm-1\ntype: mental_model\nverification:\n  cross_scene: {pass: true}\n  generative: {pass: true}\n  exclusive: {pass: true}\ngrounded_in: []\n---\nbody")
+    art = lint.load_mind_artifacts(tmp_path)
+    issues = lint.check_mind_element_grounding(art["elements"])
+    assert any("mm-1" in i for i in issues)
 ```
 
 - [ ] **Step 2: 运行确认失败**
@@ -410,6 +420,8 @@ def load_mind_artifacts(skill_root):
         elif fm.get("type") in ("mental_model", "heuristic", "anti_pattern"): elements.append(fm)
     return {"judgments": judgments, "elements": elements}
 ```
+⚠️ **实施注意**：① 本步对 `test_lint_d7.py` 是 **Edit 追加**（勿 Write 覆盖 Task 4.1/4.2 的 `_load_lint` 与前 4 个 test）；② 先确认现有 `lint_d7.py` 的 argparse 已定义 `--target-skill-root`（类型 Path），否则先补该参数（否则 `args.target_skill_root / "dag"` 的 `/` 运算失败）；③ 以下代码**插入现有 checks dict 内**，保留其他 check。
+
 在 `main()` 的 checks dict 加（保留现有 check_*）：
 ```python
 dag_path = args.target_skill_root / "dag" / "dag-index.json"
