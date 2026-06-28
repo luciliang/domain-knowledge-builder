@@ -12,7 +12,7 @@ source_span:
   file: vandermaaten2008-tsne.pdf
   start_line: 1
   end_line: 1
-  page: "3337"
+  page: "2579-2605"
 ---
 
 ## 精确表述
