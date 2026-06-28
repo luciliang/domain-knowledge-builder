@@ -24,6 +24,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    import yaml
+except ImportError:
+    yaml = None  # 无 PyYAML 时 fallback，_parse_frontmatter 返回 {}
+
 
 # ========== 1. 可回滚 ==========
 
@@ -191,7 +196,70 @@ def check_path_determinism(target_root: Path) -> dict:
     return {"ok": len(issues) == 0, "scanned": scanned, "violations": len(violations), "issues": issues}
 
 
+# ========== 6. 硬门③：grounded_in 节点存在性 ==========
+
+def check_grounding_existence(dag_index, judgments):
+    """硬门③：judgment/心智元素的 grounded_in 节点必须存在于 DAG。"""
+    valid_ids = {n["id"] for n in dag_index.get("nodes", [])}
+    issues = []
+    for j in judgments:
+        for ref in j.get("grounded_in", []):
+            node = ref.get("node") if isinstance(ref, dict) else ref
+            if node not in valid_ids:
+                issues.append(f"{j['id']}: grounded_in 指向不存在的节点 {node}")
+    return issues
+
+
+# ========== 7. 硬门①：mental_model 3重全过必 grounded_in ==========
+
+def check_mind_element_grounding(elements):
+    """硬门①：3重过的 mental_model 必须 grounded_in ≥1（heuristic 可选）。
+    注：anti_pattern 的 role:refutes 约束、judgment 的 derived_from 继承正确性
+    由 fresh subagent 抽查兜底（硬门①②），lint 不程序化校验。"""
+    issues = []
+    for e in elements:
+        v = e.get("verification", {})
+        all_pass = all(v.get(k, {}).get("pass") for k in ("cross_scene","generative","exclusive"))
+        if e.get("type") == "mental_model" and all_pass and not e.get("grounded_in"):
+            issues.append(f"{e['id']}: mental_model(3重全过) 缺 grounded_in 依据（硬门①）")
+    return issues
+
+
 # ========== 主流程 ==========
+
+def _parse_frontmatter(text):
+    """解析 .md 文件的 YAML frontmatter，无 frontmatter 或无 PyYAML 时返回 {}。"""
+    m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+    if not m:
+        return {}
+    if yaml:
+        return yaml.safe_load(m.group(1)) or {}
+    # PyYAML 缺失 fallback：至少抽出顶层 type/id 不足以表达嵌套，这里仅警告并返回空
+    print("warning: PyYAML 未安装，frontmatter 解析返回空（请 pip install pyyaml）", file=sys.stderr)
+    return {}
+
+
+def load_mind_artifacts(skill_root):
+    """从 expert-mind/*.md 解析 judgments + mind elements 的 frontmatter。
+
+    Returns:
+        {"judgments": [...], "elements": [...]}
+        judgments: type == "judgment" 的 frontmatter 列表
+        elements:  type in ("mental_model", "heuristic", "anti_pattern") 的列表
+    """
+    em = Path(skill_root) / "expert-mind"
+    if not em.exists():
+        return {"judgments": [], "elements": []}
+    judgments, elements = [], []
+    for f in em.glob("*.md"):
+        fm = _parse_frontmatter(f.read_text())
+        t = fm.get("type")
+        if t == "judgment":
+            judgments.append(fm)
+        elif t in ("mental_model", "heuristic", "anti_pattern"):
+            elements.append(fm)
+    return {"judgments": judgments, "elements": elements}
+
 
 def main():
     p = argparse.ArgumentParser(description="D7 Generator 合规 Lint")
@@ -202,12 +270,29 @@ def main():
 
     target = args.target_skill_root
 
+    # 加载 DAG 与心智元素 frontmatter（硬门①③输入）
+    dag_path = target / "dag" / "dag-index.json"
+    dag = json.loads(dag_path.read_text()) if dag_path.exists() else {"nodes": []}
+    artifacts = load_mind_artifacts(target)
+
+    # 硬门①③返回 list[str]（issues 列表），需包装成 {ok, issues} 以适配主流程渲染
+    grounding_issues = check_grounding_existence(dag, artifacts["judgments"])
+    mind_grounding_issues = check_mind_element_grounding(artifacts["elements"])
+
     checks = {
         "可回滚 (Reversible)": check_reversible(target),
         "可审计 (Auditable)": check_auditable(target, args.legacy_ok),
         "确定性 (Deterministic)": check_deterministic(target),
         "预检 (Preflight)": check_preflight(target),
         "路径确定性 (Path Determinism)": check_path_determinism(target),
+        "硬门③ grounded_in 节点存在 (Grounding Existence)": {
+            "ok": len(grounding_issues) == 0, "issues": grounding_issues,
+            "judgments_count": len(artifacts["judgments"]),
+        },
+        "硬门① mental_model 3重全过必 grounded_in": {
+            "ok": len(mind_grounding_issues) == 0, "issues": mind_grounding_issues,
+            "elements_count": len(artifacts["elements"]),
+        },
     }
 
     has_error = False
