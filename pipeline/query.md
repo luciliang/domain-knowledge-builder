@@ -175,45 +175,15 @@ provenance:
 
 ---
 
-## 4. 加载效率提示（token 预算）
+## 4. 加载效率原则
 
-| 查询模式 | 加载内容 | tokens |
-|---------|---------|--------|
-| **知识模式** | SKILL.md + dag-index.json + 3-5 个知识节点 | ~8-11K |
-| **心智模式** | SKILL.md + expert-mind/mental-models.md + expert-mind/judgments.md | ~6-9K |
-| **融合模式**（全）| SKILL.md + mental-models.md + judgments.md + 3-5 个知识节点 | ~12-16K |
-| **Ingest/Lint** | 额外加 schema/*.md | +3-6K |
-
-**原则**：
-- schema 细节（节点模板、命名规范）仅在创建/修改节点时加载，查询时不读
-- 查询优先读索引（dag-index.json / judgments.md），按需加载节点全文
-- 融合模式最全，token 最高，适合「判断 + 依据」的深度查询
+查询优先读 dag-index.json / judgments.md 的 frontmatter，按需加载节点全文（剪枝到 3-5 个节点）。schema 细节仅在创建/修改节点时加载，查询时不读。
 
 ---
 
-## 5. 查询质量自检（三模式通用）
+## 5. 查询质量校验
 
-### 通用自检
-
-回答前自问：
-- [ ] 每个论点引用了具体节点 ID / judgment ID？
-- [ ] 知识模式：定理/方法原文 + 来源 provenance？
-- [ ] 心智模式：判断 + 推理链 + 依据节点 ID？
-- [ ] 融合模式：四要素完整（立场 + 理论依据 + 替代方案 + 局限）？
-
-### 诚实边界自检
-
-- [ ] 推断判断是否标注「推断·非原话」或 `status: inferred`？
-- [ ] 知识缺口是否明说「未覆盖」，不补脑？
-- [ ] 观点演化是否标注「早期/近期」？
-- [ ] 矛盾判断是否并列双方 + 适用边界？
-- [ ] 落在反模式是否直接说「专家会反对，因为…」？
-
-### 引用完整性
-
-- [ ] 知识模式：每个论点引用知识节点 ID（如 `thm-xxx`）
-- [ ] 心智模式：每个判断引用 judgment ID（如 `judg-xxx`）
-- [ ] 融合模式：每个论点同时引用 judgment ID + 知识节点 ID
+校验规则见 spec §7（三硬门）与 §6.4（诚实边界），本协议不重复定义。
 
 ---
 
@@ -228,22 +198,9 @@ provenance:
 
 ---
 
-## 7. Schema 引用（扩展说明）
+## 7. Schema 引用原则
 
-### 相关 schema 文件
-
-| 查询要素 | 来源 schema | 关键字段 |
-|---------|------------|----------|
-| **知识节点** | `schema/schema.md` | 节点类型（def/thm/meth/exp/ins）+ 关系（uses/generalizes/contradicts） |
-| **专家心智元素** | `schema/expert-mind.md` | mental_model / heuristic / anti_pattern + verification |
-| **判断（judgment）** | `schema/coupling.md` | judgment + reasoning + grounded_in + status |
-| **来源打标** | `schema/source.md` | value（knowledge/mind/both）+ channel + provenance |
-
-### 查询时不读 schema 细节
-
-- 知识类型和关系 → 直接读 `dag-index.json` 的 edges 字段
-- judgment 结构 → 直接读 `expert-mind/judgments.md` 的 frontmatter
-- schema 细节（模板、命名规范）仅在创建/修改节点时加载
+查询时不读 schema 细节，直接读 dag-index.json / expert-mind/judgments.md frontmatter。
 
 ---
 
