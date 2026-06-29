@@ -109,6 +109,8 @@ source_span:                      # 原文定位，便于追溯验证
 | `cites` | B 的结果引用了 A | A → B | Vovk 2005 → Shafer 2008 |
 | `applies_to` | B 将 A 应用于具体场景 | A → B | CP theory → medical calibration |
 
+> **边 ID 确定性规范（§10.2）**：每条边的 `id` 必须由公式 `edge_id = {from}|{relation}|{to}` 纯函数生成，而非手写 slug。详见 §10.2。
+
 ---
 
 ## 4. dag-index.json 结构
@@ -142,7 +144,7 @@ source_span:                      # 原文定位，便于追溯验证
   ],
   "edges": [
     {
-      "id": "e-gc-coverage",
+      "id": "thm-glivenko-cantelli|guarantees|def-coverage",
       "from": "thm-glivenko-cantelli",
       "to": "def-coverage",
       "relation": "guarantees",
@@ -155,6 +157,8 @@ source_span:                      # 原文定位，便于追溯验证
 ```
 
 **confidence 字段**：`high`（原文明确表述）、`medium`（推断但合理）、`low`（推测，需验证）。
+
+**edge `id` 字段（§10.2）**：必须由公式 `edge_id = {from}|{relation}|{to}` 生成（如上例），禁止手写 slug（如 `e-gc-coverage`）。`|` 不在节点 ID 字符集 `[a-z0-9-]` 内，故三元组与 id 双射、可 `split('|')` 反解析，增量合并按 id 去重即幂等。
 
 ---
 
@@ -243,7 +247,7 @@ source_span:                      # 原文定位，便于追溯验证
 ### Generator 合规检查（D7 新增，见 §12）
 - 路径确定性：generated skill 的节点文件是否只用 skill-root-relative 路径（无绝对路径、无 meta-skill-root-relative 路径）
 - Provenance 完整性：新 ingest 的节点是否全部含 generated_by_step/run_id/source_span
-- Determinism：同源重跑是否产生同 node ID
+- Determinism：同源重跑是否产生同 node ID（§10）+ 边 ID 符公式（§10.2）
 - 输出 `lint-report.md`
 
 ---
@@ -288,6 +292,24 @@ node_id = <type前缀>-<source-slug>-<canonical-term>
 - ❌ 时间戳命名（`thm-20260627-001`）
 - ❌ 随机后缀（`thm-foo-a3b2`）
 - ❌ 流水号（`thm-001`、`thm-002`）
+
+### 边 ID 确定性（§10.2）
+
+**目标**：同一逻辑边（同 `from→relation→to`）重跑永远产生同一 `edge_id`，增量合并可按 id 去重，避免边层面 DAG 膨胀（补 §10 节点 ID 之外的边层面幂等）。
+
+**公式**（纯函数、确定性）：
+
+```
+edge_id = {from}|{relation}|{to}
+```
+
+- `from`/`relation`/`to` 均属 `[a-z0-9-]`，内部无 `|` → 三元组与 `edge_id` 双射，可 `split('|')` 反解析
+- 与节点 ID（`def-`/`thm-`/...）天然不冲突：边 ID 含 `|`，节点 ID 不含
+- 借鉴 Hyper-Extract 的 `identifiers: {relation_id: '{source}|{type}|{target}'}` 机制
+
+**幂等去重**：增量 ingest 时，新边的 `edge_id` 若已存在于 `dag-index.json` → 跳过（同逻辑边不重复入库）。
+
+**Legacy 宽容**：现有 examples 的边 ID 是历史手写 slug（如 `e-gc-coverage`），不迁移；跑 lint 时带 `--legacy-ok` 宽容，新生成 skill 默认严格。详见 §12.3 Lint。
 
 ---
 
@@ -347,7 +369,9 @@ CP 实例的 50 节点无 provenance 字段——合法，但 Lint 会标注 `[l
 
 ### 12.3 确定性（Deterministic）
 - node ID 遵循 §10 规范
-- Lint 检查：同源重跑 node ID 一致性（增量 ingest 后无重复/冲突 ID）
+- **edge ID 遵循 §10.2 公式** `edge_id = {from}|{relation}|{to}`（手写 slug 不允许）
+- Lint 检查：同源重跑 node ID 一致性（增量 ingest 后无重复/冲突 ID）；边 ID 符公式 + 无重复 edge ID
+- Legacy：`--legacy-ok` 时容忍历史 examples 的旧 slug 边 ID（不计 error，仅记 `legacy_edges` 统计）
 
 ### 12.4 预检（Preflight）
 - pipeline S1 先跑 `python -m engines.book_to_skill --check` 确认依赖

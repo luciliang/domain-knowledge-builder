@@ -68,3 +68,57 @@ def test_end_to_end_lint_flags_mental_model_no_grounding(tmp_path):
     art = lint.load_mind_artifacts(tmp_path)
     issues = lint.check_mind_element_grounding(art["elements"])
     assert any("mm-1" in i for i in issues)
+
+# ===== Deterministic edge ID (§10.2): 公式 {from}|{relation}|{to} + lint =====
+
+def test_compute_edge_id_formula():
+    lint = _lint()
+    edge = {"from": "thm-gc", "relation": "guarantees", "to": "def-coverage"}
+    assert lint.compute_edge_id(edge) == "thm-gc|guarantees|def-coverage"
+
+def test_check_deterministic_data_flags_non_formula_edge_id():
+    # 严格模式（无 --legacy-ok，新生成 skill）：旧 slug 边 ID → error
+    lint = _lint()
+    d = {"nodes": [], "edges": [
+        {"id": "e-old-slug", "from": "thm-a", "relation": "guarantees", "to": "def-b"}
+    ]}
+    result = lint._check_deterministic_data(d, legacy_ok=False)
+    assert not result["ok"]
+    assert result["bad_edge_id"] == 1
+    assert result["legacy_edges"] == 0
+
+def test_check_deterministic_data_legacy_ok_tolerates_old_edge_id():
+    # legacy 模式（历史 examples）：旧 slug 边 ID → 宽容，不计 error
+    lint = _lint()
+    d = {"nodes": [], "edges": [
+        {"id": "e-old-slug", "from": "thm-a", "relation": "guarantees", "to": "def-b"}
+    ]}
+    result = lint._check_deterministic_data(d, legacy_ok=True)
+    assert result["ok"]
+    assert result["legacy_edges"] == 1
+    assert result["bad_edge_id"] == 0
+
+def test_check_deterministic_data_flags_duplicate_edge_id():
+    # 两条同 from→relation→to 的边（id 都符公式但重复）→ 幂等去重反面
+    lint = _lint()
+    d = {"nodes": [], "edges": [
+        {"id": "thm-a|guarantees|def-b", "from": "thm-a", "relation": "guarantees", "to": "def-b"},
+        {"id": "thm-a|guarantees|def-b", "from": "thm-a", "relation": "guarantees", "to": "def-b"}
+    ]}
+    result = lint._check_deterministic_data(d, legacy_ok=False)
+    assert not result["ok"]
+    assert result["duplicate_edges"] >= 1
+    assert result["bad_edge_id"] == 0  # 两条都符公式，只是重复
+
+def test_check_deterministic_data_no_duplicate_for_non_formula_edges():
+    # legacy 模式：不符公式的旧边（如空 id）即便重复，也不报 duplicate_edges
+    # 旧 slug/空 id 边的"重复"是命名缺陷（已由 legacy_edges 宽容），非幂等失败
+    lint = _lint()
+    d = {"nodes": [], "edges": [
+        {"id": "", "from": "thm-a", "relation": "guarantees", "to": "def-b"},
+        {"id": "", "from": "thm-a", "relation": "guarantees", "to": "def-b"}
+    ]}
+    result = lint._check_deterministic_data(d, legacy_ok=True)
+    assert result["ok"]                   # legacy 宽容，干净通过
+    assert result["duplicate_edges"] == 0  # 旧边重复不计 duplicate
+    assert result["legacy_edges"] == 2     # 两条不符公式 → legacy
