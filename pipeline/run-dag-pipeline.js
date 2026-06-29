@@ -14,8 +14,12 @@
 //   args.meta_skill_root — 本 meta-skill 根目录（读 schema/engines）
 //   args.run_id — 本次构建的 UUID（外部生成，保证全 pipeline 一致）
 //   args.resume_from — 可选，从某 stage 恢复（如 "S3"）
+//   args.run_type — 可选，'initial'（默认，首次全量）| 'incremental'（已存在 skill 补料，S3 后算 Δ）
 //
 // 输出：生成的知识库 skill（target_skill_root 下完整的 wiki/dag/schema/SKILL.md）
+
+import { readFileSync } from 'node:fs';
+import { computeDelta } from './delta.mjs';
 
 export const meta = {
   name: 'domain-knowledge-dag-pipeline',
@@ -306,9 +310,31 @@ async function main() {
 
   let s1r, s2r, s3r, s4r, s5r, s6r, s7r, darwinR
 
+  // incremental 模式：S3 前读现有 dag-index 快照（S3 后算 Δ 用）
+  let snapshot = null
+  if (args.run_type === 'incremental' && startIdx <= 2) {
+    try {
+      snapshot = JSON.parse(readFileSync(`${args.target_skill_root}/dag/dag-index.json`, 'utf8'))
+      log(`incremental 模式：快照 ${snapshot.nodes?.length || 0} 节点 / ${snapshot.edges?.length || 0} 边`)
+    } catch {
+      log(`incremental 模式但无现有 dag-index，按 initial 处理`)
+    }
+  }
+
   if (startIdx <= 0) { s1r = await S1_extract() }
   if (startIdx <= 1) { s2r = await S2_extractParallel(s1r) }
   if (startIdx <= 2) { s3r = await S3_mergeDAG(s2r) }
+
+  // S3 后算增量 Δ（新增/修改节点与边），log 供审计（computeDelta 见 pipeline/delta.mjs）
+  if (snapshot) {
+    try {
+      const newDag = JSON.parse(readFileSync(`${args.target_skill_root}/dag/dag-index.json`, 'utf8'))
+      const delta = computeDelta(snapshot, newDag)
+      log(`增量 Δ: +${delta.added_node_ids.length} 节点 / +${delta.added_edge_ids.length} 边 / ${delta.modified_node_ids.length} 修改`)
+    } catch (e) {
+      log(`增量 Δ 计算失败（忽略，不阻塞 pipeline）: ${e}`)
+    }
+  }
   if (startIdx <= 3) { s4r = await S4_navigation(s3r) }
   if (startIdx <= 4) { s5r = await S5_mentalModels(s3r) }
   if (startIdx <= 5) { s6r = await S6_validate(s5r) }

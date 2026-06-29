@@ -388,6 +388,24 @@ cat pipeline/state/run-manifest.json | jq '.stages[] | {stage, status}'
 - S5c 紧耦合融合需对新心智元素重跑降级规则；已有 judgment 若依据节点变化需重挂 grounded_in
 - S4-S7 重新跑（导航/心智/验证/组装可能变化）
 
+### 4.1 run_type 标记 + Δ 计算（incremental 模式）
+
+- `args.run_type = initial | incremental`（run-manifest 记录 type）
+- incremental 模式：S3 合并后，脚本调 `computeDelta(旧快照, 新dag)`（`pipeline/delta.mjs`，纯函数已单测）算受影响集 Δ = `{added_node_ids, added_edge_ids, modified_node_ids}`，Δ 摘要 log 供审计
+- modified 用语义指纹（type/label/source/section/tokens），排除 run_id 等易变字段——增量重跑不误报
+
+### 4.2 各 stage 增量性（诚实边界）
+
+| stage | 增量性 | 说明 |
+|-------|--------|------|
+| S4 index/log | 真增量 | 追加 added_nodes 行；log 本就 append |
+| S4 overview | 半全量 | 聚焦 added_sources 贡献 |
+| **S5 心智** | **半全量** | 心智提炼本质全局，以现有 mental-models 为起点评估 Δ（非纯增量） |
+| S6 验证 | 程序化全量 + 抽查聚焦 Δ | 结构校验全量（快），原文抽查聚焦 added_nodes |
+| S7 组装 | 半全量 | 增量更新 SKILL.md |
+
+> S5 的全局性质是"完整增量"的硬边界——新材料可能带来全新心智模型，只能半全量。stage prompt 的增量分支留待 pi 环境真跑时再做（本环境不可验证）。
+
 ---
 
 _本工作流对应 schema §6 | 编排脚本：pipeline/run-dag-pipeline.js | 质量门：engines/darwin-rubric.md | 三硬门判定见 S6 + spec §7_
