@@ -141,29 +141,67 @@ format: html|pdf|txt|image
 
 ---
 
-## 六、V1 扩展接口（MVP 不实现）
+## 六、扩展 3 路（社媒 / 他评 / 时间线）
 
-以下 3 路在 MVP 阶段**仅留接口说明**，不实现采集逻辑：
+> MVP 实现 ①②③（论文/访谈/博客）。本节 ④⑤⑥ 补全完整 6 路，流程已细化可执行；
+> 但社媒反爬、他评质量、时间线人工标注是客观难点（见各路"实现注意"），失败走 §五 fallback。
 
 ### ④ 社交媒体碎片（Social）
 
+**目标**：采集专家在 Twitter/X、LinkedIn、微博等的观点碎片（短判断、立场表态）。
+
+**采集流程**：
 ```
-WebSearch（Twitter/X, LinkedIn）→ WebReader 抓取 → 存 type=social, value=mind
+WebSearch（`<expert> site:x.com` / `<expert> twitter OR linkedin`）
+  → 专家官方账号 + 高价值推文/帖子 URL
+    ↓
+WebReader/mcp__web_reader（抓正文，只取专家本人发言，忽略回复噪音）
+    ↓
+存 sources/src-<slug>.md → type=social, value=mind, channel=web
 ```
+
+**实现注意**：社媒反爬严（登录墙/限流）→ 多走 manual_required；碎片密度低，需多条聚合才提炼心智。
 
 ### ⑤ 他者评论（Review）
 
+**目标**：采集第三方对专家工作的评论/综述/批评，提供外部视角。
+
+**采集流程**：
 ```
-WebSearch（第三方评论）→ WebReader 抓取 → 存 type=review, value=mind
+WebSearch（`<expert> review OR critique` / `cite:<代表作>`）
+  → 权威评论 URL（顶会综述 > 期刊 > 技术博客）
+    ↓
+WebReader/mcp__web_reader（抓全文，过滤营销文）
+    ↓
+存 sources/src-<slug>.md → type=review, value=mind, channel=web
 ```
+
+**实现注意**：`type=review` 是**第三方观点，非专家本人**——S2 提取时**不计入专家心智**（只作背景/对照）；质量参差需筛选。
 
 ### ⑥ 观点时间线（Timeline）
 
+**目标**：按时间聚合专家观点演化（早期→现在），与 expert-mind `status: contradicted` 联动。
+
+**采集流程**：
 ```
-多轮 WebSearch + 排序 → 按时间聚合观点演化 → 存 type=timeline, value=mind
+多轮 WebSearch（按年份分片：<expert> 2018 / 2020 / 2023 ...）
+  → 各年份观点材料，按 collected_at / year 排序
+    ↓
+标注观点转折点（前后矛盾的判断）→ 聚合为时间线视图
+    ↓
+存 sources/src-<slug>.md → type=timeline, value=mind, channel=web
 ```
 
-**MVP 限制**：社媒反爬严格、他评质量参差、时间线需人工标注，均 V1 扩展。
+**实现注意**：转折点需人工标注（自动易误判）→ S3 合并发现同专家前后矛盾时标 `status: contradicted` 保留时间线（ingest.md §4）。
+
+---
+
+## 七、多专家增量
+
+- 每个 expert 一个独立 skill：`~/.pi/agent/skills/<expert>-advisor/`，互不干扰
+- 增量 ingest（ingest.md §4）**各自独立运行**——给专家 A 补料不影响专家 B
+- 多专家共存时 SKILL 路由按 `name: <expert>-advisor` 分流；查询「专家 X 怎么看 Y」激活对应 skill
+- 跨专家对照（如 Hinton vs LeCun 立场差异）：不在单 skill 内建模，由用户显式跨 skill 查询
 
 ---
 
