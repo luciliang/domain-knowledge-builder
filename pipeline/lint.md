@@ -76,7 +76,7 @@ for node in dag['nodes']:
 
 ## 2.6 紧耦合硬门检查（expert-advisor 扩展）
 
-> 本节适用于 `expert-advisor-builder`（DKB 扩展分支）。在 D7 四支柱基础上，新增**三硬门中的程序化部分**。
+> 本节适用于 `expert-advisor-builder`（DKB 扩展分支）。在 D7 四支柱基础上，新增**硬门①③④⑤ 的程序化校验**（硬门②语义/忠实度由 fresh subagent 抽查，非程序化）。
 
 ### 2.6.1 硬门③：无孤儿判断（程序化校验）
 
@@ -130,7 +130,29 @@ def check_mind_element_grounding(elements):
     return issues
 ```
 
-### 2.6.3 数据加载：frontmatter 解析
+### 2.6.3 硬门④：provenance.sources 存在（程序化校验）
+
+**目标**：judgment/心智元素的 `provenance.sources` 必须指向真实存在的 `src-*.md`（硬门③对称物，D7 可审计支柱）。
+
+**检查项**：
+- `collect_source_ids(skill_root)`：遍历所有 `src-*.md`，收集 id（frontmatter id + 文件 stem 兜底）
+- 遍历 judgment + 心智元素的 `provenance.sources`，每个 src id 必须在集合中
+- 任一不存在 → **error**（硬门④孤儿来源）
+
+**实现**：`check_provenance_sources_exist(src_ids, artifacts)`
+
+### 2.6.4 硬门⑤：元素文件单 frontmatter（程序化校验）
+
+**目标**：强制 §2.6.5 契约——元素文件（`judg-/mm-/ap-/heur-`）必须单 frontmatter 块，防止多元素聚合导致 `load_mind_artifacts` 只解析顶部块而漏元素。
+
+**检查项**：
+- 遍历 expert-mind/ 元素文件（前缀 `judg-/mm-/ap-/heur-`），跳过导航文件（index/judgments/mental-models）
+- 每文件 `---` 分隔符计数须恰好 2（= 单 frontmatter 块）
+- ≠2 → **error**（多元素须拆独立文件）
+
+**实现**：`check_single_frontmatter(skill_root)`
+
+### 2.6.5 数据加载：frontmatter 解析
 
 **契约**：每个心智元素（judgment/mental_model/heuristic/anti_pattern）是一个独立的 `expert-mind/*.md` 文件，顶部裸 YAML frontmatter。
 
