@@ -366,6 +366,7 @@ CP 实例的 50 节点无 provenance 字段——合法，但 Lint 会标注 `[l
 - 每节点有完整 provenance（§11）
 - 每次 darwin 评分记入 `results.tsv`
 - Lint 检查：抽查节点的 source_span 是否能定位到原文（grep 验证）
+- **硬门④**：judgment/心智元素的 `provenance.sources` 必须指向存在的 `src-*.md`（`check_provenance_sources_exist`，硬门③对称物）
 
 ### 12.3 确定性（Deterministic）
 - node ID 遵循 §10 规范（lint 强制 `NODE_ID_RE` 三段格式 `<type>-<source>-<term>`，不符严格模式报 `bad_node_format`）

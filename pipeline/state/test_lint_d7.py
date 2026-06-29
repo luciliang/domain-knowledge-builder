@@ -149,3 +149,35 @@ def test_check_deterministic_data_accepts_well_formed_node_id():
     result = lint._check_deterministic_data(d, legacy_ok=False)
     assert result["ok"]
     assert result["bad_node_format"] == 0
+
+# ===== 硬门④：provenance.sources 引用存在性（D7 可审计支柱，硬门③对称物）=====
+
+def test_check_provenance_sources_exist_passes():
+    # 引用的 src 都存在 → 无 issue
+    lint = _lint()
+    src_ids = {"src-foo-2020", "src-bar-2021"}
+    artifacts = {
+        "judgments": [{"id": "judg-1", "provenance": {"sources": ["src-foo-2020"]}}],
+        "elements": [{"id": "mm-1", "provenance": {"sources": ["src-bar-2021"]}}],
+    }
+    assert lint.check_provenance_sources_exist(src_ids, artifacts) == []
+
+def test_check_provenance_sources_exist_flags_orphan():
+    # 引用不存在的 src → 报孤儿
+    lint = _lint()
+    src_ids = {"src-foo-2020"}
+    artifacts = {
+        "judgments": [{"id": "judg-1", "provenance": {"sources": ["src-foo-2020", "src-NONEXISTENT"]}}],
+        "elements": [],
+    }
+    issues = lint.check_provenance_sources_exist(src_ids, artifacts)
+    assert len(issues) == 1 and "src-NONEXISTENT" in issues[0]
+
+def test_collect_source_ids_reads_frontmatter_and_stem(tmp_path):
+    # frontmatter id 优先 + 文件 stem 兜底
+    lint = _lint()
+    (tmp_path / "src-foo-2020.md").write_text("---\nid: src-foo-2020\ntype: paper\n---\nbody")
+    (tmp_path / "src-bar.md").write_text("---\ntype: paper\n---\nbody")  # 无 id → stem 兜底
+    ids = lint.collect_source_ids(tmp_path)
+    assert "src-foo-2020" in ids
+    assert "src-bar" in ids

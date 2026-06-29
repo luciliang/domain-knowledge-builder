@@ -277,6 +277,35 @@ def check_mind_element_grounding(elements):
     return issues
 
 
+# ========== 8. 硬门④：provenance.sources 引用存在性（D7 可审计支柱）==========
+
+def collect_source_ids(skill_root):
+    """收集 skill_root 下所有 src-*.md 的合法 source id 集合。
+
+    frontmatter id 优先 + 文件 stem 兜底（source.md schema 规定 id = stem，双保险）。
+    """
+    ids = set()
+    for f in Path(skill_root).rglob("src-*.md"):
+        ids.add(f.stem)
+        sid = _parse_frontmatter(f.read_text()).get("id")
+        if sid:
+            ids.add(sid)
+    return ids
+
+
+def check_provenance_sources_exist(src_ids, artifacts):
+    """硬门④：judgment/心智元素的 provenance.sources 必须指向存在的 src-*.md（硬门③对称物）。"""
+    issues = []
+    for group in (artifacts.get("judgments", []), artifacts.get("elements", [])):
+        for a in group:
+            prov = a.get("provenance") or {}
+            sources = prov.get("sources") or [] if isinstance(prov, dict) else []
+            for s in sources:
+                if s not in src_ids:
+                    issues.append(f"{a.get('id', '?')}: provenance.sources 指向不存在的来源 {s}")
+    return issues
+
+
 # ========== 主流程 ==========
 
 def _parse_frontmatter(text):
@@ -327,9 +356,11 @@ def main():
     dag = json.loads(dag_path.read_text()) if dag_path.exists() else {"nodes": []}
     artifacts = load_mind_artifacts(target)
 
-    # 硬门①③返回 list[str]（issues 列表），需包装成 {ok, issues} 以适配主流程渲染
+    # 硬门①③④返回 list[str]（issues 列表），需包装成 {ok, issues} 以适配主流程渲染
+    src_ids = collect_source_ids(target)
     grounding_issues = check_grounding_existence(dag, artifacts["judgments"])
     mind_grounding_issues = check_mind_element_grounding(artifacts["elements"])
+    provenance_issues = check_provenance_sources_exist(src_ids, artifacts)
 
     checks = {
         "可回滚 (Reversible)": check_reversible(target),
@@ -344,6 +375,10 @@ def main():
         "硬门① mental_model 3重全过必 grounded_in": {
             "ok": len(mind_grounding_issues) == 0, "issues": mind_grounding_issues,
             "elements_count": len(artifacts["elements"]),
+        },
+        "硬门④ provenance.sources 存在 (Source Existence)": {
+            "ok": len(provenance_issues) == 0, "issues": provenance_issues,
+            "src_files": len(src_ids),
         },
     }
 
