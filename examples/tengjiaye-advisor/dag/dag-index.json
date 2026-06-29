@@ -71,10 +71,10 @@
       "role": "CP 基础：P(Y_test ∈ C(X_test)) ≥ 1-α（finite-sample, distribution-free），滕佳烨所有工作的理论底盘"
     },
     {
-      "id": "def-exchangeability",
+      "id": "def-angelopoulosbates2022-exchangeability",
       "type": "definition",
       "label": "Exchangeability（可交换性）",
-      "file": "dag/knowledge/def-exchangeability.md",
+      "file": "dag/knowledge/def-angelopoulosbates2022-exchangeability.md",
       "tokens": 600,
       "source": "src-angelopoulos-bates-2022",
       "created": "2026-06-28",
@@ -157,119 +157,136 @@
       "to": "thm-split-cp-coverage",
       "relation": "preserves",
       "confidence": "high",
-      "note": "T-SCI 在删失/covariate shift 下恢复 split CP 的 coverage 保证（weighted conformal + 两阶段校准）"
+      "note": "T-SCI 在删失/covariate shift 下恢复 split CP 的 coverage 保证（weighted conformal + 两阶段校准）",
+      "id": "thm-teng2021-tsci-coverage|preserves|thm-split-cp-coverage"
     },
     {
       "from": "thm-teng2021-tsci-coverage",
-      "to": "def-exchangeability",
+      "to": "def-angelopoulosbates2022-exchangeability",
       "relation": "relaxes",
       "confidence": "high",
-      "note": "T-SCI 处理 censoring 引起的 covariate shift（exchangeability 受威胁），用 weighted conformal 修复"
+      "note": "T-SCI 处理 censoring 引起的 covariate shift（exchangeability 受威胁），用 weighted conformal 修复",
+      "id": "thm-teng2021-tsci-coverage|relaxes|def-angelopoulosbates2022-exchangeability"
     },
     {
       "from": "thm-teng2023-feature-cp-advantage",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
       "confidence": "high",
-      "note": "Feature CP 在特征空间做 CP，coverage 仍由 exchangeability 保证，额外证明更短"
+      "note": "Feature CP 在特征空间做 CP，coverage 仍由 exchangeability 保证，额外证明更短",
+      "id": "thm-teng2023-feature-cp-advantage|extends|thm-split-cp-coverage"
     },
     {
       "from": "thm-teng2023-feature-cp-advantage",
       "to": "meth-aps-raps",
       "relation": "outperforms",
       "confidence": "high",
-      "note": "Feature CP 在 cubic conditions 下 provably 比 output-space CP（含 APS/RAPS）返回更短 band"
+      "note": "Feature CP 在 cubic conditions 下 provably 比 output-space CP（含 APS/RAPS）返回更短 band",
+      "id": "thm-teng2023-feature-cp-advantage|outperforms|meth-aps-raps"
     },
     {
       "from": "meth-teng2023-surrogate-feature",
       "to": "thm-teng2023-feature-cp-advantage",
       "relation": "enables",
       "confidence": "high",
-      "note": "surrogate feature 是 Feature CP 优势定理的技术实现（解决 feature space 无 ground truth）"
+      "note": "surrogate feature 是 Feature CP 优势定理的技术实现（解决 feature space 无 ground truth）",
+      "id": "meth-teng2023-surrogate-feature|enables|thm-teng2023-feature-cp-advantage"
     },
     {
       "from": "meth-teng2025-ffcp-score",
       "to": "meth-teng2023-surrogate-feature",
       "relation": "accelerates",
       "confidence": "high",
-      "note": "FFCP 用 Taylor 展开近似 FCP 的 surrogate feature 非线性操作，50x 加速"
+      "note": "FFCP 用 Taylor 展开近似 FCP 的 surrogate feature 非线性操作，50x 加速",
+      "id": "meth-teng2025-ffcp-score|accelerates|meth-teng2023-surrogate-feature"
     },
     {
       "from": "meth-teng2025-ffcp-score",
       "to": "thm-teng2023-feature-cp-advantage",
       "relation": "realizes",
       "confidence": "high",
-      "note": "FFCP 是 Feature CP 优势定理的工程兑现（square conditions 下同样更短且可用）"
+      "note": "FFCP 是 Feature CP 优势定理的工程兑现（square conditions 下同样更短且可用）",
+      "id": "meth-teng2025-ffcp-score|realizes|thm-teng2023-feature-cp-advantage"
     },
     {
       "from": "meth-teng2025-scd-split",
       "to": "thm-split-cp-coverage",
       "relation": "preserves",
       "confidence": "high",
-      "note": "SCD-split 的 smoothing 保持 marginal coverage ≥ 1-α（Theorem 4.1，不破坏 CP 底线）"
+      "note": "SCD-split 的 smoothing 保持 marginal coverage ≥ 1-α（Theorem 4.1，不破坏 CP 底线）",
+      "id": "meth-teng2025-scd-split|preserves|thm-split-cp-coverage"
     },
     {
       "from": "meth-teng2025-scd-split",
       "to": "thm-teng2026-prejudicial-trick",
       "relation": "complements",
       "confidence": "high",
-      "note": "SCD-split 加 connectivity 度量，PT 加 stability 度量——都在扩展评估维度，质疑 interval length 唯一论"
+      "note": "SCD-split 加 connectivity 度量，PT 加 stability 度量——都在扩展评估维度，质疑 interval length 唯一论",
+      "id": "meth-teng2025-scd-split|complements|thm-teng2026-prejudicial-trick"
     },
     {
       "from": "thm-teng2026-prejudicial-trick",
       "to": "thm-split-cp-coverage",
       "relation": "exploits",
       "confidence": "high",
-      "note": "PT 在 split CP coverage 保证上玩花招——coverage valid 但 length 欺骗性降低"
+      "note": "PT 在 split CP coverage 保证上玩花招——coverage valid 但 length 欺骗性降低",
+      "id": "thm-teng2026-prejudicial-trick|exploits|thm-split-cp-coverage"
     },
     {
       "from": "thm-teng2026-prejudicial-trick",
       "to": "thm-teng2023-feature-cp-advantage",
       "relation": "context",
       "confidence": "medium",
-      "note": "PT 是反面教材：Feature CP/FFCP 是真改进（stability 高），而非靠 PT-like 技巧降 length"
+      "note": "PT 是反面教材：Feature CP/FFCP 是真改进（stability 高），而非靠 PT-like 技巧降 length",
+      "id": "thm-teng2026-prejudicial-trick|context|thm-teng2023-feature-cp-advantage"
     },
     {
       "from": "meth-aps-raps",
-      "to": "def-exchangeability",
+      "to": "def-angelopoulosbates2022-exchangeability",
       "relation": "assumes",
       "confidence": "high",
-      "note": "APS/RAPS 与所有 split CP 方法一样依赖 exchangeability"
+      "note": "APS/RAPS 与所有 split CP 方法一样依赖 exchangeability",
+      "id": "meth-aps-raps|assumes|def-angelopoulosbates2022-exchangeability"
     },
     {
       "from": "thm-split-cp-coverage",
-      "to": "def-exchangeability",
+      "to": "def-angelopoulosbates2022-exchangeability",
       "relation": "assumes",
       "confidence": "high",
-      "note": "split CP coverage 保证只需 exchangeability（弱于 i.i.d.）"
+      "note": "split CP coverage 保证只需 exchangeability（弱于 i.i.d.）",
+      "id": "thm-split-cp-coverage|assumes|def-angelopoulosbates2022-exchangeability"
     },
     {
       "from": "thm-teng2023-feature-cp-advantage",
       "to": "meth-teng2025-scd-split",
       "relation": "context",
       "confidence": "medium",
-      "note": "Feature CP 追求效率（更短），SCD-split 提醒效率不是唯一目标（还要可解释）——体现滕佳烨思路演化"
+      "note": "Feature CP 追求效率（更短），SCD-split 提醒效率不是唯一目标（还要可解释）——体现滕佳烨思路演化",
+      "id": "thm-teng2023-feature-cp-advantage|context|meth-teng2025-scd-split"
     },
     {
       "from": "thm-teng2021-tsci-coverage",
       "to": "thm-teng2023-feature-cp-advantage",
       "relation": "precedes",
       "confidence": "medium",
-      "note": "时间线：T-SCI(2021) 确立 coverage 底线 → Feature CP(2023) 在守住底线后追求更短（研究主线展开）"
+      "note": "时间线：T-SCI(2021) 确立 coverage 底线 → Feature CP(2023) 在守住底线后追求更短（研究主线展开）",
+      "id": "thm-teng2021-tsci-coverage|precedes|thm-teng2023-feature-cp-advantage"
     },
     {
       "from": "meth-teng2025-ffcp-score",
       "to": "meth-aps-raps",
       "relation": "generalizes",
       "confidence": "medium",
-      "note": "FFCP 的 gradient-level 技术可扩展到 RAPS（FFRAPS）、CQR（FFCQR）、LCP（FFLCP）"
+      "note": "FFCP 的 gradient-level 技术可扩展到 RAPS（FFRAPS）、CQR（FFCQR）、LCP（FFLCP）",
+      "id": "meth-teng2025-ffcp-score|generalizes|meth-aps-raps"
     },
     {
       "from": "thm-teng2026-prejudicial-trick",
       "to": "meth-teng2025-scd-split",
       "relation": "context",
       "confidence": "medium",
-      "note": "两者共同体现滕佳烨'质疑标准度量、扩展评估维度'的心智（2025 SCD-split + 2026 PT）"
+      "note": "两者共同体现滕佳烨'质疑标准度量、扩展评估维度'的心智（2025 SCD-split + 2026 PT）",
+      "id": "thm-teng2026-prejudicial-trick|context|meth-teng2025-scd-split"
     }
   ]
 }

@@ -368,10 +368,10 @@ CP 实例的 50 节点无 provenance 字段——合法，但 Lint 会标注 `[l
 - Lint 检查：抽查节点的 source_span 是否能定位到原文（grep 验证）
 
 ### 12.3 确定性（Deterministic）
-- node ID 遵循 §10 规范
+- node ID 遵循 §10 规范（lint 强制 `NODE_ID_RE` 三段格式 `<type>-<source>-<term>`，不符严格模式报 `bad_node_format`）
 - **edge ID 遵循 §10.2 公式** `edge_id = {from}|{relation}|{to}`（手写 slug 不允许）
-- Lint 检查：同源重跑 node ID 一致性（增量 ingest 后无重复/冲突 ID）；边 ID 符公式 + 无重复 edge ID
-- Legacy：`--legacy-ok` 时容忍历史 examples 的旧 slug 边 ID（不计 error，仅记 `legacy_edges` 统计）
+- Lint 检查：node ID 格式（`NODE_ID_RE`）+ 同源重跑一致性；边 ID 符公式 + 无重复 edge ID
+- Legacy：`--legacy-ok` 时容忍历史 examples 的旧格式（短节点 id 计 `legacy_node_ids` + 旧 slug 边 ID 计 `legacy_edges`），新生成 skill 默认严格
 
 ### 12.4 预检（Preflight）
 - pipeline S1 先跑 `python -m engines.book_to_skill --check` 确认依赖

@@ -6,7 +6,7 @@
 
 | ID | 摘要 | 文件 |
 |----|------|------|
-| `def-exchangeability` | 可交换性——联合分布在任意置换下不变，弱于 i.i.d.，是 CP 保证的基石 | [`def-exchangeability.md`](../dag/knowledge/def-exchangeability.md) |
+| `def-angelopoulosbates2022-exchangeability` | 可交换性——联合分布在任意置换下不变，弱于 i.i.d.，是 CP 保证的基石 | [`def-angelopoulosbates2022-exchangeability.md`](../dag/knowledge/def-angelopoulosbates2022-exchangeability.md) |
 
 ## 定理（theorem）
 

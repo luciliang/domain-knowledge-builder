@@ -1,6 +1,6 @@
 # Exchangeability（可交换性）
 
-> 节点 ID: `def-exchangeability` | type: definition | 来源: `src-angelopoulos-bates-2022`
+> 节点 ID: `def-angelopoulosbates2022-exchangeability` | type: definition | 来源: `src-angelopoulos-bates-2022`
 
 ## 定义
 

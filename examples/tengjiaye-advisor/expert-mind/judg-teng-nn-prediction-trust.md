@@ -11,7 +11,7 @@ grounded_in:
   - node: thm-split-cp-coverage
     role: supports
     quote: "P(Y_test ∈ C(X_test)) ≥ 1-α，finite-sample distribution-free——CP 校准神经网络的理论基础"
-  - node: def-exchangeability
+  - node: def-angelopoulosbates2022-exchangeability
     role: supports
     quote: "exchangeability 弱于 i.i.d.，是 CP 保证的基石，适用范围广"
   - node: thm-teng2021-tsci-coverage

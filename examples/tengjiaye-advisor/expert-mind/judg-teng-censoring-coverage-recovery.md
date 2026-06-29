@@ -11,7 +11,7 @@ grounded_in:
   - node: thm-teng2021-tsci-coverage
     role: supports
     quote: "T-SCI 在 milder 假设下恢复 nearly perfect guaranteed coverage（WCCI + 两阶段校准）"
-  - node: def-exchangeability
+  - node: def-angelopoulosbates2022-exchangeability
     role: supports
     quote: "censoring 破坏 exchangeability（covariate shift），weighted conformal 是修复机制"
   - node: thm-split-cp-coverage

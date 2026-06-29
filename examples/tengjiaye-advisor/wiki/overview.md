@@ -37,7 +37,7 @@ CP 研究围绕一对永恒张力展开：
 - **T-SCI (2021)**：删失/covariate shift 下用 weighted conformal + 两阶段校准恢复 Cox-MLP 的 guaranteed coverage
 
 ### 5. CP 基础理论应用
-- 所有工作都建立在 split CP coverage 定理 + exchangeability 之上（`thm-split-cp-coverage` / `def-exchangeability`）
+- 所有工作都建立在 split CP coverage 定理 + exchangeability 之上（`thm-split-cp-coverage` / `def-angelopoulosbates2022-exchangeability`）
 
 ## 滕佳烨心智的演化轨迹
 

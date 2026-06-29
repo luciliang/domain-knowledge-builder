@@ -43,7 +43,7 @@ classification: expert-advisor
 
 ### CP 基础（3，复用 conformal-prediction）
 - `thm-split-cp-coverage` — Split CP Coverage 定理 P(Y_test∈C)≥1-α（finite-sample, distribution-free）
-- `def-exchangeability` — Exchangeability（弱于 i.i.d.，CP 基石）
+- `def-angelopoulosbates2022-exchangeability` — Exchangeability（弱于 i.i.d.，CP 基石）
 - `meth-aps-raps` — APS/RAPS（分类 non-conformity score，feature CP 对比基准）
 
 ### 滕佳烨贡献（6）

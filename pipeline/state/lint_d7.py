@@ -99,9 +99,9 @@ def check_auditable(target_root: Path, legacy_ok: bool) -> dict:
 
 # ========== 3. 确定性 ==========
 
-# 节点 ID 规范格式：<type>-<source-slug>-<canonical-term>。
-# 注：当前 _check_deterministic_data 未强制此格式（容忍 CP 旧格式 <type>-<term>），
-# 仅用 BAD_ID_PATTERNS 查禁用命名。节点格式严格化是独立后续项（见 spec §6）。
+# 节点 ID 规范格式：<type>-<source-slug>-<canonical-term>（§10）。
+# _check_deterministic_data 强制此格式：不符则严格模式报 bad_node_format，
+# --legacy-ok 时宽容（历史 CP 旧格式 <type>-<term> 计 legacy_node_ids）。
 NODE_ID_RE = re.compile(r'^(def|thm|meth|exp|ins)-[a-z][a-z0-9]*-[a-z0-9-]+$')
 BAD_ID_PATTERNS = [
     (re.compile(r'-\d{6,8}($|-)'), '时间戳命名'),
@@ -126,16 +126,23 @@ def _check_deterministic_data(d: dict, legacy_ok: bool) -> dict:
     节点 ID 格式校验当前容忍历史数据（CP 旧格式 <type>-<term>），仅查
     禁用命名与重复；边 ID 按 §10.2 公式校验，legacy_ok 时旧 slug 宽容。
     """
+    bad_format = []           # 节点不符 3 段格式（严格 error）
+    legacy_node_ids = []      # 节点不符格式但 legacy_ok 宽容
     bad_pattern = []          # 节点禁用命名（时间戳/随机/流水号）
     duplicate_node_ids = []   # 节点 ID 重复
     bad_edge_id = []          # 边 ID 不符公式（严格模式 error）
     legacy_edges = []         # 边 ID 不符公式但 legacy_ok 宽容
     duplicate_edges = []      # 边 ID 重复（幂等去重反面）
 
-    # --- 节点 ID（§10）---
+    # --- 节点 ID（§10：格式 NODE_ID_RE + 禁用命名 + 重复）---
     seen_nodes = set()
     for n in d.get("nodes", []):
         nid = n.get("id", "")
+        if not NODE_ID_RE.match(nid):
+            if legacy_ok:
+                legacy_node_ids.append(nid)
+            else:
+                bad_format.append(nid)
         for pat, desc in BAD_ID_PATTERNS:
             if pat.search(nid):
                 bad_pattern.append((nid, desc))
@@ -161,6 +168,8 @@ def _check_deterministic_data(d: dict, legacy_ok: bool) -> dict:
             bad_edge_id.append((eid, expected))
 
     issues = []
+    if bad_format:
+        issues.append(f"{len(bad_format)} 个 node ID 不符 3 段格式 <type>-<source>-<term>: {bad_format[:3]}")
     if bad_pattern:
         issues.append(f"{len(bad_pattern)} 个 node ID 用禁止命名: {bad_pattern[:3]}")
     if duplicate_node_ids:
@@ -173,6 +182,8 @@ def _check_deterministic_data(d: dict, legacy_ok: bool) -> dict:
     return {
         "ok": len(issues) == 0,
         "nodes": len(d.get("nodes", [])),
+        "bad_node_format": len(bad_format),
+        "legacy_node_ids": len(legacy_node_ids),
         "bad_node_pattern": len(bad_pattern),
         "duplicate_node_ids": len(duplicate_node_ids),
         "edges": len(d.get("edges", [])),

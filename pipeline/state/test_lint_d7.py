@@ -122,3 +122,30 @@ def test_check_deterministic_data_no_duplicate_for_non_formula_edges():
     assert result["ok"]                   # legacy 宽容，干净通过
     assert result["duplicate_edges"] == 0  # 旧边重复不计 duplicate
     assert result["legacy_edges"] == 2     # 两条不符公式 → legacy
+
+# ===== 节点 ID 格式严格化（§10 NODE_ID_RE 启用）=====
+
+def test_check_deterministic_data_flags_non_formula_node_id():
+    # 严格模式：2 段短节点 id（无 source 中段，如 def-crc）→ bad_node_format
+    lint = _lint()
+    d = {"nodes": [{"id": "def-crc", "type": "definition"}], "edges": []}
+    result = lint._check_deterministic_data(d, legacy_ok=False)
+    assert not result["ok"]
+    assert result["bad_node_format"] == 1
+
+def test_check_deterministic_data_legacy_ok_tolerates_node_id():
+    # legacy 模式：短节点 id 宽容（历史 conformal 缩写命名）
+    lint = _lint()
+    d = {"nodes": [{"id": "def-crc", "type": "definition"}], "edges": []}
+    result = lint._check_deterministic_data(d, legacy_ok=True)
+    assert result["ok"]
+    assert result["legacy_node_ids"] == 1
+    assert result["bad_node_format"] == 0
+
+def test_check_deterministic_data_accepts_well_formed_node_id():
+    # 3 段规范 id（type-source-term）严格模式不报
+    lint = _lint()
+    d = {"nodes": [{"id": "def-angelopoulosbates2022-exchangeability", "type": "definition"}], "edges": []}
+    result = lint._check_deterministic_data(d, legacy_ok=False)
+    assert result["ok"]
+    assert result["bad_node_format"] == 0

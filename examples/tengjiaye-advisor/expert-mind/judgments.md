@@ -23,9 +23,9 @@
 | `judg-teng-which-space-cp` | `thm-teng2023-feature-cp-advantage`, `meth-teng2023-surrogate-feature`, `meth-teng2025-ffcp-score`, `thm-split-cp-coverage` |
 | `judg-teng-scd-split-disconnected` | `meth-teng2025-scd-split`, `thm-split-cp-coverage`, `thm-teng2026-prejudicial-trick` |
 | `judg-teng-shorter-not-better` | `thm-teng2026-prejudicial-trick`, `meth-teng2025-scd-split`, `thm-split-cp-coverage`, `thm-teng2023-feature-cp-advantage` |
-| `judg-teng-nn-prediction-trust` | `thm-split-cp-coverage`, `def-exchangeability`, `thm-teng2021-tsci-coverage` |
+| `judg-teng-nn-prediction-trust` | `thm-split-cp-coverage`, `def-angelopoulosbates2022-exchangeability`, `thm-teng2021-tsci-coverage` |
 | `judg-teng-theory-plus-engineering` | `thm-teng2023-feature-cp-advantage`, `meth-teng2025-ffcp-score`, `meth-teng2023-surrogate-feature`, `meth-teng2025-scd-split` |
-| `judg-teng-censoring-coverage-recovery` | `thm-teng2021-tsci-coverage`, `def-exchangeability`, `thm-split-cp-coverage` |
+| `judg-teng-censoring-coverage-recovery` | `thm-teng2021-tsci-coverage`, `def-angelopoulosbates2022-exchangeability`, `thm-split-cp-coverage` |
 
 ## 查询路由
 

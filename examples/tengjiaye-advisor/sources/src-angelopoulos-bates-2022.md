@@ -27,7 +27,7 @@ CP 入门权威综述（Angelopoulos-Bates）。系统介绍 split CP 的 exchan
 
 ### 覆盖范围
 
-本来源覆盖知识节点 `thm-split-cp-coverage`、`def-exchangeability`、`meth-aps-raps`（CP 基础，复用 conformal-prediction 示例），为滕佳烨所有工作提供理论底盘。
+本来源覆盖知识节点 `thm-split-cp-coverage`、`def-angelopoulosbates2022-exchangeability`、`meth-aps-raps`（CP 基础，复用 conformal-prediction 示例），为滕佳烨所有工作提供理论底盘。
 
 ### 可信度
 
