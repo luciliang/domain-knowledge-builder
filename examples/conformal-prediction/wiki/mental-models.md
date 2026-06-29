@@ -47,7 +47,7 @@
 - **生成力：** 直接生成 sem-CRC 等新方法——将像素级风险重构为器官级风险，只需替换分组方式和损失定义。
 - **排他性：** $B/n$ 校正项是共形框架特有的——它精确控制有限样本的"最坏情况"越界概率，与 VC 维或其他泛化界有本质区别。
 
-**相关节点：** `thm-conformal-risk-control`, `def-crc`, `meth-sem-crc`, `thm-sem-crc-validity`, `def-semantic-uq`, `meth-k-crc`
+**相关节点：** `thm-conformal-risk-control`, `def-teneggi2025-crc`, `meth-sem-crc`, `thm-sem-crc-validity`, `def-semantic-uq`, `meth-k-crc`
 
 ---
 

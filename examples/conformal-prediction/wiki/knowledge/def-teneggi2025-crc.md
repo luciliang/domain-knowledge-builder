@@ -1,5 +1,5 @@
 ---
-id: def-crc
+id: def-teneggi2025-crc
 type: definition
 label: Conformal Risk Control (CRC)
 source: teneggi2025

@@ -31,8 +31,8 @@ The holdout set provides an honest appraisal of the model's performance. We comp
 
 → thm-split-cp-coverage (guarantees marginal coverage)
 ← def-marginal-coverage (split CP achieves this property)
-→ meth-aps (extends to adaptive prediction sets)
-→ meth-cqr (extends to conformalized quantile regression)
+→ meth-angelopoulos2022-aps (extends to adaptive prediction sets)
+→ meth-angelopoulos2022-cqr (extends to conformalized quantile regression)
 → meth-conformalize-uncertainty (extends to uncertainty scalars)
 → meth-conformalize-bayes (extends to Bayesian models)
 ← thm-full-cp-coverage (full CP is more general but less efficient)

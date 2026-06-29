@@ -30,7 +30,7 @@ This metric checks whether prediction sets have equal coverage across different 
 
 → def-conditional-coverage (FSC measures approximation to conditional coverage)
 ↔ def-ssc-metric (FSC is feature-based, SSC is set-size-based)
-← meth-aps (APS performance can be evaluated with FSC)
+← meth-angelopoulos2022-aps (APS performance can be evaluated with FSC)
 ← meth-group-balanced-cp (group-balanced CP aims to improve FSC)
 ← meth-class-conditional-cp (class-conditional CP aims to improve per-class FSC)
 

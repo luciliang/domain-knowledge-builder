@@ -28,7 +28,7 @@ The bound decomposes into: (1) $\varepsilon + \delta_{comm}(n,\varepsilon) + \de
 
 ## 与其他知识的关系
 
-← meth-graphcp（分析 GraphCP 方法的理论保证）
+← meth-min2026-graphcp（分析 GraphCP 方法的理论保证）
 ← thm-symmpi-conditional（Theorem 6 在图数据上的具体实例化）
 
 ## 来源引用

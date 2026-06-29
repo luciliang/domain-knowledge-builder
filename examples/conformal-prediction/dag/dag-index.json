@@ -46,10 +46,10 @@
       "created": "2026-06-23"
     },
     {
-      "id": "def-crc",
+      "id": "def-teneggi2025-crc",
       "type": "definition",
       "label": "Conformal Risk Control (CRC)",
-      "file": "wiki/knowledge/def-crc.md",
+      "file": "wiki/knowledge/def-teneggi2025-crc.md",
       "tokens": 900,
       "source": "teneggi2025",
       "created": "2026-06-23"
@@ -190,10 +190,10 @@
       "created": "2026-06-24"
     },
     {
-      "id": "meth-aps",
+      "id": "meth-angelopoulos2022-aps",
       "type": "method",
       "label": "Adaptive Prediction Sets (APS)",
-      "file": "wiki/knowledge/meth-aps.md",
+      "file": "wiki/knowledge/meth-angelopoulos2022-aps.md",
       "tokens": 1200,
       "source": "angelopoulos2022",
       "created": "2026-06-24"
@@ -235,19 +235,19 @@
       "created": "2026-06-24"
     },
     {
-      "id": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr",
       "type": "method",
       "label": "Conformalized Quantile Regression (CQR)",
-      "file": "wiki/knowledge/meth-cqr.md",
+      "file": "wiki/knowledge/meth-angelopoulos2022-cqr.md",
       "tokens": 1200,
       "source": "angelopoulos2022",
       "created": "2026-06-24"
     },
     {
-      "id": "meth-graphcp",
+      "id": "meth-min2026-graphcp",
       "type": "method",
       "label": "GraphCP: Community-Conditional Conformal Prediction on Graphs",
-      "file": "wiki/knowledge/meth-graphcp.md",
+      "file": "wiki/knowledge/meth-min2026-graphcp.md",
       "tokens": 1300,
       "source": "min2026",
       "created": "2026-06-24"
@@ -480,8 +480,8 @@
   ],
   "edges": [
     {
-      "id": "e-aps-conditional",
-      "from": "meth-aps",
+      "id": "meth-angelopoulos2022-aps|generalizes|def-conditional-coverage",
+      "from": "meth-angelopoulos2022-aps",
       "to": "def-conditional-coverage",
       "relation": "generalizes",
       "desc": "APS better approximates conditional coverage than standard CP",
@@ -489,35 +489,35 @@
       "confidence": "high"
     },
     {
-      "id": "e-aps-cqr-cmp",
-      "from": "meth-aps",
-      "to": "meth-cqr",
+      "id": "meth-angelopoulos2022-aps|compares_with|meth-angelopoulos2022-cqr",
+      "from": "meth-angelopoulos2022-aps",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "compares_with",
       "desc": "APS for classification vs CQR for regression",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-aps-fsc",
+      "id": "def-fsc-metric|evaluates|meth-angelopoulos2022-aps",
       "from": "def-fsc-metric",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "evaluates",
       "desc": "FSC metric evaluates APS performance across feature groups",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-aps-ssc",
+      "id": "def-ssc-metric|evaluates|meth-angelopoulos2022-aps",
       "from": "def-ssc-metric",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "evaluates",
       "desc": "SSC metric evaluates APS performance across set sizes",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-aps-thm1",
-      "from": "meth-aps",
+      "id": "meth-angelopoulos2022-aps|guarantees|thm-split-cp-coverage",
+      "from": "meth-angelopoulos2022-aps",
       "to": "thm-split-cp-coverage",
       "relation": "guarantees",
       "desc": "APS satisfies Theorem 1's marginal coverage guarantee",
@@ -525,7 +525,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-bayes-thm1",
+      "id": "meth-conformalize-bayes|guarantees|thm-split-cp-coverage",
       "from": "meth-conformalize-bayes",
       "to": "thm-split-cp-coverage",
       "relation": "guarantees",
@@ -534,7 +534,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-beta-fsc",
+      "id": "thm-beta-coverage-distribution|extends|def-fsc-metric",
       "from": "thm-beta-coverage-distribution",
       "to": "def-fsc-metric",
       "relation": "extends",
@@ -543,7 +543,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-beta-marginal",
+      "id": "thm-beta-coverage-distribution|generalizes|def-marginal-coverage",
       "from": "thm-beta-coverage-distribution",
       "to": "def-marginal-coverage",
       "relation": "generalizes",
@@ -552,7 +552,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-beta-ssc",
+      "id": "thm-beta-coverage-distribution|extends|def-ssc-metric",
       "from": "thm-beta-coverage-distribution",
       "to": "def-ssc-metric",
       "relation": "extends",
@@ -561,7 +561,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-beta-thm1",
+      "id": "thm-beta-coverage-distribution|extends|thm-split-cp-coverage",
       "from": "thm-beta-coverage-distribution",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
@@ -570,7 +570,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-class-cond-conditional",
+      "id": "meth-class-conditional-cp|guarantees|def-conditional-coverage",
       "from": "meth-class-conditional-cp",
       "to": "def-conditional-coverage",
       "relation": "guarantees",
@@ -579,7 +579,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-class-cond-thm",
+      "id": "meth-class-conditional-cp|guarantees|thm-class-conditional-coverage",
       "from": "meth-class-conditional-cp",
       "to": "thm-class-conditional-coverage",
       "relation": "guarantees",
@@ -588,7 +588,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-class-cond-thm-conditional",
+      "id": "thm-class-conditional-coverage|guarantees|def-conditional-coverage",
       "from": "thm-class-conditional-coverage",
       "to": "def-conditional-coverage",
       "relation": "guarantees",
@@ -597,7 +597,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-class-cond-thm1",
+      "id": "meth-class-conditional-cp|extends|thm-split-cp-coverage",
       "from": "meth-class-conditional-cp",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
@@ -606,7 +606,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-conditional-class-cond",
+      "id": "def-conditional-coverage|extends|meth-class-conditional-cp",
       "from": "def-conditional-coverage",
       "to": "meth-class-conditional-cp",
       "relation": "extends",
@@ -615,7 +615,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-conditional-fsc",
+      "id": "def-conditional-coverage|evaluates|def-fsc-metric",
       "from": "def-conditional-coverage",
       "to": "def-fsc-metric",
       "relation": "evaluates",
@@ -624,7 +624,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-conditional-group-bal",
+      "id": "def-conditional-coverage|extends|meth-group-balanced-cp",
       "from": "def-conditional-coverage",
       "to": "meth-group-balanced-cp",
       "relation": "extends",
@@ -633,7 +633,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-conditional-impossible",
+      "id": "def-conditional-coverage|generalizes|thm-conditional-coverage-impossible",
       "from": "def-conditional-coverage",
       "to": "thm-conditional-coverage-impossible",
       "relation": "generalizes",
@@ -642,7 +642,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-conditional-ssc",
+      "id": "def-conditional-coverage|evaluates|def-ssc-metric",
       "from": "def-conditional-coverage",
       "to": "def-ssc-metric",
       "relation": "evaluates",
@@ -651,7 +651,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-covshift-marginal",
+      "id": "thm-covariate-shift-coverage|guarantees|def-marginal-coverage",
       "from": "thm-covariate-shift-coverage",
       "to": "def-marginal-coverage",
       "relation": "guarantees",
@@ -660,7 +660,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-covshift-split-cp",
+      "id": "thm-covariate-shift-coverage|specializes|def-split-conformal-prediction",
       "from": "thm-covariate-shift-coverage",
       "to": "def-split-conformal-prediction",
       "relation": "specializes",
@@ -669,7 +669,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-covshift-thm1",
+      "id": "thm-covariate-shift-coverage|extends|thm-split-cp-coverage",
       "from": "thm-covariate-shift-coverage",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
@@ -678,8 +678,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-cqr-conditional",
-      "from": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr|generalizes|def-conditional-coverage",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "def-conditional-coverage",
       "relation": "generalizes",
       "desc": "Quantile regression has asymptotically valid conditional coverage, propagating to CQR",
@@ -687,8 +687,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-cqr-group-bal",
-      "from": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr|extends|meth-group-balanced-cp",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "meth-group-balanced-cp",
       "relation": "extends",
       "desc": "CQR can be combined with group-balanced CP",
@@ -696,8 +696,8 @@
       "confidence": "medium"
     },
     {
-      "id": "e-cqr-thm1",
-      "from": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr|guarantees|thm-split-cp-coverage",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "thm-split-cp-coverage",
       "relation": "guarantees",
       "desc": "CQR satisfies Theorem 1's coverage guarantee",
@@ -705,8 +705,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-cqr-unc-cmp",
-      "from": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr|compares_with|meth-conformalize-uncertainty",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "meth-conformalize-uncertainty",
       "relation": "compares_with",
       "desc": "CQR preferred when possible; uncertainty scalars easier but less precise",
@@ -714,8 +714,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-crc-coverage",
-      "from": "def-crc",
+      "id": "def-teneggi2025-crc|guarantees|def-conformal-coverage",
+      "from": "def-teneggi2025-crc",
       "to": "def-conformal-coverage",
       "relation": "guarantees",
       "desc": "CRC procedure guarantees risk control",
@@ -723,7 +723,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-crc-split-cp",
+      "id": "thm-conformal-risk-control|generalizes|def-split-conformal-prediction",
       "from": "thm-conformal-risk-control",
       "to": "def-split-conformal-prediction",
       "relation": "generalizes",
@@ -732,7 +732,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-crc-thm1",
+      "id": "thm-conformal-risk-control|generalizes|thm-split-cp-coverage",
       "from": "thm-conformal-risk-control",
       "to": "thm-split-cp-coverage",
       "relation": "generalizes",
@@ -741,16 +741,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-crc-thm2",
+      "id": "thm-conformal-risk-control|guarantees|def-teneggi2025-crc",
       "from": "thm-conformal-risk-control",
-      "to": "def-crc",
+      "to": "def-teneggi2025-crc",
       "relation": "guarantees",
       "desc": "Theorem 2 provides the theoretical foundation for CRC (P3)",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-drift-beta",
+      "id": "thm-distribution-drift-coverage|depends_on|thm-beta-coverage-distribution",
       "from": "thm-distribution-drift-coverage",
       "to": "thm-beta-coverage-distribution",
       "relation": "depends_on",
@@ -759,7 +759,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-drift-covshift",
+      "id": "thm-distribution-drift-coverage|generalizes|thm-covariate-shift-coverage",
       "from": "thm-distribution-drift-coverage",
       "to": "thm-covariate-shift-coverage",
       "relation": "generalizes",
@@ -768,7 +768,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-drift-marginal",
+      "id": "thm-distribution-drift-coverage|guarantees|def-marginal-coverage",
       "from": "thm-distribution-drift-coverage",
       "to": "def-marginal-coverage",
       "relation": "guarantees",
@@ -777,7 +777,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-drift-thm1",
+      "id": "thm-distribution-drift-coverage|extends|thm-split-cp-coverage",
       "from": "thm-distribution-drift-coverage",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
@@ -786,16 +786,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-exp-crc",
+      "id": "exp-ct-denoising-reconstruction|evaluates|def-teneggi2025-crc",
       "from": "exp-ct-denoising-reconstruction",
-      "to": "def-crc",
+      "to": "def-teneggi2025-crc",
       "relation": "evaluates",
       "desc": "CRC evaluated as comparison baseline",
       "source": "teneggi2025",
       "confidence": "high"
     },
     {
-      "id": "e-exp-evaluates-semcrc",
+      "id": "exp-ct-denoising-reconstruction|evaluates|meth-sem-crc",
       "from": "exp-ct-denoising-reconstruction",
       "to": "meth-sem-crc",
       "relation": "evaluates",
@@ -804,7 +804,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-exp-kcrc",
+      "id": "exp-ct-denoising-reconstruction|evaluates|meth-k-crc",
       "from": "exp-ct-denoising-reconstruction",
       "to": "meth-k-crc",
       "relation": "evaluates",
@@ -813,7 +813,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-exp-perorgan",
+      "id": "exp-ct-denoising-reconstruction|evaluates|meth-sem-crc-per-organ",
       "from": "exp-ct-denoising-reconstruction",
       "to": "meth-sem-crc-per-organ",
       "relation": "evaluates",
@@ -822,7 +822,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fsc-class-cond",
+      "id": "meth-class-conditional-cp|evaluates|def-fsc-metric",
       "from": "meth-class-conditional-cp",
       "to": "def-fsc-metric",
       "relation": "evaluates",
@@ -831,7 +831,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fsc-group-bal",
+      "id": "meth-group-balanced-cp|evaluates|def-fsc-metric",
       "from": "meth-group-balanced-cp",
       "to": "def-fsc-metric",
       "relation": "evaluates",
@@ -840,7 +840,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fsc-ssc-cmp",
+      "id": "def-fsc-metric|compares_with|def-ssc-metric",
       "from": "def-fsc-metric",
       "to": "def-ssc-metric",
       "relation": "compares_with",
@@ -849,7 +849,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-class-cond-cmp",
+      "id": "meth-group-balanced-cp|compares_with|meth-class-conditional-cp",
       "from": "meth-group-balanced-cp",
       "to": "meth-class-conditional-cp",
       "relation": "compares_with",
@@ -858,7 +858,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-conditional",
+      "id": "meth-group-balanced-cp|guarantees|def-conditional-coverage",
       "from": "meth-group-balanced-cp",
       "to": "def-conditional-coverage",
       "relation": "guarantees",
@@ -867,7 +867,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-thm",
+      "id": "meth-group-balanced-cp|guarantees|thm-group-balanced-coverage",
       "from": "meth-group-balanced-cp",
       "to": "thm-group-balanced-coverage",
       "relation": "guarantees",
@@ -876,7 +876,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-thm-class-cond",
+      "id": "thm-group-balanced-coverage|compares_with|thm-class-conditional-coverage",
       "from": "thm-group-balanced-coverage",
       "to": "thm-class-conditional-coverage",
       "relation": "compares_with",
@@ -885,7 +885,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-thm-conditional",
+      "id": "thm-group-balanced-coverage|guarantees|def-conditional-coverage",
       "from": "thm-group-balanced-coverage",
       "to": "def-conditional-coverage",
       "relation": "guarantees",
@@ -894,7 +894,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-group-bal-thm1",
+      "id": "meth-group-balanced-cp|extends|thm-split-cp-coverage",
       "from": "meth-group-balanced-cp",
       "to": "thm-split-cp-coverage",
       "relation": "extends",
@@ -903,16 +903,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-impossible-aps",
+      "id": "thm-conditional-coverage-impossible|extends|meth-angelopoulos2022-aps",
       "from": "thm-conditional-coverage-impossible",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "extends",
       "desc": "APS is a practical method that approximates conditional coverage",
       "source": "angelopoulos2022",
       "confidence": "medium"
     },
     {
-      "id": "e-impossible-fsc",
+      "id": "thm-conditional-coverage-impossible|extends|def-fsc-metric",
       "from": "thm-conditional-coverage-impossible",
       "to": "def-fsc-metric",
       "relation": "extends",
@@ -921,7 +921,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-impossible-marginal",
+      "id": "thm-conditional-coverage-impossible|contradicts|def-marginal-coverage",
       "from": "thm-conditional-coverage-impossible",
       "to": "def-marginal-coverage",
       "relation": "contradicts",
@@ -930,7 +930,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-impossible-ssc",
+      "id": "thm-conditional-coverage-impossible|extends|def-ssc-metric",
       "from": "thm-conditional-coverage-impossible",
       "to": "def-ssc-metric",
       "relation": "extends",
@@ -939,7 +939,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-ins-exp",
+      "id": "exp-ct-denoising-reconstruction|extends|ins-semantic-uq-clinical",
       "from": "exp-ct-denoising-reconstruction",
       "to": "ins-semantic-uq-clinical",
       "relation": "extends",
@@ -948,7 +948,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-ins-perorgan",
+      "id": "meth-sem-crc-per-organ|extends|ins-semantic-uq-clinical",
       "from": "meth-sem-crc-per-organ",
       "to": "ins-semantic-uq-clinical",
       "relation": "extends",
@@ -957,7 +957,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-ins-semuq",
+      "id": "def-semantic-uq|extends|ins-semantic-uq-clinical",
       "from": "def-semantic-uq",
       "to": "ins-semantic-uq-clinical",
       "relation": "extends",
@@ -966,8 +966,8 @@
       "confidence": "medium"
     },
     {
-      "id": "e-kcrc-crc",
-      "from": "def-crc",
+      "id": "def-teneggi2025-crc|extends|meth-k-crc",
+      "from": "def-teneggi2025-crc",
       "to": "meth-k-crc",
       "relation": "extends",
       "desc": "K-CRC extends CRC to high-dimensional settings with K groups",
@@ -975,7 +975,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-marginal-beta",
+      "id": "def-marginal-coverage|generalizes|thm-beta-coverage-distribution",
       "from": "def-marginal-coverage",
       "to": "thm-beta-coverage-distribution",
       "relation": "generalizes",
@@ -984,7 +984,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-marginal-conditional",
+      "id": "def-marginal-coverage|generalizes|def-conditional-coverage",
       "from": "def-marginal-coverage",
       "to": "def-conditional-coverage",
       "relation": "generalizes",
@@ -993,7 +993,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-marginal-covshift",
+      "id": "def-marginal-coverage|guarantees|thm-covariate-shift-coverage",
       "from": "def-marginal-coverage",
       "to": "thm-covariate-shift-coverage",
       "relation": "guarantees",
@@ -1002,7 +1002,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-marginal-drift",
+      "id": "def-marginal-coverage|guarantees|thm-distribution-drift-coverage",
       "from": "def-marginal-coverage",
       "to": "thm-distribution-drift-coverage",
       "relation": "guarantees",
@@ -1011,16 +1011,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-outlier-cqr-cmp",
+      "id": "meth-outlier-detection-cp|compares_with|meth-angelopoulos2022-cqr",
       "from": "meth-outlier-detection-cp",
-      "to": "meth-cqr",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "compares_with",
       "desc": "Different applications of the conformal framework",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-outlier-split-cp",
+      "id": "meth-outlier-detection-cp|specializes|def-split-conformal-prediction",
       "from": "meth-outlier-detection-cp",
       "to": "def-split-conformal-prediction",
       "relation": "specializes",
@@ -1029,7 +1029,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-outlier-thm",
+      "id": "meth-outlier-detection-cp|guarantees|thm-outlier-detection-guarantee",
       "from": "meth-outlier-detection-cp",
       "to": "thm-outlier-detection-guarantee",
       "relation": "guarantees",
@@ -1038,7 +1038,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-outlier-thm-thm1",
+      "id": "thm-outlier-detection-guarantee|specializes|thm-split-cp-coverage",
       "from": "thm-outlier-detection-guarantee",
       "to": "thm-split-cp-coverage",
       "relation": "specializes",
@@ -1047,7 +1047,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-01",
+      "id": "def-unified-cp-framework|guarantees|thm-marginal-coverage-weighted",
       "from": "def-unified-cp-framework",
       "to": "thm-marginal-coverage-weighted",
       "relation": "guarantees",
@@ -1056,7 +1056,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-02",
+      "id": "def-unified-cp-framework|guarantees|thm-three-term-decomposition",
       "from": "def-unified-cp-framework",
       "to": "thm-three-term-decomposition",
       "relation": "guarantees",
@@ -1065,7 +1065,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-03",
+      "id": "def-unified-cp-framework|extends|def-conformal-coverage",
       "from": "def-unified-cp-framework",
       "to": "def-conformal-coverage",
       "relation": "extends",
@@ -1074,7 +1074,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-04",
+      "id": "thm-marginal-coverage-weighted|extends|def-conformal-coverage",
       "from": "thm-marginal-coverage-weighted",
       "to": "def-conformal-coverage",
       "relation": "extends",
@@ -1083,7 +1083,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-05",
+      "id": "thm-marginal-coverage-weighted|depends_on|thm-three-term-decomposition",
       "from": "thm-marginal-coverage-weighted",
       "to": "thm-three-term-decomposition",
       "relation": "depends_on",
@@ -1092,7 +1092,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-06",
+      "id": "thm-three-term-decomposition|specializes|def-three-errors",
       "from": "thm-three-term-decomposition",
       "to": "def-three-errors",
       "relation": "specializes",
@@ -1101,7 +1101,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-07",
+      "id": "thm-three-term-decomposition|generalizes|thm-averaged-miscoverage",
       "from": "thm-three-term-decomposition",
       "to": "thm-averaged-miscoverage",
       "relation": "generalizes",
@@ -1110,7 +1110,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-08",
+      "id": "thm-three-term-decomposition|extends|def-conditional-coverage",
       "from": "thm-three-term-decomposition",
       "to": "def-conditional-coverage",
       "relation": "extends",
@@ -1119,7 +1119,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-09",
+      "id": "thm-three-term-decomposition|extends|meth-model-selection-cc",
       "from": "thm-three-term-decomposition",
       "to": "meth-model-selection-cc",
       "relation": "extends",
@@ -1128,7 +1128,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-10",
+      "id": "def-three-errors|extends|ins-method-comparison-table",
       "from": "def-three-errors",
       "to": "ins-method-comparison-table",
       "relation": "extends",
@@ -1137,7 +1137,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-11",
+      "id": "def-three-errors|depends_on|meth-model-selection-cc",
       "from": "def-three-errors",
       "to": "meth-model-selection-cc",
       "relation": "depends_on",
@@ -1146,7 +1146,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-12",
+      "id": "thm-averaged-miscoverage|specializes|thm-cc-averaged",
       "from": "thm-averaged-miscoverage",
       "to": "thm-cc-averaged",
       "relation": "specializes",
@@ -1155,7 +1155,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-13",
+      "id": "thm-averaged-miscoverage|applies_to|ins-method-comparison-table",
       "from": "thm-averaged-miscoverage",
       "to": "ins-method-comparison-table",
       "relation": "applies_to",
@@ -1164,7 +1164,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-14",
+      "id": "thm-cc-averaged|applies_to|ins-method-comparison-table",
       "from": "thm-cc-averaged",
       "to": "ins-method-comparison-table",
       "relation": "applies_to",
@@ -1173,7 +1173,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-15",
+      "id": "thm-covariate-shift-marginal|extends|thm-marginal-coverage-weighted",
       "from": "thm-covariate-shift-marginal",
       "to": "thm-marginal-coverage-weighted",
       "relation": "extends",
@@ -1182,7 +1182,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-16",
+      "id": "thm-covariate-shift-marginal|extends|def-conformal-coverage",
       "from": "thm-covariate-shift-marginal",
       "to": "def-conformal-coverage",
       "relation": "extends",
@@ -1191,7 +1191,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-17",
+      "id": "thm-covariate-shift-marginal|depends_on|meth-covariate-shift-conditional",
       "from": "thm-covariate-shift-marginal",
       "to": "meth-covariate-shift-conditional",
       "relation": "depends_on",
@@ -1200,7 +1200,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-18",
+      "id": "meth-covariate-shift-conditional|depends_on|thm-three-term-decomposition",
       "from": "meth-covariate-shift-conditional",
       "to": "thm-three-term-decomposition",
       "relation": "depends_on",
@@ -1209,7 +1209,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-19",
+      "id": "meth-covariate-shift-conditional|applies_to|exp-covariate-shift",
       "from": "meth-covariate-shift-conditional",
       "to": "exp-covariate-shift",
       "relation": "applies_to",
@@ -1218,7 +1218,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-20",
+      "id": "def-unified-cp-framework|extends|thm-symmpi-structured",
       "from": "def-unified-cp-framework",
       "to": "thm-symmpi-structured",
       "relation": "extends",
@@ -1227,7 +1227,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-21",
+      "id": "thm-symmpi-structured|extends|thm-marginal-coverage-weighted",
       "from": "thm-symmpi-structured",
       "to": "thm-marginal-coverage-weighted",
       "relation": "extends",
@@ -1236,7 +1236,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-22",
+      "id": "thm-symmpi-structured|guarantees|thm-symmpi-conditional",
       "from": "thm-symmpi-structured",
       "to": "thm-symmpi-conditional",
       "relation": "guarantees",
@@ -1245,7 +1245,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-23",
+      "id": "thm-symmpi-conditional|extends|thm-three-term-decomposition",
       "from": "thm-symmpi-conditional",
       "to": "thm-three-term-decomposition",
       "relation": "extends",
@@ -1254,17 +1254,17 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-24",
+      "id": "thm-symmpi-conditional|applies_to|meth-min2026-graphcp",
       "from": "thm-symmpi-conditional",
-      "to": "meth-graphcp",
+      "to": "meth-min2026-graphcp",
       "relation": "applies_to",
       "desc": "SymmPI conditional decomposition analyzed for graph CP",
       "source": "min2026",
       "confidence": "high"
     },
     {
-      "id": "e-p4-25",
-      "from": "meth-graphcp",
+      "id": "meth-min2026-graphcp|guarantees|thm-community-conditional",
+      "from": "meth-min2026-graphcp",
       "to": "thm-community-conditional",
       "relation": "guarantees",
       "desc": "Theorem 7 provides community-conditional coverage guarantee for GraphCP",
@@ -1272,8 +1272,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-26",
-      "from": "meth-graphcp",
+      "id": "meth-min2026-graphcp|applies_to|exp-toloker-graph",
+      "from": "meth-min2026-graphcp",
       "to": "exp-toloker-graph",
       "relation": "applies_to",
       "desc": "GraphCP evaluated on Toloker real graph dataset",
@@ -1281,7 +1281,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-27",
+      "id": "thm-community-conditional|applies_to|exp-toloker-graph",
       "from": "thm-community-conditional",
       "to": "exp-toloker-graph",
       "relation": "applies_to",
@@ -1290,7 +1290,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-28",
+      "id": "ins-method-comparison-table|applies_to|exp-covariate-shift",
       "from": "ins-method-comparison-table",
       "to": "exp-covariate-shift",
       "relation": "applies_to",
@@ -1299,7 +1299,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-29",
+      "id": "ins-intrinsic-error-necessity|depends_on|def-three-errors",
       "from": "ins-intrinsic-error-necessity",
       "to": "def-three-errors",
       "relation": "depends_on",
@@ -1308,7 +1308,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-30",
+      "id": "ins-intrinsic-error-necessity|depends_on|meth-model-selection-cc",
       "from": "ins-intrinsic-error-necessity",
       "to": "meth-model-selection-cc",
       "relation": "depends_on",
@@ -1317,7 +1317,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-31",
+      "id": "meth-model-selection-cc|applies_to|exp-model-selection",
       "from": "meth-model-selection-cc",
       "to": "exp-model-selection",
       "relation": "applies_to",
@@ -1326,7 +1326,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-32",
+      "id": "thm-three-term-decomposition|extends|exp-model-selection",
       "from": "thm-three-term-decomposition",
       "to": "exp-model-selection",
       "relation": "extends",
@@ -1335,7 +1335,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-p4-33",
+      "id": "exp-covariate-shift|evaluates|thm-covariate-shift-marginal",
       "from": "exp-covariate-shift",
       "to": "thm-covariate-shift-marginal",
       "relation": "evaluates",
@@ -1344,7 +1344,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-34",
+      "id": "exp-model-selection|evaluates|meth-model-selection-cc",
       "from": "exp-model-selection",
       "to": "meth-model-selection-cc",
       "relation": "evaluates",
@@ -1353,17 +1353,17 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-35",
+      "id": "exp-toloker-graph|evaluates|meth-min2026-graphcp",
       "from": "exp-toloker-graph",
-      "to": "meth-graphcp",
+      "to": "meth-min2026-graphcp",
       "relation": "evaluates",
       "desc": "Experiments validate GraphCP community-conditional coverage",
       "source": "min2026",
       "confidence": "high"
     },
     {
-      "id": "e-p4-36",
-      "from": "meth-graphcp",
+      "id": "meth-min2026-graphcp|compares_with|meth-sem-crc",
+      "from": "meth-min2026-graphcp",
       "to": "meth-sem-crc",
       "relation": "compares_with",
       "desc": "GraphCP targets graph community coverage vs sem-CRC targets pixel semantic groups",
@@ -1371,7 +1371,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-p4-37",
+      "id": "meth-model-selection-cc|compares_with|meth-sem-crc",
       "from": "meth-model-selection-cc",
       "to": "meth-sem-crc",
       "relation": "compares_with",
@@ -1380,7 +1380,7 @@
       "confidence": "medium"
     },
     {
-      "id": "e-p4-38",
+      "id": "ins-wcp-limitation|depends_on|thm-covariate-shift-marginal",
       "from": "ins-wcp-limitation",
       "to": "thm-covariate-shift-marginal",
       "relation": "depends_on",
@@ -1389,7 +1389,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-39",
+      "id": "ins-wcp-limitation|depends_on|def-three-errors",
       "from": "ins-wcp-limitation",
       "to": "def-three-errors",
       "relation": "depends_on",
@@ -1398,7 +1398,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-40",
+      "id": "ins-wcp-limitation|extends|meth-covariate-shift-conditional",
       "from": "ins-wcp-limitation",
       "to": "meth-covariate-shift-conditional",
       "relation": "extends",
@@ -1407,7 +1407,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-41",
+      "id": "thm-symmpi-conditional|specializes|thm-community-conditional",
       "from": "thm-symmpi-conditional",
       "to": "thm-community-conditional",
       "relation": "specializes",
@@ -1416,7 +1416,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-p4-42",
+      "id": "def-conditional-coverage|depends_on|thm-three-term-decomposition",
       "from": "def-conditional-coverage",
       "to": "thm-three-term-decomposition",
       "relation": "depends_on",
@@ -1425,7 +1425,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-perorgan-cmp",
+      "id": "meth-sem-crc|compares_with|meth-sem-crc-per-organ",
       "from": "meth-sem-crc",
       "to": "meth-sem-crc-per-organ",
       "relation": "compares_with",
@@ -1434,7 +1434,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-perorgan-semcrc",
+      "id": "meth-sem-crc|specializes|meth-sem-crc-per-organ",
       "from": "meth-sem-crc",
       "to": "meth-sem-crc-per-organ",
       "relation": "specializes",
@@ -1443,7 +1443,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-perorgan-thm",
+      "id": "thm-sem-crc-validity|specializes|meth-sem-crc-per-organ",
       "from": "thm-sem-crc-validity",
       "to": "meth-sem-crc-per-organ",
       "relation": "specializes",
@@ -1452,7 +1452,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semcrc-dep-semuq",
+      "id": "def-semantic-uq|depends_on|meth-sem-crc",
       "from": "def-semantic-uq",
       "to": "meth-sem-crc",
       "relation": "depends_on",
@@ -1461,7 +1461,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semcrc-exp",
+      "id": "meth-sem-crc|applies_to|exp-ct-denoising-reconstruction",
       "from": "meth-sem-crc",
       "to": "exp-ct-denoising-reconstruction",
       "relation": "applies_to",
@@ -1470,7 +1470,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semcrc-kcrc",
+      "id": "meth-k-crc|extends|meth-sem-crc",
       "from": "meth-k-crc",
       "to": "meth-sem-crc",
       "relation": "extends",
@@ -1479,7 +1479,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semcrc-kcrc-cmp",
+      "id": "meth-k-crc|compares_with|meth-sem-crc",
       "from": "meth-k-crc",
       "to": "meth-sem-crc",
       "relation": "compares_with",
@@ -1488,8 +1488,8 @@
       "confidence": "high"
     },
     {
-      "id": "e-semuq-defcrc",
-      "from": "def-crc",
+      "id": "def-teneggi2025-crc|depends_on|def-semantic-uq",
+      "from": "def-teneggi2025-crc",
       "to": "def-semantic-uq",
       "relation": "depends_on",
       "desc": "Understanding semantic UQ requires understanding the CRC framework first",
@@ -1497,7 +1497,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semuq-kcrc-contra",
+      "id": "def-semantic-uq|compares_with|meth-k-crc",
       "from": "def-semantic-uq",
       "to": "meth-k-crc",
       "relation": "compares_with",
@@ -1506,7 +1506,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-semuq-semcrc",
+      "id": "def-semantic-uq|applies_to|meth-sem-crc",
       "from": "def-semantic-uq",
       "to": "meth-sem-crc",
       "relation": "applies_to",
@@ -1515,16 +1515,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-aps",
+      "id": "def-split-conformal-prediction|extends|meth-angelopoulos2022-aps",
       "from": "def-split-conformal-prediction",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "extends",
       "desc": "APS is a specialization of split CP for classification",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-bayes",
+      "id": "def-split-conformal-prediction|extends|meth-conformalize-bayes",
       "from": "def-split-conformal-prediction",
       "to": "meth-conformalize-bayes",
       "relation": "extends",
@@ -1533,7 +1533,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-conditional-cmp",
+      "id": "def-split-conformal-prediction|compares_with|def-conditional-coverage",
       "from": "def-split-conformal-prediction",
       "to": "def-conditional-coverage",
       "relation": "compares_with",
@@ -1542,16 +1542,16 @@
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-cqr",
+      "id": "def-split-conformal-prediction|extends|meth-angelopoulos2022-cqr",
       "from": "def-split-conformal-prediction",
-      "to": "meth-cqr",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "extends",
       "desc": "CQR is a specialization of split CP for regression",
       "source": "angelopoulos2022",
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-marginal",
+      "id": "def-split-conformal-prediction|guarantees|def-marginal-coverage",
       "from": "def-split-conformal-prediction",
       "to": "def-marginal-coverage",
       "relation": "guarantees",
@@ -1560,7 +1560,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-thm1",
+      "id": "def-split-conformal-prediction|guarantees|thm-split-cp-coverage",
       "from": "def-split-conformal-prediction",
       "to": "thm-split-cp-coverage",
       "relation": "guarantees",
@@ -1569,7 +1569,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-split-cp-unc",
+      "id": "def-split-conformal-prediction|extends|meth-conformalize-uncertainty",
       "from": "def-split-conformal-prediction",
       "to": "meth-conformalize-uncertainty",
       "relation": "extends",
@@ -1578,7 +1578,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-ssc-group-bal",
+      "id": "meth-group-balanced-cp|evaluates|def-ssc-metric",
       "from": "meth-group-balanced-cp",
       "to": "def-ssc-metric",
       "relation": "evaluates",
@@ -1587,7 +1587,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm-defcoverage",
+      "id": "def-conformal-coverage|extends|thm-sem-crc-validity",
       "from": "def-conformal-coverage",
       "to": "thm-sem-crc-validity",
       "relation": "extends",
@@ -1596,7 +1596,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm-semcrc",
+      "id": "thm-sem-crc-validity|guarantees|meth-sem-crc",
       "from": "thm-sem-crc-validity",
       "to": "meth-sem-crc",
       "relation": "guarantees",
@@ -1605,7 +1605,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-class-cond",
+      "id": "thm-split-cp-coverage|specializes|thm-class-conditional-coverage",
       "from": "thm-split-cp-coverage",
       "to": "thm-class-conditional-coverage",
       "relation": "specializes",
@@ -1614,7 +1614,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-conformal-cov",
+      "id": "thm-split-cp-coverage|specializes|def-conformal-coverage",
       "from": "thm-split-cp-coverage",
       "to": "def-conformal-coverage",
       "relation": "specializes",
@@ -1623,7 +1623,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-covshift",
+      "id": "thm-split-cp-coverage|extends|thm-covariate-shift-coverage",
       "from": "thm-split-cp-coverage",
       "to": "thm-covariate-shift-coverage",
       "relation": "extends",
@@ -1632,7 +1632,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-drift",
+      "id": "thm-split-cp-coverage|extends|thm-distribution-drift-coverage",
       "from": "thm-split-cp-coverage",
       "to": "thm-distribution-drift-coverage",
       "relation": "extends",
@@ -1641,7 +1641,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-group-bal",
+      "id": "thm-split-cp-coverage|specializes|thm-group-balanced-coverage",
       "from": "thm-split-cp-coverage",
       "to": "thm-group-balanced-coverage",
       "relation": "specializes",
@@ -1650,7 +1650,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-marginal",
+      "id": "thm-split-cp-coverage|guarantees|def-marginal-coverage",
       "from": "thm-split-cp-coverage",
       "to": "def-marginal-coverage",
       "relation": "guarantees",
@@ -1659,7 +1659,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-outlier",
+      "id": "thm-split-cp-coverage|specializes|thm-outlier-detection-guarantee",
       "from": "thm-split-cp-coverage",
       "to": "thm-outlier-detection-guarantee",
       "relation": "specializes",
@@ -1668,7 +1668,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-thm1-split-cp",
+      "id": "thm-split-cp-coverage|guarantees|def-split-conformal-prediction",
       "from": "thm-split-cp-coverage",
       "to": "def-split-conformal-prediction",
       "relation": "guarantees",
@@ -1677,7 +1677,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-unc-conditional",
+      "id": "meth-conformalize-uncertainty|does_not_guarantee|def-conditional-coverage",
       "from": "meth-conformalize-uncertainty",
       "to": "def-conditional-coverage",
       "relation": "does_not_guarantee",
@@ -1686,7 +1686,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-unc-thm1",
+      "id": "meth-conformalize-uncertainty|guarantees|thm-split-cp-coverage",
       "from": "meth-conformalize-uncertainty",
       "to": "thm-split-cp-coverage",
       "relation": "guarantees",
@@ -1695,7 +1695,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fullcp-splitcp",
+      "id": "thm-full-cp-coverage|generalizes|thm-split-cp-coverage",
       "from": "thm-full-cp-coverage",
       "to": "thm-split-cp-coverage",
       "relation": "generalizes",
@@ -1704,7 +1704,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fullcp-marginal",
+      "id": "thm-full-cp-coverage|guarantees|def-marginal-coverage",
       "from": "thm-full-cp-coverage",
       "to": "def-marginal-coverage",
       "relation": "guarantees",
@@ -1713,7 +1713,7 @@
       "confidence": "high"
     },
     {
-      "id": "e-fullcp-splitcp-def",
+      "id": "thm-full-cp-coverage|specializes|def-split-conformal-prediction",
       "from": "thm-full-cp-coverage",
       "to": "def-split-conformal-prediction",
       "relation": "specializes",

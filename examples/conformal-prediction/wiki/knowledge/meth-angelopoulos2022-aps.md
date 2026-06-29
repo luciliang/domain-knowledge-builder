@@ -1,5 +1,5 @@
 ---
-id: meth-aps
+id: meth-angelopoulos2022-aps
 type: method
 label: Adaptive Prediction Sets (APS)
 source: angelopoulos2022
@@ -36,7 +36,7 @@ We greedily include classes from most to least likely until cumulative softmax e
 ← def-split-conformal-prediction (APS is a specialization of split CP)
 ← def-fsc-metric (APS performance evaluated via FSC/SSC metrics)
 ← def-ssc-metric (APS performance evaluated via FSC/SSC metrics)
-↔ meth-cqr (different CP method for regression)
+↔ meth-angelopoulos2022-cqr (different CP method for regression)
 
 ## 来源引用
 

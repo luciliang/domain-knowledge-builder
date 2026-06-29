@@ -30,7 +30,7 @@ This checks whether prediction sets of the same size have equal coverage. If sma
 
 → def-conditional-coverage (SSC measures approximation to conditional coverage)
 ↔ def-fsc-metric (SSC is size-based, FSC is feature-based)
-← meth-aps (APS performance can be evaluated with SSC)
+← meth-angelopoulos2022-aps (APS performance can be evaluated with SSC)
 ← meth-group-balanced-cp (group-balanced CP aims to improve SSC)
 
 ## 来源引用

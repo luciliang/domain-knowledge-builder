@@ -32,7 +32,7 @@ Conformal outlier detection calibrates the outlier score threshold to control th
 
 → thm-outlier-detection-guarantee (Proposition 3 guarantees error control)
 ← def-split-conformal-prediction (specialization to unsupervised setting)
-↔ meth-cqr (different application of conformal framework)
+↔ meth-angelopoulos2022-cqr (different application of conformal framework)
 
 ## 来源引用
 

@@ -1,5 +1,5 @@
 ---
-id: meth-graphcp
+id: meth-min2026-graphcp
 type: method
 label: GraphCP: Community-Conditional Conformal Prediction on Graphs
 source: min2026

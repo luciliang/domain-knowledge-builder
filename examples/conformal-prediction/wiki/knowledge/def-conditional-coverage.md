@@ -29,7 +29,7 @@ Marginal coverage means 90% overall, but all errors could happen in one subgroup
 ## 与其他知识的关系
 
 → def-marginal-coverage (conditional coverage implies marginal coverage, but not vice versa)
-← meth-aps (APS improves conditional coverage over standard CP)
+← meth-angelopoulos2022-aps (APS improves conditional coverage over standard CP)
 ← thm-conditional-coverage-impossible (conditional coverage is generally impossible)
 → def-fsc-metric (feature-stratified coverage measures conditional coverage approximation)
 → def-ssc-metric (size-stratified coverage measures conditional coverage approximation)

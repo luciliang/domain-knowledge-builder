@@ -33,7 +33,7 @@
 | 节点 | 类型 | Frontmatter | 5个必需章节 | 评级 |
 |------|------|------------|------------|------|
 | def-unified-cp-framework | definition | ✅ | ✅ 精确表述/适用条件/直觉解释/关系/来源 | ✅ |
-| meth-graphcp | method | ✅ | ✅ 含LaTeX公式 | ✅ |
+| meth-min2026-graphcp | method | ✅ | ✅ 含LaTeX公式 | ✅ |
 | meth-sem-crc | method | ✅ | ✅ 含多公式+关键创新标注 | ✅ |
 | exp-covariate-shift | experiment | ✅ | ✅ 含数值结果 | ✅ |
 | exp-toloker-graph | experiment | ✅ | ✅ 含具体数据对比 | ✅ |
@@ -55,7 +55,7 @@
 | # | 边 ID | 方向 | 关系类型 | 评估 |
 |---|-------|------|---------|------|
 | 1 | e-thm1-marginal | thm-split-cp-coverage → def-marginal-coverage | guarantees | ✅ 定理保证定义 |
-| 2 | e-cqr-conditional | meth-cqr → def-conditional-coverage | generalizes | ✅ CQR 推广条件覆盖 |
+| 2 | e-cqr-conditional | meth-angelopoulos2022-cqr → def-conditional-coverage | generalizes | ✅ CQR 推广条件覆盖 |
 | 3 | e-impossible-marginal | thm-conditional-coverage-impossible → def-marginal-coverage | contradicts | ✅ 不可能定理与边际覆盖的矛盾关系准确——条件覆盖不可能但边际覆盖可达 |
 | 4 | e-p4-06 | thm-three-term-decomposition → def-three-errors | specializes | ✅ 分解定理定义了三个误差 |
 | 5 | e-p4-22 | thm-symmpi-structured → thm-symmpi-conditional | guarantees | ✅ 边际覆盖是条件分析的基础 |
@@ -157,9 +157,9 @@
 **方案：** 在 SKILL.md 查询协议后增加 2-3 个示例查询，展示完整的执行路径：
 ```
 示例 1: "什么是 CQR？它与标准 CP 有什么区别？"
-  → Step 1: 涉及方法(meth-cqr) + 定义(def-split-conformal-prediction)
-  → Step 2: 从 meth-cqr 出发，沿 guarantees→thm-split-cp-coverage, compares_with→meth-aps
-  → Step 3: 加载 meth-cqr.md + thm-split-cp-coverage.md
+  → Step 1: 涉及方法(meth-angelopoulos2022-cqr) + 定义(def-split-conformal-prediction)
+  → Step 2: 从 meth-angelopoulos2022-cqr 出发，沿 guarantees→thm-split-cp-coverage, compares_with→meth-angelopoulos2022-aps
+  → Step 3: 加载 meth-angelopoulos2022-cqr.md + thm-split-cp-coverage.md
   → Step 4: [回答]
 ```
 

@@ -1,5 +1,5 @@
 ---
-id: meth-cqr
+id: meth-angelopoulos2022-cqr
 type: method
 label: Conformalized Quantile Regression (CQR)
 source: angelopoulos2022
@@ -39,7 +39,7 @@ The set $C(x)$ grows or shrinks the distance between the fitted quantiles by $\h
 ← def-split-conformal-prediction (CQR is a specialization of split CP)
 → def-conditional-coverage (quantile regression has asymptotically valid conditional coverage, propagating to CQR)
 ↔ meth-conformalize-uncertainty (CQR preferred when possible; uncertainty scalars are easier but less precise)
-↔ meth-aps (different CP method for classification)
+↔ meth-angelopoulos2022-aps (different CP method for classification)
 → meth-group-balanced-cp (can be combined)
 
 ## 来源引用

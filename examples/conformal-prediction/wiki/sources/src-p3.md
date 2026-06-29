@@ -5,7 +5,7 @@ title: "Conformal Risk Control for Semantic Uncertainty Quantification in Comput
 authors: ["Jacopo Teneggi", "J Webster Stayman", "Jeremias Sulam"]
 year: 2025
 venue: "arXiv:2503.00136 [cs.CV]"
-nodes_extracted: ["def-crc", "def-conformal-coverage", "meth-k-crc", "meth-sem-crc", "thm-sem-crc-validity", "meth-sem-crc-per-organ", "def-semantic-uq", "exp-ct-denoising-reconstruction", "ins-semantic-uq-clinical"]
+nodes_extracted: ["def-teneggi2025-crc", "def-conformal-coverage", "meth-k-crc", "meth-sem-crc", "thm-sem-crc-validity", "meth-sem-crc-per-organ", "def-semantic-uq", "exp-ct-denoising-reconstruction", "ins-semantic-uq-clinical"]
 ingested: 2026-06-23
 ---
 
@@ -17,7 +17,7 @@ ingested: 2026-06-23
 
 | 节点ID | 类型 | 名称 |
 |--------|------|------|
-| def-crc | definition | Conformal Risk Control (CRC) |
+| def-teneggi2025-crc | definition | Conformal Risk Control (CRC) |
 | def-conformal-coverage | definition | Conformal Risk Control Guarantee |
 | meth-k-crc | method | K-CRC (High-Dimensional Risk Control) |
 | meth-sem-crc | method | sem-CRC (Semantic Conformal Risk Control) |

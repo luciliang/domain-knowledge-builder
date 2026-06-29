@@ -56,9 +56,9 @@ classification: query-skill
 ### 示例查询
 
 **示例 1：概念查询** — "什么是 CQR？它与标准 CP 有什么区别？"
-- Step 1: 涉及 method(meth-cqr) + definition(def-split-conformal-prediction)
-- Step 2: 从 meth-cqr 出发 → guarantees→thm-split-cp-coverage, compares_with→meth-aps
-- Step 3: 加载 meth-cqr.md + thm-split-cp-coverage.md（~2.2K tokens）
+- Step 1: 涉及 method(meth-angelopoulos2022-cqr) + definition(def-split-conformal-prediction)
+- Step 2: 从 meth-angelopoulos2022-cqr 出发 → guarantees→thm-split-cp-coverage, compares_with→meth-angelopoulos2022-aps
+- Step 3: 加载 meth-angelopoulos2022-cqr.md + thm-split-cp-coverage.md（~2.2K tokens）
 - Step 4: 综合回答，引用节点 ID
 
 **示例 2：跨论文比较** — "Split CP 和 Full CP 有什么区别？什么时候用哪个？"
@@ -83,7 +83,7 @@ classification: query-skill
 |----|------|
 | def-conditional-coverage | Conditional Coverage |
 | def-conformal-coverage | Conformal Risk Control Guarantee |
-| def-crc | Conformal Risk Control (CRC) |
+| def-teneggi2025-crc | Conformal Risk Control (CRC) |
 | def-fsc-metric | Feature-Stratified Coverage (FSC) Metric |
 | def-marginal-coverage | Marginal Coverage |
 | def-semantic-uq | Semantic Uncertainty Quantification |
@@ -96,13 +96,13 @@ classification: query-skill
 
 | ID | 名称 |
 |----|------|
-| meth-aps | Adaptive Prediction Sets (APS) |
+| meth-angelopoulos2022-aps | Adaptive Prediction Sets (APS) |
 | meth-class-conditional-cp | Class-Conditional Conformal Prediction |
 | meth-conformalize-bayes | Conformalizing Bayes |
 | meth-conformalize-uncertainty | Conformalizing Scalar Uncertainty Estimates |
 | meth-covariate-shift-conditional | Conditional Methods under Covariate Shift |
-| meth-cqr | Conformalized Quantile Regression (CQR) |
-| meth-graphcp | GraphCP: Community-Conditional CP on Graphs |
+| meth-angelopoulos2022-cqr | Conformalized Quantile Regression (CQR) |
+| meth-min2026-graphcp | GraphCP: Community-Conditional CP on Graphs |
 | meth-group-balanced-cp | Group-Balanced Conformal Prediction |
 | meth-k-crc | K-CRC (High-Dimensional Risk Control via K Groups) |
 | meth-model-selection-cc | Conditional-Coverage-Oriented Model Selection |
