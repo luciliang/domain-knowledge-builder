@@ -306,6 +306,27 @@ def check_provenance_sources_exist(src_ids, artifacts):
     return issues
 
 
+# ========== 9. 硬门⑤：元素文件单 frontmatter 契约 ==========
+
+def check_single_frontmatter(skill_root):
+    """硬门⑤：元素文件（judg-/mm-/ap-/heur-）必须单 frontmatter 块（顶部裸 frontmatter）。
+
+    防止多个元素聚合到一个文件 → load_mind_artifacts 只解析顶部块会漏元素。
+    导航文件（index/judgments/mental-models）是纯链接层，不检查。
+    """
+    em = Path(skill_root) / "expert-mind"
+    if not em.exists():
+        return []
+    issues = []
+    for f in em.glob("*.md"):
+        if not f.stem.startswith(("judg-", "mm-", "ap-", "heur-")):
+            continue  # 跳过导航文件
+        delim = len(re.findall(r'^---\s*$', f.read_text(), re.M))
+        if delim != 2:
+            issues.append(f"{f.name}: 含 {delim} 个 '---' 分隔符（应为 2=单 frontmatter 块），多元素须拆独立文件")
+    return issues
+
+
 # ========== 主流程 ==========
 
 def _parse_frontmatter(text):
@@ -361,6 +382,7 @@ def main():
     grounding_issues = check_grounding_existence(dag, artifacts["judgments"])
     mind_grounding_issues = check_mind_element_grounding(artifacts["elements"])
     provenance_issues = check_provenance_sources_exist(src_ids, artifacts)
+    single_fm_issues = check_single_frontmatter(target)
 
     checks = {
         "可回滚 (Reversible)": check_reversible(target),
@@ -379,6 +401,9 @@ def main():
         "硬门④ provenance.sources 存在 (Source Existence)": {
             "ok": len(provenance_issues) == 0, "issues": provenance_issues,
             "src_files": len(src_ids),
+        },
+        "硬门⑤ 元素文件单 frontmatter (Single Frontmatter)": {
+            "ok": len(single_fm_issues) == 0, "issues": single_fm_issues,
         },
     }
 

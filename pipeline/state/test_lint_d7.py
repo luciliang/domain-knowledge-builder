@@ -181,3 +181,28 @@ def test_collect_source_ids_reads_frontmatter_and_stem(tmp_path):
     ids = lint.collect_source_ids(tmp_path)
     assert "src-foo-2020" in ids
     assert "src-bar" in ids
+
+# ===== 硬门⑤：元素文件单 frontmatter 契约 =====
+
+def test_check_single_frontmatter_passes(tmp_path):
+    lint = _lint()
+    em = tmp_path / "expert-mind"; em.mkdir()
+    (em / "judg-1.md").write_text("---\nid: judg-1\ntype: judgment\n---\n## 正文")
+    (em / "mm-1.md").write_text("---\nid: mm-1\ntype: mental_model\n---\n## 正文")
+    assert lint.check_single_frontmatter(tmp_path) == []
+
+def test_check_single_frontmatter_flags_multi_block(tmp_path):
+    lint = _lint()
+    em = tmp_path / "expert-mind"; em.mkdir()
+    # 4 个 --- = 2 个 frontmatter 块（违规：一文件含多元素）
+    (em / "judg-1.md").write_text("---\nid: judg-1\ntype: judgment\n---\n## 正文\n---\nid: judg-2\n---\n## 正文2")
+    issues = lint.check_single_frontmatter(tmp_path)
+    assert len(issues) == 1 and "judg-1.md" in issues[0]
+
+def test_check_single_frontmatter_skips_nav_files(tmp_path):
+    lint = _lint()
+    em = tmp_path / "expert-mind"; em.mkdir()
+    # 导航文件 index.md 含多 --- 但不报
+    (em / "index.md").write_text("---\ntitle: nav\n---\n## 导航\n---\n## 节")
+    (em / "judg-1.md").write_text("---\nid: judg-1\ntype: judgment\n---\nbody")
+    assert lint.check_single_frontmatter(tmp_path) == []
