@@ -7,8 +7,6 @@
 
 这是一个 **meta-skill**——它的职责不是回答领域问题，而是**生成其他可回答领域问题的知识库 skill**。
 
----
-
 ## 它解决什么问题
 
 读论文有三种深度：
@@ -18,12 +16,10 @@
 
 本 meta-skill 做第三件事。它的产物是一个**结构等价于 [Karpathy LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) + DAG 关系图**的 skill，可用作该领域的思维顾问。
 
----
-
 ## 架构（5 层）
 
 ```
-domain-knowledge-skill/
+domain-knowledge-builder/
 ├── SKILL.md                       # 入口（生成器，<4K tokens）
 ├── schema/schema.md               # 知识规范（5 类型 + 10 关系 + D7 可控性）
 ├── pipeline/                      # Ingest/Query/Lint 工作流
@@ -41,10 +37,10 @@ domain-knowledge-skill/
 ├── references/                    # 模板（待补）
 └── examples/
     ├── conformal-prediction/      # 黄金参照（darwin 88/A-，领域知识库模式）
+    ├── tengjiaye-advisor/       # Expert Advisor：滕佳烨心模+判断+知识（v1.0）
+    └── hinton-advisor/          # Expert Advisor：Hinton 模式验证（示例级）
     └── diffusion-models/          # 首个生成实例（darwin 84.70/B+，领域知识库模式）
 ```
-
----
 
 ## 7 步 Ingest 流水线
 
@@ -68,8 +64,6 @@ S1 提取 ──┬─▶ S2×N 并行 ──┐
 | S7 组装 | subagent | SKILL.md（<4K tokens）|
 | darwin | fresh subagent | 9 维评分，<B+ 则 git revert |
 
----
-
 ## D7 生成器可控性层
 
 meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 FS 写、subagent spawn、网络。这必须可控。本 meta-skill 实现了 5 项机制（对应 darwin 第 9 维 generator-skill 子类的四支柱）：
@@ -83,8 +77,6 @@ meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 
 | **路径确定性** | 节点 .md 只用 skill-root-relative 路径，禁绝对/meta-relative（防链接断裂）|
 
 `pipeline/state/lint_d7.py` 是这 5 项的可执行检查器。
-
----
 
 ## 质量门：darwin 2.0（9 维，第 9 维双子类）
 
@@ -101,8 +93,6 @@ meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 
 
 这让生成器能公平过质量门（否则按 query-skill 标准，meta-skill 必然因"做外部操作"在这维得 0 分）。
 
----
-
 ## 5 个参考源的去向
 
 | 源 | 去向 | 复用方式 |
@@ -112,8 +102,6 @@ meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 
 | [alchaincyf/nuwa-skill](https://github.com/alchaincyf/nuwa-skill) | engines/nuwa-validation.md | 方法论提炼：三重验证（去 expression DNA）|
 | [alchaincyf/darwin-skill](https://github.com/alchaincyf/darwin-skill) | engines/darwin-rubric.md | 双源重构：9 维 + 第 9 维双子类 |
 | dag-executor | 仅哲学参考 | wave-based 并行（实现用 pi workflow/subagent）|
-
----
 
 ## 安装
 
@@ -132,7 +120,7 @@ meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 
 # 1. clone
 git clone https://github.com/luciliang/domain-knowledge-builder.git
 # 2. 放到 pi 的 skills 目录
-cp -R domain-knowledge-skill ~/.pi/agent/skills/
+cp -R domain-knowledge-builder ~/.pi/agent/skills/
 # 3. 装好后告诉 pi agent
 #    "给 X 领域建知识库，论文在 ~/papers/xxx.pdf"
 ```
@@ -142,8 +130,6 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
 `examples/conformal-prediction/raw/sources/` 因版权不含 PDF。若要完整复现 CP 黄金参照：
 - 从 [arxiv 2107.07511](https://arxiv.org/abs/2107.07511) 下 Angelopoulos & Bates 2022
 - 其他两篇见 `examples/conformal-prediction/wiki/sources/*.md` 的引用
-
----
 
 ## 使用示例
 
@@ -157,8 +143,6 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
   4. 用户可后续查询该 skill
 ```
 
----
-
 ## 已验证的实例
 
 | 实例 | 类型 | 来源 | 节点/边 | darwin | 说明 |
@@ -168,17 +152,12 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
 | `examples/tengjiaye-advisor` | 专家顾问 | 8 篇 CP 论文 | 9 节点 | N/A | Expert Advisor：4 心模+6 判断+9 知识节点 |
 | `examples/hinton-advisor` | 专家顾问 | Hinton 论文 + 访谈 | — | N/A | Expert Advisor 模式验证（示例级）|
 
----
-
 ## 已知局限
 
 - **docling 安装可能受阻**：国内经代理装 docling 时 `docling-parse` 需编译 4 个 C 库（lcms2/openjpeg/jpeg/json），github clone 可能 curl 18。降级 pdftotext 可跑通流程但丢公式格式。
 - **ar5iv HTML 是更优提取源**：实测对 arxiv 论文，`ar5iv.labs.arxiv.org/html/<id>` 的 HTML 把 LaTeX 存于 `<annotation>`，提取后 663 公式完整保留，质量优于 pdftotext 且经代理下载更稳定。
 - **canonical-term 非完全确定**：LLM 抽取节点命名实体两次可能差 hash，lint 会报告。
 - **大论文提取成本高**：>50K tokens 的论文需 REPL 探测（grep+sed），不能全读。
-
-
----
 
 ## 进化 v1.0（2026-07-02）
 
@@ -208,13 +187,10 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
 
 ### 提交历史
 详见 PR #3：心模抽象层级检验 + 元批判模式 + 生成式判断引擎
----
 
 ## 许可证
 
 MIT（见 `LICENSE`），但 `engines/book_to_skill/` 遵循其原 [virgiliojr94/book-to-skill](https://github.com/virgiliojr94/book-to-skill) 的 MIT 许可。
-
----
 
 ## 致谢
 
@@ -222,7 +198,5 @@ MIT（见 `LICENSE`），但 `engines/book_to_skill/` 遵循其原 [virgiliojr94
 - **Andrej Karpathy** — [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) 模式
 - **virgiliojr94** — [book-to-skill](https://github.com/virgiliojr94/book-to-skill) 提取引擎
 - **花叔 (alchaincyf)** — [nuwa-skill](https://github.com/alchaincyf/nuwa-skill) 三重验证方法论 + [darwin-skill](https://github.com/alchaincyf/darwin-skill) 质量评分
-
----
 
 _本 meta-skill 在 [pi coding agent](https://github.com/earendil-works/pi-coding-agent) 环境下设计与验证。_
