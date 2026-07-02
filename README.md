@@ -40,8 +40,8 @@ domain-knowledge-skill/
 │   └── nuwa-validation.md         # 领域化三重验证
 ├── references/                    # 模板（待补）
 └── examples/
-    ├── conformal-prediction/      # 黄金参照（darwin 88/A-，懒加载）
-    └── diffusion-models/          # 首个生成实例（darwin 84.70/B+）
+    ├── conformal-prediction/      # 黄金参照（darwin 88/A-，领域知识库模式）
+    └── diffusion-models/          # 首个生成实例（darwin 84.70/B+，领域知识库模式）
 ```
 
 ---
@@ -130,7 +130,7 @@ meta-skill 与普通 skill 的本质区别是**生成其他 skill**——大量 
 
 ```bash
 # 1. clone
-git clone https://github.com/<your-account>/domain-knowledge-skill.git
+git clone https://github.com/luciliang/domain-knowledge-builder.git
 # 2. 放到 pi 的 skills 目录
 cp -R domain-knowledge-skill ~/.pi/agent/skills/
 # 3. 装好后告诉 pi agent
@@ -161,10 +161,12 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
 
 ## 已验证的实例
 
-| 实例 | 来源 | 节点/边 | darwin | 说明 |
-|------|------|---------|--------|------|
-| `examples/conformal-prediction` | 3 篇 CP 论文 | 50/138 | **88 A-** | 黄金参照（人工策展 v1.1.0）|
-| `examples/diffusion-models` | DDPM + Score-SDE | 30/53 | **84.70 B+** | meta-skill 自动生成（双源，含 11 跨源关系，M4 连续时间统一）|
+| 实例 | 类型 | 来源 | 节点/边 | darwin | 说明 |
+|------|------|------|---------|--------|------|
+| `examples/conformal-prediction` | 领域知识库 | 3 篇 CP 论文 | 50/138 | **88 A-** | 黄金参照（人工策展 v1.1.0）|
+| `examples/diffusion-models` | 领域知识库 | DDPM + Score-SDE | 30/53 | **84.70 B+** | 自动生成（双源，含 11 跨源关系）|
+| `examples/tengjiaye-advisor` | 专家顾问 | 8 篇 CP 论文 | 9 节点 | N/A | Expert Advisor：4 心模+6 判断+9 知识节点 |
+| `examples/hinton-advisor` | 专家顾问 | Hinton 论文 + 访谈 | — | N/A | Expert Advisor 模式验证（示例级）|
 
 ---
 
@@ -175,6 +177,37 @@ cp -R domain-knowledge-skill ~/.pi/agent/skills/
 - **canonical-term 非完全确定**：LLM 抽取节点命名实体两次可能差 hash，lint 会报告。
 - **大论文提取成本高**：>50K tokens 的论文需 REPL 探测（grep+sed），不能全读。
 
+
+---
+
+## 进化 v1.0（2026-07-02）
+
+根据达尔文.skill 2.0 流程对 meta-skill 进行一轮进化，针对三种蒸馏系统的实际对比测试暴露的缺陷：
+
+### 核心改进
+
+**① S5 心模抽象层级检验**
+- 新增方法论/原则/结论三级判定标准
+- 追问提升协议 + 跨域迁移测试
+- Generative 验证升级（未见领域问题的推理链测试）
+- 确保产出的是可迁移的思维操作，而非领域具体的结论
+
+**② 模式0 元批判（Meta-Critique）**
+- 所有用户问题先经：问题假设检查 → 裂缝检查 → 指标检查
+- 问题本身隐含不合理假设 → 先重新定义再进入知识查询
+- 防止"直接开干"而不质疑问题本身的合理性
+
+**③ 生成式判断引擎**
+- 预制立场（静态结论）→ 生成规则（trigger_pattern + inference_steps + fallback）
+- 跨域迁移从"匹配已有判断"提升至"按推理规则生成新判断"
+
+### 进化评分
+- 进化前：67.36/100（C+）
+- 进化后：88.00/100（B+）
+- Judge 盲评 PASS，用户确认 ✅
+
+### 提交历史
+详见 PR #3：心模抽象层级检验 + 元批判模式 + 生成式判断引擎
 ---
 
 ## 许可证
