@@ -170,4 +170,233 @@ S1 提取 ──┬─▶ S2×N 并行 ──┐
 
 ---
 
+### 端到端最小执行示例
+
+> 以下是一个真实可执行的端到端流程。从零开始，建一个"diffusion-models"领域知识库。每步命令可直接复制。完成后可继续读 `pipeline/ingest.md` 的完整契约。
+
+#### 前置条件
+
+```bash
+# 确认本 meta-skill 在 domain-knowledge-builder 目录下
+cd /media/lzw/9755f264-d29f-4750-a43e-6432766bece3/openclaw/domain-knowledge-builder
+
+# 1. 确认 docling 可用（必做）
+python3 -m engines.book_to_skill --check
+# 期望输出：docling: available ✓  technical-mode-ready: yes
+# 若不可用 → pip install "docling[pdf]"（或 docker 方式）
+
+# 2. 准备领域名 + 来源
+DOMAIN="diffusion-models"
+SKILL_ROOT="/tmp/gen-skills/${DOMAIN}"
+mkdir -p "$SKILL_ROOT" "$SKILL_ROOT/raw/sources"
+
+# 放入 2 篇论文（硬门要求：至少 1 篇，最佳 2-5 篇）
+cp ~/papers/ddpm.pdf "$SKILL_ROOT/raw/sources/s1.pdf"
+cp ~/papers/score-sde.pdf "$SKILL_ROOT/raw/sources/s2.pdf"
+```
+
+#### Step 0：初始化 run（git + manifest + preflight）
+
+```bash
+# 生成本次 run_id 并初始化 D7 可控层
+RUN_ID=$(python3 pipeline/state/init_run.py \
+  --target-skill-root "$SKILL_ROOT" \
+  --domain "$DOMAIN" \
+  --sources "$SKILL_ROOT/raw/sources/s1.pdf" "$SKILL_ROOT/raw/sources/s2.pdf")
+echo "Run ID: $RUN_ID"
+
+# 验证：run-manifest.json 已创建
+cat "$SKILL_ROOT/pipeline/state/run-manifest.json"
+
+# 验证：git 分支已切换
+cd "$SKILL_ROOT" && git status
+# 期望：On branch ingest/<RUN_ID>
+```
+
+#### Step 1-7：执行完整流水线
+
+```bash
+# 回到 meta-skill 根目录
+cd /media/lzw/9755f264-d29f-4750-a43e-6432766bece3/openclaw/domain-knowledge-builder
+
+# S1-S7 由 run-dag-pipeline.js 编排（fan-out 并行 + subagent chain）
+node pipeline/run-dag-pipeline.js \
+  --meta-skill-root "$PWD" \
+  --target-skill-root "$SKILL_ROOT" \
+  --domain "$DOMAIN" \
+  --run-id "$RUN_ID"
+
+# 运行后检查：
+ls "$SKILL_ROOT/wiki/knowledge/"     # 应含 ~10-40 个 <type>-<slug>.md
+ls "$SKILL_ROOT/wiki/sources/"       # 每篇来源的摘要
+ls "$SKILL_ROOT/wiki/mental-models.md"  # 心智模型提炼
+cat "$SKILL_ROOT/dag/dag-index.json" # DAG 索引（nodes + edges 统计）
+```
+
+#### Step 8：darwin 质量门评分
+
+```bash
+# fresh-context 子 agent 独立评分（禁自评）
+cd /media/lzw/9755f264-d29f-4750-a43e-6432766bece3/openclaw/domain-knowledge-builder
+engines/darwin-rubric.md --target "$SKILL_ROOT/SKILL.md"
+# 期望分数 ≥ 80/100（B+）
+
+# 若 < B+ → 自动 git revert + 诊断低分维度 → 修复重评
+# 连续 3 轮无改进 → 触发探索性重写
+```
+
+#### 产出物快照（小规模示例，2 篇论文）
+
+```
+domain-knowledge-skill/
+├── SKILL.md                          # 最终产物 (<4K tokens)
+├── raw/sources/s1.pdf                # 不可变源
+├── raw/sources/s2.pdf
+├── wiki/
+│   ├── overview.md                   # 领域全局概览 ~800 tokens
+│   ├── mental-models.md              # 3-5 个心智模型 ~1.5K tokens
+│   ├── knowledge/                    # 提取的节点（示例）
+│   │   ├── def-diffusion-process.md  # definition ~800 tok
+│   │   ├── def-score-function.md     # definition ~700 tok
+│   │   ├── thm-elbo-bound.md         # theorem ~1.2K tok
+│   │   ├── thm-score-matching.md     # theorem ~1.5K tok
+│   │   ├── meth-ddpm-sampling.md     # method ~1.8K tok
+│   │   ├── meth-score-sde-solver.md  # method ~2.0K tok
+│   │   ├── exp-fid-evaluation.md     # experiment ~1K tok
+│   │   └── ins-future-trends.md      # insight ~600 tok
+│   └── sources/
+│       ├── src-s1.md                 # s1.pdf 摘要
+│       └── src-s2.md                 # s2.pdf 摘要
+├── dag/
+│   ├── dag-index.json                # ~50 nodes + ~80 edges
+│   └── merge-report.md               # 去重 + 关系归一化报告
+└── pipeline/state/
+    ├── run-manifest.json             # 7 stages 记录
+    └── lint_report.md                # 零断裂验证
+```
+
+**节点关系示例（摘自 dag-index.json）**：
+```json
+{
+  "nodes": [
+    {"id": "def-diffusion-process", "type": "definition", "tokens": 800},
+    {"id": "thm-elbo-bound", "type": "theorem", "tokens": 1200},
+    {"id": "meth-ddpm-sampling", "type": "method", "tokens": 1800}
+  ],
+  "edges": [
+    {"id": "e1", "from": "thm-elbo-bound", "to": "def-diffusion-process",
+     "relation": "depends_on", "source": "s1"},
+    {"id": "e2", "from": "meth-ddpm-sampling", "to": "thm-elbo-bound",
+     "relation": "implements", "source": "s1"},
+    {"id": "e3", "from": "meth-score-sde-solver", "to": "meth-ddpm-sampling",
+     "relation": "generalizes", "source": "s2"}
+  ]
+}
+```
+
+**完成后的查询体验**：
+```
+用户: diffusion model 的训练损失函数是什么？
+→ SKILL.md 心智模型引导 → 定位 thm-elbo-bound → 沿
+  depends_on→def-diffusion-process 和 generalizes→meth-score-sde-solver
+  扩展 → 加载 3 个节点 (~3K tokens) → 综合回答包含公式和引用
+```
+
+#### 下一步
+
+本示例跑通后，请继续阅读完整契约：
+- **`pipeline/ingest.md`** — 7 步流水线的详细契约和边界条件
+- **`pipeline/query.md`** — 5 步 DAG 遍历查询协议
+- **`pipeline/lint.md`** — 零断裂 + D7 合规检查
+- **`schema/schema.md`** — 节点模板 + 10 种关系 + Determinism 命名
+
+---
+
+### 进化 v1.0：用户 Intent Preflight（元批判模式）
+
+> 在本 skill 进入真正的 fan-out 流水线之前，增加一个**独立的、fresh-context 的元批判预检步骤**。这不是 S0，而是 -1 层——在 S1 执行前，先质疑用户的输入和本 skill 的能力匹配。
+
+#### 何时触发
+
+每次用户触发本 meta-skill 时，在以下三个节点运行 intent preflight：
+
+1. **入口处**（用户刚说出触发词，本 skill 被路由）→ 快速匹配度预检
+2. **S0 来源确认后**（用户已指定论文列表 + 领域）→ 深度可行性预检
+3. **S1 执行前**（docling preflight 通过后，资源开销前）→ 执行就绪预检
+
+#### 预检协议（fresh-context 子 agent，禁自评）
+
+```python
+# 伪代码：intent_preflight.py
+# 由 fresh-context 子 agent 执行，输出 struct:
+
+def intent_preflight(user_input: str, sources: list) -> dict:
+    return {
+        "verdict": "GO" / "REDIRECT" / "BLOCK",
+        "checks": [
+            {
+                "check": "领域匹配度",
+                "pass": True,
+                "detail": "diffusion-models 是本 skill 支持的领域（ML/统计）"
+            },
+            {
+                "check": "来源可提取性",
+                "pass": True,
+                "detail": "2 篇 PDF，born-digital，docling 可用"
+            },
+            {
+                "check": "路由校验",
+                "pass": True,
+                "detail": "需领域知识库 + 非纯查询 → generator 模式正确"
+            },
+            {
+                "check": "资源预算",
+                "pass": True,
+                "detail": "~60 nodes × ~1K tok ≈ 60K tok 总提取预算，在许可窗口内"
+            }
+        ],
+        "warnings": [],
+        "redirect_suggestion": None
+    }
+```
+
+| 裁决 | 含义 | 后续动作 |
+|------|------|---------|
+| `GO` | 所有预检通过 | 进入 S1-S7 pipeline |
+| `REDIRECT` | 用户需求与本 skill 能力部分偏离 | 显示 redirect_suggestion（如"您要的是单书 skill？→ book-to-skill"），让用户确认是否继续 |
+| `BLOCK` | 严重不匹配或资源不可行 | 阻止进入 pipeline，给出具体原因和咨询路径 |
+
+#### 预检清单（5 项）
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ ① 领域匹配度     — 用户的域在本 skill 支持范围内？       │
+│ ② 来源可提取性   — docling/OCR 可用？格式兼容？           │
+│ ③ 路由校验       — generator 模式 vs query 模式？         │
+│                   — 纯领域知识库 vs 专家顾问模式？         │
+│ ④ 资源预算       — 来源规模是否在 token 预算窗口内？      │
+│                   — 是否需要分批量 ingest？                │
+│ ⑤ 已有冲突       — ~/.pi/agent/skills/<domain>/ 已存在？   │
+│                   — 冲突：增量 vs 重建 vs 跳过？           │
+└──────────────────────────────────────────────────────────┘
+```
+
+#### 三关触发矩阵
+
+| 预检节点 | 触发时机 | 检查项 | 失败后果 |
+|---------|---------|--------|---------|
+| 入口预检 | 本 skill 被路由 | ①领域匹配度 | 不路由到本 skill |
+| 来源预检 | S0 确认后 | ①②③⑤ | `REDIRECT` 或 `BLOCK` |
+| 执行预检 | S1 前 | ②④ | `BLOCK` 或分批建议 |
+
+#### 实现建议
+
+- 将 `intent_preflight.py` 放入 `pipeline/intent_preflight/`
+- 入口预检：只读 SKILL.md 的 `何时用/何时不用` + `路由区分` + `约束与诚实边界`
+- 来源预检：额外读 `pipeline/state/init_run.py` 的 preflight 结果
+- 执行预检：额外检查 `$SKILL_ROOT/` 磁盘空间 + token 估算（`wc -c` 所有来源源文件总和 / 3 ≈ token 数）
+- **fresh-context 规则**：所有预检由一个独立的新子 agent 执行，该子 agent 只有本 SKILL.md 的元数据（frontmatter + 何时用/不用 + 约束与诚实边界），不预先加载工作流细节——避免预检污染执行上下文。预检输出以 `--intent-preflight=result.json` 传递给主流水线。
+
+---
+
 _本 meta-skill 版本：v0.1 | 5 源复用 + D7 可控性 + darwin 2.0 质量门 | 黄金参照：examples/conformal-prediction (88/A-)_
