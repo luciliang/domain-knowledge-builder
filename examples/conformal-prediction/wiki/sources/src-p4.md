@@ -5,7 +5,7 @@ title: A Unified Theory of Conditional Coverage for Conformal Prediction
 authors: [Yinjie Min, Liuhua Peng, Changliang Zou]
 year: 2026
 venue: arXiv:2605.11602v3 [stat.ME]
-nodes_extracted: [def-unified-cp-framework, thm-marginal-coverage-weighted, thm-three-term-decomposition, def-three-errors, thm-averaged-miscoverage, thm-cc-averaged, meth-model-selection-cc, thm-covariate-shift-marginal, meth-covariate-shift-conditional, thm-symmpi-structured, thm-symmpi-conditional, meth-graphcp, thm-community-conditional, ins-method-comparison-table, ins-intrinsic-error-necessity, exp-covariate-shift, exp-model-selection, exp-toloker-graph, def-conditional-coverage, ins-wcp-limitation]
+nodes_extracted: [def-unified-cp-framework, thm-marginal-coverage-weighted, thm-three-term-decomposition, def-three-errors, thm-averaged-miscoverage, thm-cc-averaged, meth-model-selection-cc, thm-covariate-shift-marginal, meth-covariate-shift-conditional, thm-symmpi-structured, thm-symmpi-conditional, meth-min2026-graphcp, thm-community-conditional, ins-method-comparison-table, ins-intrinsic-error-necessity, exp-covariate-shift, exp-model-selection, exp-toloker-graph, def-conditional-coverage, ins-wcp-limitation]
 ingested: 2026-06-24
 ---
 
@@ -28,7 +28,7 @@ This paper develops a unified framework for conditional coverage in conformal pr
 | meth-covariate-shift-conditional | method | Conditional Methods under Covariate Shift |
 | thm-symmpi-structured | theorem | Theorem 5: Marginal Coverage under SymmPI |
 | thm-symmpi-conditional | theorem | Theorem 6: Conditional Miscoverage under SymmPI |
-| meth-graphcp | method | GraphCP: Community-Conditional CP on Graphs |
+| meth-min2026-graphcp | method | GraphCP: Community-Conditional CP on Graphs |
 | thm-community-conditional | theorem | Theorem 7: Community-Conditional Miscoverage Convergence |
 | ins-method-comparison-table | insight | Unified Error Decomposition Across Methods |
 | ins-intrinsic-error-necessity | insight | Intrinsic Error is the Key Bottleneck |

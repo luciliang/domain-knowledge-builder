@@ -37,7 +37,7 @@ The algorithm picks the smallest $\lambda$ such that the empirical risk is sligh
 
 ## 与其他知识的关系
 
-→ def-crc (P3's CRC definition; this theorem provides its theoretical foundation)
+→ def-teneggi2025-crc (P3's CRC definition; this theorem provides its theoretical foundation)
 ← def-split-conformal-prediction (CRC generalizes conformal prediction to arbitrary losses)
 → thm-split-cp-coverage (special case when $\ell$ = miscoverage loss)
 → meth-selective-classification (applied to selective classification)

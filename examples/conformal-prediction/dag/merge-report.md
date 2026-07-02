@@ -111,12 +111,12 @@ None — all nodes are connected.
 
 | Edge ID | From | From Source | To | To Source | Relation |
 |---------|------|-------------|----|-----------|----------|
-| `e-crc-thm2` | `thm-conformal-risk-control` | angelopoulos2022 | `def-crc` | teneggi2025 | guarantees |
+| `e-crc-thm2` | `thm-conformal-risk-control` | angelopoulos2022 | `def-teneggi2025-crc` | teneggi2025 | guarantees |
 | `e-p4-03` | `def-unified-cp-framework` | min2026 | `def-conformal-coverage` | teneggi2025 | extends |
 | `e-p4-04` | `thm-marginal-coverage-weighted` | min2026 | `def-conformal-coverage` | teneggi2025 | extends |
 | `e-p4-08` | `thm-three-term-decomposition` | min2026 | `def-conditional-coverage` | angelopoulos2022 | extends |
 | `e-p4-16` | `thm-covariate-shift-marginal` | min2026 | `def-conformal-coverage` | teneggi2025 | extends |
-| `e-p4-36` | `meth-graphcp` | min2026 | `meth-sem-crc` | teneggi2025 | compares_with |
+| `e-p4-36` | `meth-min2026-graphcp` | min2026 | `meth-sem-crc` | teneggi2025 | compares_with |
 | `e-p4-37` | `meth-model-selection-cc` | min2026 | `meth-sem-crc` | teneggi2025 | compares_with |
 | `e-p4-42` | `def-conditional-coverage` | angelopoulos2022 | `thm-three-term-decomposition` | min2026 | depends_on |
 | `e-thm1-conformal-cov` | `thm-split-cp-coverage` | angelopoulos2022 | `def-conformal-coverage` | teneggi2025 | specializes |

@@ -29,7 +29,7 @@ GraphCP achieves substantially better community-conditional coverage with minima
 
 ## 与其他知识的关系
 
-← meth-graphcp（验证 GraphCP 方法）
+← meth-min2026-graphcp（验证 GraphCP 方法）
 ← thm-community-conditional（验证 Theorem 7 的理论预测）
 
 ## 来源引用

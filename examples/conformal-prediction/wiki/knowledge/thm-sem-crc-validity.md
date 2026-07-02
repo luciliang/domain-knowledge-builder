@@ -32,7 +32,7 @@ $$\mathbb{E}[\ell_{01}(g_{\hat{\lambda}_{\text{sem}}}(Y), X)] \leq \epsilon.$$
 ## 与其他知识的关系
 
 ← def-conformal-coverage（基于 CRC 的基本风险控制保证）
-← def-crc（建立在 CRC 框架之上）
+← def-teneggi2025-crc（建立在 CRC 框架之上）
 guarantees → meth-sem-crc（保证 sem-CRC 方法在期望意义下控制风险）
 → meth-sem-crc-per-organ（逐器官版本通过将此命题应用到每个维度得到）
 

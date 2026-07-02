@@ -36,7 +36,7 @@ This is the distribution-free guarantee: the expected proportion of ground-truth
 
 ## 与其他知识的关系
 
-← def-crc（CRC 定义推出了这个保证）
+← def-teneggi2025-crc（CRC 定义推出了这个保证）
 → thm-sem-crc-validity（sem-CRC 的有效性命题扩展了这个保证）
 → meth-k-crc（K-CRC 同样提供此保证）
 

@@ -11,10 +11,10 @@
   },
   "nodes": [
     {
-      "id": "def-crc",
+      "id": "def-teneggi2025-crc",
       "type": "definition",
       "label": "Conformal Risk Control (CRC)",
-      "file": "wiki/knowledge/def-crc.md",
+      "file": "wiki/knowledge/def-teneggi2025-crc.md",
       "tokens": 900,
       "source": "teneggi2025",
       "created": "2026-06-23"
@@ -95,7 +95,7 @@
   "edges": [
     {
       "id": "e-crc-coverage",
-      "from": "def-crc",
+      "from": "def-teneggi2025-crc",
       "to": "def-conformal-coverage",
       "relation": "guarantees",
       "desc": "CRC procedure guarantees risk control",
@@ -104,7 +104,7 @@
     },
     {
       "id": "e-kcrc-crc",
-      "from": "def-crc",
+      "from": "def-teneggi2025-crc",
       "to": "meth-k-crc",
       "relation": "extends",
       "desc": "K-CRC extends CRC to high-dimensional settings with K groups",
@@ -176,7 +176,7 @@
     },
     {
       "id": "e-semuq-defcrc",
-      "from": "def-crc",
+      "from": "def-teneggi2025-crc",
       "to": "def-semantic-uq",
       "relation": "depends_on",
       "desc": "Understanding semantic UQ requires understanding the CRC framework first",
@@ -231,7 +231,7 @@
     {
       "id": "e-exp-crc",
       "from": "exp-ct-denoising-reconstruction",
-      "to": "def-crc",
+      "to": "def-teneggi2025-crc",
       "relation": "evaluates",
       "desc": "CRC evaluated as comparison baseline",
       "source": "teneggi2025",

@@ -58,7 +58,7 @@ created: 2026-06-23
 
 ← meth-sem-crc（验证 sem-CRC 方法）
 ← meth-k-crc（K-CRC 作为对比基线）
-← def-crc（CRC 作为对比基线）
+← def-teneggi2025-crc（CRC 作为对比基线）
 ← meth-sem-crc-per-organ（sem-CRC̄ 的实验验证）
 evaluates → meth-sem-crc（实验证明 sem-CRC 优于 K-CRC 和 CRC）
 

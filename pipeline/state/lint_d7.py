@@ -99,6 +99,9 @@ def check_auditable(target_root: Path, legacy_ok: bool) -> dict:
 
 # ========== 3. 确定性 ==========
 
+# 节点 ID 规范格式：<type>-<source-slug>-<canonical-term>（§10）。
+# _check_deterministic_data 强制此格式：不符则严格模式报 bad_node_format，
+# --legacy-ok 时宽容（历史 CP 旧格式 <type>-<term> 计 legacy_node_ids）。
 NODE_ID_RE = re.compile(r'^(def|thm|meth|exp|ins)-[a-z][a-z0-9]*-[a-z0-9-]+$')
 BAD_ID_PATTERNS = [
     (re.compile(r'-\d{6,8}($|-)'), '时间戳命名'),
@@ -107,48 +110,97 @@ BAD_ID_PATTERNS = [
 ]
 
 
-def check_deterministic(target_root: Path) -> dict:
-    """检查 node ID 命名规范（schema §10 + §12.3）。"""
+def compute_edge_id(edge: dict) -> str:
+    """边 ID 确定性公式（schema §10.2）：edge_id = {from}|{relation}|{to}。
+
+    纯函数、确定性、可 split('|') 反解析。from/relation/to 均属 [a-z0-9-]，
+    内部无 '|'，故三元组与 edge_id 双射——增量合并时按 edge_id 去重即幂等。
+    """
+    return f"{edge['from']}|{edge['relation']}|{edge['to']}"
+
+
+def _check_deterministic_data(d: dict, legacy_ok: bool) -> dict:
+    """纯逻辑：检查 node ID 命名 + edge ID 公式（schema §10 + §10.2 + §12.3）。
+
+    由 check_deterministic 读文件后调用，便于直接测试。
+    节点 ID 格式校验当前容忍历史数据（CP 旧格式 <type>-<term>），仅查
+    禁用命名与重复；边 ID 按 §10.2 公式校验，legacy_ok 时旧 slug 宽容。
+    """
+    bad_format = []           # 节点不符 3 段格式（严格 error）
+    legacy_node_ids = []      # 节点不符格式但 legacy_ok 宽容
+    bad_pattern = []          # 节点禁用命名（时间戳/随机/流水号）
+    duplicate_node_ids = []   # 节点 ID 重复
+    bad_edge_id = []          # 边 ID 不符公式（严格模式 error）
+    legacy_edges = []         # 边 ID 不符公式但 legacy_ok 宽容
+    duplicate_edges = []      # 边 ID 重复（幂等去重反面）
+
+    # --- 节点 ID（§10：格式 NODE_ID_RE + 禁用命名 + 重复）---
+    seen_nodes = set()
+    for n in d.get("nodes", []):
+        nid = n.get("id", "")
+        if not NODE_ID_RE.match(nid):
+            if legacy_ok:
+                legacy_node_ids.append(nid)
+            else:
+                bad_format.append(nid)
+        for pat, desc in BAD_ID_PATTERNS:
+            if pat.search(nid):
+                bad_pattern.append((nid, desc))
+        if nid in seen_nodes:
+            duplicate_node_ids.append(nid)
+        seen_nodes.add(nid)
+
+    # --- 边 ID（§10.2）---
+    # duplicate 只对符公式的边检查：旧 slug/空 id 边的"重复"是命名缺陷
+    # （已由 legacy_edges/bad_edge_id 覆盖），非幂等失败
+    seen_edges = set()
+    for e in d.get("edges", []):
+        eid = e.get("id", "")
+        has_triple = all(k in e for k in ("from", "relation", "to"))
+        expected = compute_edge_id(e) if has_triple else None
+        if expected is not None and eid == expected:
+            if eid in seen_edges:
+                duplicate_edges.append(eid)
+            seen_edges.add(eid)
+        elif legacy_ok:
+            legacy_edges.append((eid, expected))
+        else:
+            bad_edge_id.append((eid, expected))
+
+    issues = []
+    if bad_format:
+        issues.append(f"{len(bad_format)} 个 node ID 不符 3 段格式 <type>-<source>-<term>: {bad_format[:3]}")
+    if bad_pattern:
+        issues.append(f"{len(bad_pattern)} 个 node ID 用禁止命名: {bad_pattern[:3]}")
+    if duplicate_node_ids:
+        issues.append(f"{len(duplicate_node_ids)} 个重复 node ID: {duplicate_node_ids[:3]}")
+    if bad_edge_id:
+        issues.append(f"{len(bad_edge_id)} 个边 ID 不符公式 (应为 {{from}}|{{relation}}|{{to}}): {bad_edge_id[:3]}")
+    if duplicate_edges:
+        issues.append(f"{len(duplicate_edges)} 个重复 edge ID: {duplicate_edges[:3]}")
+
+    return {
+        "ok": len(issues) == 0,
+        "nodes": len(d.get("nodes", [])),
+        "bad_node_format": len(bad_format),
+        "legacy_node_ids": len(legacy_node_ids),
+        "bad_node_pattern": len(bad_pattern),
+        "duplicate_node_ids": len(duplicate_node_ids),
+        "edges": len(d.get("edges", [])),
+        "bad_edge_id": len(bad_edge_id),
+        "legacy_edges": len(legacy_edges),
+        "duplicate_edges": len(duplicate_edges),
+        "issues": issues,
+    }
+
+
+def check_deterministic(target_root: Path, legacy_ok: bool = False) -> dict:
+    """检查 node ID 命名 + edge ID 公式（schema §10 + §10.2 + §12.3）。"""
     dag = target_root / "dag" / "dag-index.json"
     if not dag.exists():
         return {"ok": False, "issues": ["无 dag/dag-index.json"]}
     d = json.loads(dag.read_text())
-
-    bad_format = []
-    bad_pattern = []
-    duplicates = []
-
-    ids = [n["id"] for n in d.get("nodes", [])]
-    seen = set()
-    for nid in ids:
-        # 格式检查
-        if not NODE_ID_RE.match(nid):
-            # 容忍 CP 实例的旧格式（无 source-slug 中段，如 thm-split-cp-coverage）
-            # 新 schema 要求 <type>-<source>-<term>，但历史数据是 <type>-<term>
-            pass  # 见下方 legacy 处理
-        # 禁止模式
-        for pat, desc in BAD_ID_PATTERNS:
-            if pat.search(nid):
-                bad_pattern.append((nid, desc))
-        # 重复
-        if nid in seen:
-            duplicates.append(nid)
-        seen.add(nid)
-
-    issues = []
-    if bad_pattern:
-        issues.append(f"{len(bad_pattern)} 个 node ID 用禁止命名: {bad_pattern[:3]}")
-    if duplicates:
-        issues.append(f"{len(duplicates)} 个重复 node ID: {duplicates[:3]}")
-
-    return {
-        "ok": len(issues) == 0,
-        "total_ids": len(ids),
-        "unique_ids": len(seen),
-        "bad_pattern": len(bad_pattern),
-        "duplicates": len(duplicates),
-        "issues": issues
-    }
+    return _check_deterministic_data(d, legacy_ok)
 
 
 # ========== 4. 预检 ==========
@@ -225,6 +277,56 @@ def check_mind_element_grounding(elements):
     return issues
 
 
+# ========== 8. 硬门④：provenance.sources 引用存在性（D7 可审计支柱）==========
+
+def collect_source_ids(skill_root):
+    """收集 skill_root 下所有 src-*.md 的合法 source id 集合。
+
+    frontmatter id 优先 + 文件 stem 兜底（source.md schema 规定 id = stem，双保险）。
+    """
+    ids = set()
+    for f in Path(skill_root).rglob("src-*.md"):
+        ids.add(f.stem)
+        sid = _parse_frontmatter(f.read_text()).get("id")
+        if sid:
+            ids.add(sid)
+    return ids
+
+
+def check_provenance_sources_exist(src_ids, artifacts):
+    """硬门④：judgment/心智元素的 provenance.sources 必须指向存在的 src-*.md（硬门③对称物）。"""
+    issues = []
+    for group in (artifacts.get("judgments", []), artifacts.get("elements", [])):
+        for a in group:
+            prov = a.get("provenance") or {}
+            sources = prov.get("sources") or [] if isinstance(prov, dict) else []
+            for s in sources:
+                if s not in src_ids:
+                    issues.append(f"{a.get('id', '?')}: provenance.sources 指向不存在的来源 {s}")
+    return issues
+
+
+# ========== 9. 硬门⑤：元素文件单 frontmatter 契约 ==========
+
+def check_single_frontmatter(skill_root):
+    """硬门⑤：元素文件（judg-/mm-/ap-/heur-）必须单 frontmatter 块（顶部裸 frontmatter）。
+
+    防止多个元素聚合到一个文件 → load_mind_artifacts 只解析顶部块会漏元素。
+    导航文件（index/judgments/mental-models）是纯链接层，不检查。
+    """
+    em = Path(skill_root) / "expert-mind"
+    if not em.exists():
+        return []
+    issues = []
+    for f in em.glob("*.md"):
+        if not f.stem.startswith(("judg-", "mm-", "ap-", "heur-")):
+            continue  # 跳过导航文件
+        delim = len(re.findall(r'^---\s*$', f.read_text(), re.M))
+        if delim != 2:
+            issues.append(f"{f.name}: 含 {delim} 个 '---' 分隔符（应为 2=单 frontmatter 块），多元素须拆独立文件")
+    return issues
+
+
 # ========== 主流程 ==========
 
 def _parse_frontmatter(text):
@@ -275,14 +377,17 @@ def main():
     dag = json.loads(dag_path.read_text()) if dag_path.exists() else {"nodes": []}
     artifacts = load_mind_artifacts(target)
 
-    # 硬门①③返回 list[str]（issues 列表），需包装成 {ok, issues} 以适配主流程渲染
+    # 硬门①③④返回 list[str]（issues 列表），需包装成 {ok, issues} 以适配主流程渲染
+    src_ids = collect_source_ids(target)
     grounding_issues = check_grounding_existence(dag, artifacts["judgments"])
     mind_grounding_issues = check_mind_element_grounding(artifacts["elements"])
+    provenance_issues = check_provenance_sources_exist(src_ids, artifacts)
+    single_fm_issues = check_single_frontmatter(target)
 
     checks = {
         "可回滚 (Reversible)": check_reversible(target),
         "可审计 (Auditable)": check_auditable(target, args.legacy_ok),
-        "确定性 (Deterministic)": check_deterministic(target),
+        "确定性 (Deterministic)": check_deterministic(target, args.legacy_ok),
         "预检 (Preflight)": check_preflight(target),
         "路径确定性 (Path Determinism)": check_path_determinism(target),
         "硬门③ grounded_in 节点存在 (Grounding Existence)": {
@@ -292,6 +397,13 @@ def main():
         "硬门① mental_model 3重全过必 grounded_in": {
             "ok": len(mind_grounding_issues) == 0, "issues": mind_grounding_issues,
             "elements_count": len(artifacts["elements"]),
+        },
+        "硬门④ provenance.sources 存在 (Source Existence)": {
+            "ok": len(provenance_issues) == 0, "issues": provenance_issues,
+            "src_files": len(src_ids),
+        },
+        "硬门⑤ 元素文件单 frontmatter (Single Frontmatter)": {
+            "ok": len(single_fm_issues) == 0, "issues": single_fm_issues,
         },
     }
 

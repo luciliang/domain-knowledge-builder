@@ -5,7 +5,7 @@ title: "A Gentle Introduction to Conformal Prediction: Distribution-Free, Finite
 authors: ["Anastasios N. Angelopoulos", "Stephen Bates"]
 year: 2022
 venue: "arXiv:2107.07511"
-nodes_extracted: ["def-split-conformal-prediction", "thm-split-cp-coverage", "def-marginal-coverage", "def-conditional-coverage", "thm-conditional-coverage-impossible", "meth-aps", "meth-cqr", "meth-conformalize-uncertainty", "meth-conformalize-bayes", "def-fsc-metric", "def-ssc-metric", "thm-beta-coverage-distribution", "meth-group-balanced-cp", "thm-group-balanced-coverage", "meth-class-conditional-cp", "thm-class-conditional-coverage", "thm-conformal-risk-control", "thm-covariate-shift-coverage", "thm-distribution-drift-coverage", "meth-outlier-detection-cp", "thm-outlier-detection-guarantee"]
+nodes_extracted: ["def-split-conformal-prediction", "thm-split-cp-coverage", "def-marginal-coverage", "def-conditional-coverage", "thm-conditional-coverage-impossible", "meth-angelopoulos2022-aps", "meth-angelopoulos2022-cqr", "meth-conformalize-uncertainty", "meth-conformalize-bayes", "def-fsc-metric", "def-ssc-metric", "thm-beta-coverage-distribution", "meth-group-balanced-cp", "thm-group-balanced-coverage", "meth-class-conditional-cp", "thm-class-conditional-coverage", "thm-conformal-risk-control", "thm-covariate-shift-coverage", "thm-distribution-drift-coverage", "meth-outlier-detection-cp", "thm-outlier-detection-guarantee"]
 ingested: 2026-06-24
 ---
 
@@ -22,8 +22,8 @@ ingested: 2026-06-24
 | def-marginal-coverage | definition | Marginal Coverage |
 | def-conditional-coverage | definition | Conditional Coverage |
 | thm-conditional-coverage-impossible | theorem | Conditional Coverage Impossibility |
-| meth-aps | method | Adaptive Prediction Sets (APS) |
-| meth-cqr | method | Conformalized Quantile Regression (CQR) |
+| meth-angelopoulos2022-aps | method | Adaptive Prediction Sets (APS) |
+| meth-angelopoulos2022-cqr | method | Conformalized Quantile Regression (CQR) |
 | meth-conformalize-uncertainty | method | Conformalizing Scalar Uncertainty Estimates |
 | meth-conformalize-bayes | method | Conformalizing Bayes |
 | def-fsc-metric | definition | Feature-Stratified Coverage (FSC) Metric |

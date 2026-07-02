@@ -56,19 +56,19 @@
       "created": "2026-06-24"
     },
     {
-      "id": "meth-aps",
+      "id": "meth-angelopoulos2022-aps",
       "type": "method",
       "label": "Adaptive Prediction Sets (APS)",
-      "file": "wiki/knowledge/meth-aps.md",
+      "file": "wiki/knowledge/meth-angelopoulos2022-aps.md",
       "tokens": 1200,
       "source": "angelopoulos2022",
       "created": "2026-06-24"
     },
     {
-      "id": "meth-cqr",
+      "id": "meth-angelopoulos2022-cqr",
       "type": "method",
       "label": "Conformalized Quantile Regression (CQR)",
-      "file": "wiki/knowledge/meth-cqr.md",
+      "file": "wiki/knowledge/meth-angelopoulos2022-cqr.md",
       "tokens": 1200,
       "source": "angelopoulos2022",
       "created": "2026-06-24"
@@ -222,7 +222,7 @@
     {
       "id": "e-split-cp-aps",
       "from": "def-split-conformal-prediction",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "extends_to",
       "desc": "APS is a specialization of split CP for classification",
       "source": "angelopoulos2022",
@@ -231,7 +231,7 @@
     {
       "id": "e-split-cp-cqr",
       "from": "def-split-conformal-prediction",
-      "to": "meth-cqr",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "extends_to",
       "desc": "CQR is a specialization of split CP for regression",
       "source": "angelopoulos2022",
@@ -447,7 +447,7 @@
     {
       "id": "e-impossible-aps",
       "from": "thm-conditional-coverage-impossible",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "motivates",
       "desc": "APS is a practical method that approximates conditional coverage",
       "source": "angelopoulos2022",
@@ -455,7 +455,7 @@
     },
     {
       "id": "e-aps-thm1",
-      "from": "meth-aps",
+      "from": "meth-angelopoulos2022-aps",
       "to": "thm-split-cp-coverage",
       "relation": "satisfies",
       "desc": "APS satisfies Theorem 1's marginal coverage guarantee",
@@ -464,7 +464,7 @@
     },
     {
       "id": "e-aps-conditional",
-      "from": "meth-aps",
+      "from": "meth-angelopoulos2022-aps",
       "to": "def-conditional-coverage",
       "relation": "approximates",
       "desc": "APS better approximates conditional coverage than standard CP",
@@ -474,7 +474,7 @@
     {
       "id": "e-aps-fsc",
       "from": "def-fsc-metric",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "evaluates",
       "desc": "FSC metric evaluates APS performance across feature groups",
       "source": "angelopoulos2022",
@@ -483,7 +483,7 @@
     {
       "id": "e-aps-ssc",
       "from": "def-ssc-metric",
-      "to": "meth-aps",
+      "to": "meth-angelopoulos2022-aps",
       "relation": "evaluates",
       "desc": "SSC metric evaluates APS performance across set sizes",
       "source": "angelopoulos2022",
@@ -491,8 +491,8 @@
     },
     {
       "id": "e-aps-cqr-cmp",
-      "from": "meth-aps",
-      "to": "meth-cqr",
+      "from": "meth-angelopoulos2022-aps",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "compares_with",
       "desc": "APS for classification vs CQR for regression",
       "source": "angelopoulos2022",
@@ -500,7 +500,7 @@
     },
     {
       "id": "e-cqr-thm1",
-      "from": "meth-cqr",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "thm-split-cp-coverage",
       "relation": "satisfies",
       "desc": "CQR satisfies Theorem 1's coverage guarantee",
@@ -509,7 +509,7 @@
     },
     {
       "id": "e-cqr-conditional",
-      "from": "meth-cqr",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "def-conditional-coverage",
       "relation": "approximates",
       "desc": "Quantile regression has asymptotically valid conditional coverage, propagating to CQR",
@@ -518,7 +518,7 @@
     },
     {
       "id": "e-cqr-unc-cmp",
-      "from": "meth-cqr",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "meth-conformalize-uncertainty",
       "relation": "compares_with",
       "desc": "CQR preferred when possible; uncertainty scalars easier but less precise",
@@ -527,7 +527,7 @@
     },
     {
       "id": "e-cqr-group-bal",
-      "from": "meth-cqr",
+      "from": "meth-angelopoulos2022-cqr",
       "to": "meth-group-balanced-cp",
       "relation": "composable_with",
       "desc": "CQR can be combined with group-balanced CP",
@@ -726,7 +726,7 @@
     {
       "id": "e-crc-thm2",
       "from": "thm-conformal-risk-control",
-      "to": "def-crc",
+      "to": "def-teneggi2025-crc",
       "relation": "underpins",
       "desc": "Theorem 2 provides the theoretical foundation for CRC (P3)",
       "source": "angelopoulos2022",
@@ -834,7 +834,7 @@
     {
       "id": "e-outlier-cqr-cmp",
       "from": "meth-outlier-detection-cp",
-      "to": "meth-cqr",
+      "to": "meth-angelopoulos2022-cqr",
       "relation": "compares_with",
       "desc": "Different applications of the conformal framework",
       "source": "angelopoulos2022",

@@ -14,8 +14,12 @@
 //   args.meta_skill_root — 本 meta-skill 根目录（读 schema/engines）
 //   args.run_id — 本次构建的 UUID（外部生成，保证全 pipeline 一致）
 //   args.resume_from — 可选，从某 stage 恢复（如 "S3"）
+//   args.run_type — 可选，'initial'（默认，首次全量）| 'incremental'（已存在 skill 补料，S3 后算 Δ）
 //
 // 输出：生成的知识库 skill（target_skill_root 下完整的 wiki/dag/schema/SKILL.md）
+
+import { readFileSync } from 'node:fs';
+import { computeDelta } from './delta.mjs';
 
 export const meta = {
   name: 'domain-knowledge-dag-pipeline',
@@ -158,16 +162,27 @@ async function S3_mergeDAG(s2Results) {
   return result
 }
 
+// ========== 增量提示（incremental 模式给 S4-S7 的 Δ 上下文）==========
+
+let currentDelta = null  // 受影响集（main 在 S3 后设，S4-S7 prompt 读）
+
+function incrementalHint() {
+  const d = currentDelta
+  if (!d) return ''
+  return `\n**incremental run（增量补料）**。受影响集 Δ：新增节点 ${d.added_node_ids.length}（${d.added_node_ids.slice(0, 10).join(', ') || '无'}）/ 新增边 ${d.added_edge_ids.length} / 修改节点 ${d.modified_node_ids.length}。`
+}
+
 // ========== S4: 导航文件（确定性，可并行 3 个） ==========
 
 async function S4_navigation(s3Result) {
   phase('S4: 导航文件')
   log('S4 开始：生成 index/log/overview')
 
+  const inc4 = incrementalHint() + (currentDelta ? ` S4 增量性：index 追加 added_nodes 行（不全量重写）；overview 聚焦 added_sources 贡献。` : '')
   const navTasks = [
-    () => agent(stagePrompt('S4_index', `基于 ${args.target_skill_root}/dag/dag-index.json 生成 ${args.target_skill_root}/wiki/index.md：按 def/thm/meth/exp/ins 分组，每节点一行（ID + 链接 + 一句话摘要）`), { label: 'S4 index', tier: 'small' }),
+    () => agent(stagePrompt('S4_index', `基于 ${args.target_skill_root}/dag/dag-index.json 生成 ${args.target_skill_root}/wiki/index.md：按 def/thm/meth/exp/ins 分组，每节点一行（ID + 链接 + 一句话摘要）${inc4}`), { label: 'S4 index', tier: 'small' }),
     () => agent(stagePrompt('S4_log', `追加 ${args.target_skill_root}/wiki/log.md：本次 ingest 摘要（日期/来源/新增节点数/总节点数/darwin 分数占位）`), { label: 'S4 log', tier: 'small' }),
-    () => agent(stagePrompt('S4_overview', `生成 ${args.target_skill_root}/wiki/overview.md：领域全局概览（3-5 段，基于 dag-index 的 meta + sources）`), { label: 'S4 overview', tier: 'medium' })
+    () => agent(stagePrompt('S4_overview', `生成 ${args.target_skill_root}/wiki/overview.md：领域全局概览（3-5 段，基于 dag-index 的 meta + sources）${inc4}`), { label: 'S4 overview', tier: 'medium' })
   ]
 
   await parallel(navTasks)
@@ -183,6 +198,7 @@ async function S5_mentalModels(s3Result) {
   const result = await agent(
     stagePrompt('S5', [
       `用领域化三重验证提炼心智模型。`,
+      incrementalHint() + (currentDelta ? ` **S5 半全量**：以现有 wiki/mental-models.md 为起点，评估 Δ 是否带来新心智模型或修正现有模型（非纯增量，心智提炼本质全局）。` : ''),
       ``,
       `1. 读 ${args.meta_skill_root}/engines/nuwa-validation.md（领域化三重验证方法论）`,
       `2. 读所有 ${args.target_skill_root}/wiki/knowledge/*.md 和 wiki/sources/*.md`,
@@ -211,6 +227,7 @@ async function S6_validate(s5Result) {
   const result = await agent(
     stagePrompt('S6', [
       `你是 fresh-context 独立验证 agent。**不要假设构建正确，从零验证产物**。`,
+      incrementalHint() + (currentDelta ? ` **S6 增量**：结构校验仍全量（快）；原文抽查聚焦 added_nodes（而非随机抽）。` : ''),
       ``,
       `1. 读 ${args.target_skill_root}/dag/dag-index.json，程序化校验：`,
       `   - 0 断裂引用（edges 的 from/to 全在 nodes）`,
@@ -245,6 +262,7 @@ async function S7_assembleSkill(s6Result) {
   const result = await agent(
     stagePrompt('S7', [
       `组装 ${args.target_skill_root}/SKILL.md（<4K tokens，compaction 从末尾截断所以重要内容前置）。`,
+      incrementalHint() + (currentDelta ? ` **S7 半全量**：基于现有 SKILL.md 增量更新（反映 Δ），非全量重写。` : ''),
       ``,
       `结构：`,
       `1. frontmatter: name=${args.domain}, description（foreground 领域名 + 查询语义）`,
@@ -306,9 +324,31 @@ async function main() {
 
   let s1r, s2r, s3r, s4r, s5r, s6r, s7r, darwinR
 
+  // incremental 模式：S3 前读现有 dag-index 快照（S3 后算 Δ 用）
+  let snapshot = null
+  if (args.run_type === 'incremental' && startIdx <= 2) {
+    try {
+      snapshot = JSON.parse(readFileSync(`${args.target_skill_root}/dag/dag-index.json`, 'utf8'))
+      log(`incremental 模式：快照 ${snapshot.nodes?.length || 0} 节点 / ${snapshot.edges?.length || 0} 边`)
+    } catch {
+      log(`incremental 模式但无现有 dag-index，按 initial 处理`)
+    }
+  }
+
   if (startIdx <= 0) { s1r = await S1_extract() }
   if (startIdx <= 1) { s2r = await S2_extractParallel(s1r) }
   if (startIdx <= 2) { s3r = await S3_mergeDAG(s2r) }
+
+  // S3 后算增量 Δ（新增/修改节点与边），log 供审计（computeDelta 见 pipeline/delta.mjs）
+  if (snapshot) {
+    try {
+      const newDag = JSON.parse(readFileSync(`${args.target_skill_root}/dag/dag-index.json`, 'utf8'))
+      currentDelta = computeDelta(snapshot, newDag)  // 设模块级，供 S4-S7 prompt 增量分支用
+      log(`增量 Δ: +${currentDelta.added_node_ids.length} 节点 / +${currentDelta.added_edge_ids.length} 边 / ${currentDelta.modified_node_ids.length} 修改`)
+    } catch (e) {
+      log(`增量 Δ 计算失败（忽略，不阻塞 pipeline）: ${e}`)
+    }
+  }
   if (startIdx <= 3) { s4r = await S4_navigation(s3r) }
   if (startIdx <= 4) { s5r = await S5_mentalModels(s3r) }
   if (startIdx <= 5) { s6r = await S6_validate(s5r) }

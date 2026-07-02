@@ -38,7 +38,7 @@ The key distinction from pixel-level UQ is the **decoupling of uncertainty estim
 → meth-sem-crc（语义 UQ 通过 sem-CRC 方法实现）
 contradicts → meth-k-crc（与固定分组的 K-CRC 形成对比：语义分组 vs. 固定分组）
 applies_to → exp-ct-denoising-reconstruction（在 CT 实验中验证了语义 UQ 的优势）
-depends_on → def-crc（理解语义 UQ 需先理解 CRC 的基本框架）
+depends_on → def-teneggi2025-crc（理解语义 UQ 需先理解 CRC 的基本框架）
 
 ## 来源引用
 

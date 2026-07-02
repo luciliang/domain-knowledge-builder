@@ -30,7 +30,7 @@ To have $1-\alpha$ coverage for every single $x$, the prediction set must adapt 
 ← def-marginal-coverage (marginal coverage IS achievable, conditional is not)
 → def-fsc-metric (practical metric to measure how close we get)
 → def-ssc-metric (practical metric to measure how close we get)
-→ meth-aps (practical method that approximates conditional coverage)
+→ meth-angelopoulos2022-aps (practical method that approximates conditional coverage)
 
 ## 来源引用
 

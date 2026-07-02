@@ -11,7 +11,7 @@
 |---------|------|-----------|
 | def-conditional-coverage | Conditional Coverage | 共形预测覆盖率的理想目标：对所有输入条件的均匀覆盖保证 |
 | def-conformal-coverage | Conformal Risk Control Guarantee | CRC 框架的基本覆盖率保证定义 |
-| def-crc | Conformal Risk Control (CRC) | 通过有序保序性统计量控制任意风险函数的共形方法 |
+| def-teneggi2025-crc | Conformal Risk Control (CRC) | 通过有序保序性统计量控制任意风险函数的共形方法 |
 | def-fsc-metric | Feature-Stratified Coverage (FSC) Metric | 按特征分组度量的覆盖率指标，评估条件覆盖近似程度 |
 | def-marginal-coverage | Marginal Coverage | 共形预测的基本保证：整体样本集上至少 1−α 的覆盖率 |
 | def-semantic-uq | Semantic Uncertainty Quantification | 在医学影像等语义空间中量化像素级预测不确定性的方法 |
@@ -26,13 +26,13 @@
 
 | 节点 ID | 名称 | 一句话摘要 |
 |---------|------|-----------|
-| meth-aps | Adaptive Prediction Sets (APS) | 分类任务中自适应大小的预测集方法，近似条件覆盖 |
+| meth-angelopoulos2022-aps | Adaptive Prediction Sets (APS) | 分类任务中自适应大小的预测集方法，近似条件覆盖 |
 | meth-class-conditional-cp | Class-Conditional Conformal Prediction | 按类别分别设定覆盖阈值的条件共形预测方法 |
 | meth-conformalize-bayes | Conformalizing Bayes | 将贝叶斯后验与共形预测结合以获得有效覆盖率保证 |
 | meth-conformalize-uncertainty | Conformalizing Scalar Uncertainty Estimates | 利用标量不确定性估计构建共形集的通用方法 |
 | meth-covariate-shift-conditional | Conditional Methods under Covariate Shift | 协变量漂移下通过密度比加权和局部化恢复条件覆盖的方法 |
-| meth-cqr | Conformalized Quantile Regression (CQR) | 将分位数回归与共形预测结合的回归区间方法 |
-| meth-graphcp | GraphCP: Community-Conditional Conformal Prediction on Graphs | 在图数据上实现社区条件覆盖的共形预测方法 |
+| meth-angelopoulos2022-cqr | Conformalized Quantile Regression (CQR) | 将分位数回归与共形预测结合的回归区间方法 |
+| meth-min2026-graphcp | GraphCP: Community-Conditional Conformal Prediction on Graphs | 在图数据上实现社区条件覆盖的共形预测方法 |
 | meth-group-balanced-cp | Group-Balanced Conformal Prediction | 为已知分组提供均衡覆盖率保证的方法 |
 | meth-k-crc | K-CRC (High-Dimensional Risk Control via K Groups) | 通过 K 组划分实现高维空间风险控制的 CRC 扩展 |
 | meth-model-selection-cc | Conditional-Coverage-Oriented Model Selection | 以条件覆盖为导向的模型选择方法，基于内在误差分量 |

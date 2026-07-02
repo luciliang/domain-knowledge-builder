@@ -34,7 +34,7 @@ The score $s(x,y)$ is a multiplicative correction factor: $s(x,y) \cdot u(x) = |
 
 → thm-split-cp-coverage (satisfies Theorem 1's coverage guarantee)
 ← def-split-conformal-prediction (specialization of split CP)
-↔ meth-cqr (quantile regression preferred when possible; uncertainty scalars easier but less precise)
+↔ meth-angelopoulos2022-cqr (quantile regression preferred when possible; uncertainty scalars easier but less precise)
 → def-conditional-coverage (does_not_guarantee: scalar uncertainty scaling provides marginal but not conditional coverage)
 
 ## 来源引用
